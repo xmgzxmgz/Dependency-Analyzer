@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const Logger = require('../../src/modules/Logger');
 
@@ -13,22 +13,21 @@ describe('Logger 单元测试', function() {
     sandbox = sinon.createSandbox();
     consoleStub = {
       log: sandbox.stub(console, 'log'),
-      error: sandbox.stub(console, 'error'),
-      warn: sandbox.stub(console, 'warn'),
-      info: sandbox.stub(console, 'info')
+      time: sandbox.stub(console, 'time'),
+      timeEnd: sandbox.stub(console, 'timeEnd')
     };
     
-    sandbox.stub(fs, 'existsSync').returns(true);
-    sandbox.stub(fs, 'mkdirSync');
-    sandbox.stub(fs, 'appendFileSync');
-    sandbox.stub(fs, 'statSync').returns({ size: 1024 });
-    sandbox.stub(fs, 'renameSync');
-    sandbox.stub(fs, 'unlinkSync');
+    sandbox.stub(fs, 'pathExists').resolves(true);
+    sandbox.stub(fs, 'ensureDir').resolves();
+    sandbox.stub(fs, 'appendFile').resolves();
+    sandbox.stub(fs, 'stat').resolves({ size: 1024 });
+    sandbox.stub(fs, 'move').resolves();
+    sandbox.stub(fs, 'remove').resolves();
     
     logger = new Logger({
       level: 'debug',
-      logDir: '/test/logs',
-      maxFileSize: 1024 * 1024,
+      file: '/test/logs/app.log',
+      maxSize: 1024 * 1024,
       maxFiles: 5
     });
   });
