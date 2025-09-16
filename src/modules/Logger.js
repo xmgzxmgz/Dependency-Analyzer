@@ -1,6 +1,6 @@
-const fs = require('fs-extra');
-const path = require('path');
-const chalk = require('chalk');
+const fs = require("fs-extra");
+const path = require("path");
+const chalk = require("chalk");
 
 /**
  * 日志记录器
@@ -9,31 +9,31 @@ const chalk = require('chalk');
 class Logger {
   constructor(config = {}) {
     this.config = {
-      level: config.level || 'info',
+      level: config.level || "info",
       file: config.file || null,
       maxSize: config.maxSize || 10 * 1024 * 1024, // 10MB
       maxFiles: config.maxFiles || 5,
       timestamp: config.timestamp !== false,
       colors: config.colors !== false,
-      ...config
+      ...config,
     };
-    
+
     this.levels = {
       error: 0,
       warn: 1,
       info: 2,
       debug: 3,
-      trace: 4
+      trace: 4,
     };
-    
+
     this.colors = {
       error: chalk.red,
       warn: chalk.yellow,
       info: chalk.blue,
       debug: chalk.gray,
-      trace: chalk.dim
+      trace: chalk.dim,
     };
-    
+
     this.currentLogFile = null;
     this.initializeLogFile();
   }
@@ -45,7 +45,7 @@ class Logger {
     if (this.config.file) {
       this.currentLogFile = path.resolve(this.config.file);
       await fs.ensureDir(path.dirname(this.currentLogFile));
-      
+
       // 检查文件大小，必要时轮转
       await this.rotateLogIfNeeded();
     }
@@ -56,7 +56,7 @@ class Logger {
    */
   async rotateLogIfNeeded() {
     if (!this.currentLogFile) return;
-    
+
     try {
       const stats = await fs.stat(this.currentLogFile);
       if (stats.size >= this.config.maxSize) {
@@ -72,14 +72,17 @@ class Logger {
    */
   async rotateLog() {
     const logDir = path.dirname(this.currentLogFile);
-    const logName = path.basename(this.currentLogFile, path.extname(this.currentLogFile));
+    const logName = path.basename(
+      this.currentLogFile,
+      path.extname(this.currentLogFile)
+    );
     const logExt = path.extname(this.currentLogFile);
-    
+
     // 移动现有日志文件
     for (let i = this.config.maxFiles - 1; i > 0; i--) {
       const oldFile = path.join(logDir, `${logName}.${i}${logExt}`);
       const newFile = path.join(logDir, `${logName}.${i + 1}${logExt}`);
-      
+
       if (await fs.pathExists(oldFile)) {
         if (i === this.config.maxFiles - 1) {
           await fs.remove(oldFile); // 删除最老的文件
@@ -88,7 +91,7 @@ class Logger {
         }
       }
     }
-    
+
     // 移动当前日志文件
     const firstRotated = path.join(logDir, `${logName}.1${logExt}`);
     if (await fs.pathExists(this.currentLogFile)) {
@@ -104,19 +107,19 @@ class Logger {
    * @returns {string} 格式化后的消息
    */
   formatMessage(level, message, meta = {}) {
-    let formatted = '';
-    
+    let formatted = "";
+
     if (this.config.timestamp) {
       const timestamp = new Date().toISOString();
       formatted += `[${timestamp}] `;
     }
-    
+
     formatted += `[${level.toUpperCase()}] ${message}`;
-    
+
     if (Object.keys(meta).length > 0) {
       formatted += ` ${JSON.stringify(meta)}`;
     }
-    
+
     return formatted;
   }
 
@@ -129,24 +132,24 @@ class Logger {
   async log(level, message, meta = {}) {
     const levelNum = this.levels[level];
     const configLevelNum = this.levels[this.config.level];
-    
+
     if (levelNum > configLevelNum) {
       return; // 级别不够，不记录
     }
-    
+
     const formatted = this.formatMessage(level, message, meta);
-    
+
     // 控制台输出
     if (this.config.colors && this.colors[level]) {
       console.log(this.colors[level](formatted));
     } else {
       console.log(formatted);
     }
-    
+
     // 文件输出
     if (this.currentLogFile) {
       await this.rotateLogIfNeeded();
-      await fs.appendFile(this.currentLogFile, formatted + '\n');
+      await fs.appendFile(this.currentLogFile, formatted + "\n");
     }
   }
 
@@ -156,7 +159,7 @@ class Logger {
    * @param {Object} meta - 元数据
    */
   async error(message, meta = {}) {
-    await this.log('error', message, meta);
+    await this.log("error", message, meta);
   }
 
   /**
@@ -165,7 +168,7 @@ class Logger {
    * @param {Object} meta - 元数据
    */
   async warn(message, meta = {}) {
-    await this.log('warn', message, meta);
+    await this.log("warn", message, meta);
   }
 
   /**
@@ -174,7 +177,7 @@ class Logger {
    * @param {Object} meta - 元数据
    */
   async info(message, meta = {}) {
-    await this.log('info', message, meta);
+    await this.log("info", message, meta);
   }
 
   /**
@@ -183,7 +186,7 @@ class Logger {
    * @param {Object} meta - 元数据
    */
   async debug(message, meta = {}) {
-    await this.log('debug', message, meta);
+    await this.log("debug", message, meta);
   }
 
   /**
@@ -192,7 +195,7 @@ class Logger {
    * @param {Object} meta - 元数据
    */
   async trace(message, meta = {}) {
-    await this.log('trace', message, meta);
+    await this.log("trace", message, meta);
   }
 
   /**
@@ -219,7 +222,7 @@ class Logger {
   child(options = {}) {
     return new Logger({
       ...this.config,
-      ...options
+      ...options,
     });
   }
 }

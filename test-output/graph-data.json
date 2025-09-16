@@ -1,63 +1,290 @@
 {
   "graph": {
-    "nodes": {},
-    "edges": [],
+    "nodes": {
+      "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/App.jsx": {
+        "id": "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/App.jsx",
+        "name": "App",
+        "propsDeclared": [],
+        "propsUsedInBody": [],
+        "unusedProps": [],
+        "inDegree": 0,
+        "outDegree": 2,
+        "dependencies": [
+          "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx",
+          "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Card.jsx"
+        ],
+        "dependents": [],
+        "relativePath": "App.jsx"
+      },
+      "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx": {
+        "id": "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx",
+        "name": "Button",
+        "propsDeclared": [
+          "children",
+          "variant",
+          "size",
+          "disabled",
+          "onClick",
+          "className",
+          "unusedProp"
+        ],
+        "propsUsedInBody": [
+          "children",
+          "variant",
+          "size",
+          "disabled",
+          "onClick",
+          "className",
+          "unusedProp"
+        ],
+        "unusedProps": [],
+        "inDegree": 2,
+        "outDegree": 0,
+        "dependencies": [],
+        "dependents": [
+          "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/App.jsx",
+          "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Card.jsx"
+        ],
+        "relativePath": "components/Button.jsx"
+      },
+      "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Card.jsx": {
+        "id": "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Card.jsx",
+        "name": "Card",
+        "propsDeclared": [
+          "title",
+          "content",
+          "imageUrl",
+          "actions",
+          "className"
+        ],
+        "propsUsedInBody": [
+          "title",
+          "content",
+          "imageUrl",
+          "actions",
+          "className"
+        ],
+        "unusedProps": [],
+        "inDegree": 1,
+        "outDegree": 1,
+        "dependencies": [
+          "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx"
+        ],
+        "dependents": [
+          "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/App.jsx"
+        ],
+        "relativePath": "components/Card.jsx"
+      },
+      "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx": {
+        "id": "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx",
+        "name": "OrphanComponent",
+        "propsDeclared": [
+          "message",
+          "type",
+          "onClose",
+          "unusedProp1",
+          "unusedProp2",
+          "unusedProp3"
+        ],
+        "propsUsedInBody": [
+          "message",
+          "type",
+          "onClose",
+          "unusedProp1",
+          "unusedProp2",
+          "unusedProp3"
+        ],
+        "unusedProps": [],
+        "inDegree": 0,
+        "outDegree": 0,
+        "dependencies": [],
+        "dependents": [],
+        "relativePath": "components/OrphanComponent.jsx"
+      }
+    },
+    "edges": [
+      {
+        "source": "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/App.jsx",
+        "target": "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx",
+        "metadata": {
+          "importSpecifiers": [
+            {
+              "type": "default",
+              "local": "Button"
+            }
+          ],
+          "source": "./components/Button",
+          "usage": {
+            "count": 4,
+            "props": {}
+          }
+        }
+      },
+      {
+        "source": "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/App.jsx",
+        "target": "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Card.jsx",
+        "metadata": {
+          "importSpecifiers": [
+            {
+              "type": "default",
+              "local": "Card"
+            }
+          ],
+          "source": "./components/Card",
+          "usage": {
+            "count": 1,
+            "props": {}
+          }
+        }
+      },
+      {
+        "source": "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Card.jsx",
+        "target": "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx",
+        "metadata": {
+          "importSpecifiers": [
+            {
+              "type": "default",
+              "local": "Button"
+            }
+          ],
+          "source": "./Button",
+          "usage": {
+            "count": 1,
+            "props": {}
+          }
+        }
+      }
+    ],
     "metadata": {
-      "nodeCount": 0,
-      "edgeCount": 0,
-      "density": 0,
+      "nodeCount": 4,
+      "edgeCount": 3,
+      "density": 0.25,
       "degreeDistribution": {
         "inDegree": {
           "min": 0,
-          "max": 0,
-          "mean": 0,
-          "median": 0,
-          "std": 0
+          "max": 2,
+          "mean": 0.75,
+          "median": 0.5,
+          "std": 0.82915619758885
         },
         "outDegree": {
           "min": 0,
-          "max": 0,
-          "mean": 0,
-          "median": 0,
-          "std": 0
+          "max": 2,
+          "mean": 0.75,
+          "median": 0.5,
+          "std": 0.82915619758885
         },
         "totalDegree": {
           "min": 0,
-          "max": 0,
-          "mean": 0,
-          "median": 0,
-          "std": 0
+          "max": 2,
+          "mean": 1.5,
+          "median": 2,
+          "std": 0.8660254037844386
         }
       },
-      "isolatedNodes": [],
-      "leafNodes": [],
-      "rootNodes": [],
-      "connectedComponents": 0,
-      "largestComponentSize": null
+      "isolatedNodes": [
+        "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx"
+      ],
+      "leafNodes": [
+        "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx"
+      ],
+      "rootNodes": [
+        "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/App.jsx"
+      ],
+      "connectedComponents": 2,
+      "largestComponentSize": 3
     }
   },
   "analysis": {
     "summary": {
-      "totalComponents": 0,
-      "totalDependencies": 0,
-      "orphanCount": 0,
+      "totalComponents": 4,
+      "totalDependencies": 3,
+      "orphanCount": 2,
       "unusedPropsCount": 0,
       "circularDependenciesCount": 0,
-      "deadCodeCount": 0,
-      "density": 0
+      "deadCodeCount": 1,
+      "density": 0.25
     },
-    "orphanComponents": [],
+    "orphanComponents": [
+      {
+        "id": "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/App.jsx",
+        "name": "App",
+        "outDegree": 2,
+        "reason": "entry_point"
+      },
+      {
+        "id": "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx",
+        "name": "OrphanComponent",
+        "outDegree": 0,
+        "reason": "isolated"
+      }
+    ],
     "unusedProps": [],
     "circularDependencies": [],
-    "componentComplexity": [],
+    "componentComplexity": [
+      {
+        "id": "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx",
+        "name": "Button",
+        "complexity": 6.5,
+        "inDegree": 2,
+        "outDegree": 0,
+        "propsCount": 7,
+        "category": "low"
+      },
+      {
+        "id": "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Card.jsx",
+        "name": "Card",
+        "complexity": 6,
+        "inDegree": 1,
+        "outDegree": 1,
+        "propsCount": 5,
+        "category": "low"
+      },
+      {
+        "id": "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/App.jsx",
+        "name": "App",
+        "complexity": 4,
+        "inDegree": 0,
+        "outDegree": 2,
+        "propsCount": 0,
+        "category": "very_low"
+      },
+      {
+        "id": "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx",
+        "name": "OrphanComponent",
+        "complexity": 3,
+        "inDegree": 0,
+        "outDegree": 0,
+        "propsCount": 6,
+        "category": "very_low"
+      }
+    ],
     "dependencyDepth": {
-      "averageDepth": null,
-      "maxDepth": null,
-      "deepestComponents": [],
-      "depthDistribution": {}
+      "averageDepth": 0.75,
+      "maxDepth": 2,
+      "deepestComponents": [
+        {
+          "id": "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/App.jsx",
+          "name": "App",
+          "depth": 2,
+          "outDegree": 2
+        }
+      ],
+      "depthDistribution": {
+        "0": 2,
+        "1": 1,
+        "2": 1
+      }
     },
     "hubComponents": [],
-    "deadCode": [],
+    "deadCode": [
+      {
+        "id": "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx",
+        "name": "OrphanComponent",
+        "reason": "isolated_component",
+        "confidence": 0.9
+      }
+    ],
     "couplingAnalysis": {
       "metrics": {
         "afferentCoupling": {},
@@ -66,19 +293,34 @@
         "abstractness": {}
       },
       "highCouplingComponents": [],
-      "averageCoupling": 0,
+      "averageCoupling": 1.5,
       "couplingDistribution": {
-        "low": 0,
+        "low": 4,
         "medium": 0,
         "high": 0,
         "very_high": 0
       }
     },
-    "recommendations": []
+    "recommendations": [
+      {
+        "type": "orphan_components",
+        "priority": "high",
+        "title": "移除孤立组件",
+        "description": "发现 1 个孤立组件，建议检查是否可以安全删除",
+        "components": [
+          {
+            "id": "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx",
+            "name": "OrphanComponent",
+            "outDegree": 0,
+            "reason": "isolated"
+          }
+        ]
+      }
+    ]
   },
   "metadata": {
-    "generatedAt": "2025-09-16T01:39:28.788Z",
-    "projectPath": "/Users/xiamuguizhi/前端依赖可视化/examples/react-demo/src",
+    "generatedAt": "2025-09-16T03:44:12.795Z",
+    "projectPath": "/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src",
     "framework": "react"
   }
 }

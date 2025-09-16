@@ -1,10 +1,10 @@
-const fs = require('fs-extra');
-const path = require('path');
-const parser = require('@babel/parser');
-const traverse = require('@babel/traverse').default;
-const t = require('@babel/types');
-const { parse: parseVue } = require('@vue/compiler-sfc');
-const FileScanner = require('./FileScanner');
+const fs = require("fs-extra");
+const path = require("path");
+const parser = require("@babel/parser");
+const traverse = require("@babel/traverse").default;
+const t = require("@babel/types");
+const { parse: parseVue } = require("@vue/compiler-sfc");
+const FileScanner = require("./FileScanner");
 
 /**
  * AST分析器
@@ -18,26 +18,26 @@ class ASTAnalyzer {
   constructor(config) {
     this.config = config;
     this.fileScanner = new FileScanner(config);
-    
+
     // Babel解析器配置
     this.babelOptions = {
-      sourceType: 'module',
+      sourceType: "module",
       allowImportExportEverywhere: true,
       allowReturnOutsideFunction: true,
       plugins: [
-        'jsx',
-        'typescript',
-        'decorators-legacy',
-        'classProperties',
-        'objectRestSpread',
-        'asyncGenerators',
-        'functionBind',
-        'exportDefaultFrom',
-        'exportNamespaceFrom',
-        'dynamicImport',
-        'nullishCoalescingOperator',
-        'optionalChaining'
-      ]
+        "jsx",
+        "typescript",
+        "decorators-legacy",
+        "classProperties",
+        "objectRestSpread",
+        "asyncGenerators",
+        "functionBind",
+        "exportDefaultFrom",
+        "exportNamespaceFrom",
+        "dynamicImport",
+        "nullishCoalescingOperator",
+        "optionalChaining",
+      ],
     };
   }
 
@@ -48,9 +48,9 @@ class ASTAnalyzer {
    */
   async analyzeFile(filePath) {
     const ext = path.extname(filePath);
-    
+
     try {
-      if (ext === '.vue') {
+      if (ext === ".vue") {
         return await this.analyzeVueFile(filePath);
       } else {
         return await this.analyzeJSFile(filePath);
@@ -66,9 +66,9 @@ class ASTAnalyzer {
    * @returns {Object|null} 分析结果
    */
   async analyzeVueFile(filePath) {
-    const content = await fs.readFile(filePath, 'utf-8');
+    const content = await fs.readFile(filePath, "utf-8");
     const { descriptor } = parseVue(content, { filename: filePath });
-    
+
     const result = {
       filePath,
       componentName: this.extractComponentName(filePath),
@@ -76,14 +76,18 @@ class ASTAnalyzer {
       exports: [],
       propsDeclared: new Set(),
       propsUsedInBody: new Set(),
-      isComponent: true
+      isComponent: true,
     };
 
     // 分析script部分
     if (descriptor.script || descriptor.scriptSetup) {
-      const scriptContent = descriptor.script?.content || descriptor.scriptSetup?.content || '';
-      const scriptResult = await this.analyzeScriptContent(scriptContent, filePath);
-      
+      const scriptContent =
+        descriptor.script?.content || descriptor.scriptSetup?.content || "";
+      const scriptResult = await this.analyzeScriptContent(
+        scriptContent,
+        filePath
+      );
+
       if (scriptResult) {
         result.dependencies = scriptResult.dependencies;
         result.exports = scriptResult.exports;
@@ -94,7 +98,10 @@ class ASTAnalyzer {
 
     // 分析template部分
     if (descriptor.template) {
-      const templateDeps = this.analyzeVueTemplate(descriptor.template.content, result.dependencies);
+      const templateDeps = this.analyzeVueTemplate(
+        descriptor.template.content,
+        result.dependencies
+      );
       templateDeps.forEach((dep, key) => {
         result.dependencies.set(key, dep);
       });
@@ -109,7 +116,7 @@ class ASTAnalyzer {
    * @returns {Object|null} 分析结果
    */
   async analyzeJSFile(filePath) {
-    const content = await fs.readFile(filePath, 'utf-8');
+    const content = await fs.readFile(filePath, "utf-8");
     return await this.analyzeScriptContent(content, filePath);
   }
 
@@ -138,7 +145,7 @@ class ASTAnalyzer {
       exports: [],
       propsDeclared: new Set(),
       propsUsedInBody: new Set(),
-      isComponent: false
+      isComponent: false,
     };
 
     // 遍历AST
@@ -147,44 +154,44 @@ class ASTAnalyzer {
       ImportDeclaration: (path) => {
         this.handleImportDeclaration(path, result, filePath);
       },
-      
+
       // 处理导出声明
       ExportDefaultDeclaration: (path) => {
         this.handleExportDeclaration(path, result);
       },
-      
+
       ExportNamedDeclaration: (path) => {
         this.handleExportDeclaration(path, result);
       },
-      
+
       // 处理JSX元素
       JSXOpeningElement: (path) => {
         this.handleJSXElement(path, result);
       },
-      
+
       // 处理函数组件
       FunctionDeclaration: (path) => {
         this.handleFunctionComponent(path, result);
       },
-      
+
       ArrowFunctionExpression: (path) => {
         this.handleArrowFunctionComponent(path, result);
       },
-      
+
       // 处理类组件
       ClassDeclaration: (path) => {
         this.handleClassComponent(path, result);
       },
-      
+
       // 处理Props使用
       MemberExpression: (path) => {
         this.handlePropsUsage(path, result);
       },
-      
+
       // 处理对象解构
       ObjectPattern: (path) => {
         this.handleObjectDestructuring(path, result);
-      }
+      },
     });
 
     // 如果没有导出任何组件，返回null
@@ -203,28 +210,33 @@ class ASTAnalyzer {
    */
   handleImportDeclaration(path, result, currentFile) {
     const source = path.node.source.value;
-    const resolvedPath = this.fileScanner.resolveImportPath(source, currentFile);
-    
+    const resolvedPath = this.fileScanner.resolveImportPath(
+      source,
+      currentFile
+    );
+
     if (resolvedPath && this.fileScanner.isInProjectScope(resolvedPath)) {
-      const specifiers = path.node.specifiers.map(spec => {
-        if (t.isImportDefaultSpecifier(spec)) {
-          return { type: 'default', local: spec.local.name };
-        } else if (t.isImportSpecifier(spec)) {
-          return { 
-            type: 'named', 
-            imported: spec.imported.name, 
-            local: spec.local.name 
-          };
-        } else if (t.isImportNamespaceSpecifier(spec)) {
-          return { type: 'namespace', local: spec.local.name };
-        }
-        return null;
-      }).filter(Boolean);
-      
+      const specifiers = path.node.specifiers
+        .map((spec) => {
+          if (t.isImportDefaultSpecifier(spec)) {
+            return { type: "default", local: spec.local.name };
+          } else if (t.isImportSpecifier(spec)) {
+            return {
+              type: "named",
+              imported: spec.imported.name,
+              local: spec.local.name,
+            };
+          } else if (t.isImportNamespaceSpecifier(spec)) {
+            return { type: "namespace", local: spec.local.name };
+          }
+          return null;
+        })
+        .filter(Boolean);
+
       result.dependencies.set(resolvedPath, {
         source,
         resolvedPath,
-        specifiers
+        specifiers,
       });
     }
   }
@@ -237,8 +249,8 @@ class ASTAnalyzer {
   handleExportDeclaration(path, result) {
     if (t.isExportDefaultDeclaration(path.node)) {
       result.exports.push({
-        type: 'default',
-        name: this.extractExportName(path.node.declaration)
+        type: "default",
+        name: this.extractExportName(path.node.declaration),
       });
       result.isComponent = this.isComponentDeclaration(path.node.declaration);
     } else if (t.isExportNamedDeclaration(path.node)) {
@@ -246,10 +258,12 @@ class ASTAnalyzer {
         const name = this.extractExportName(path.node.declaration);
         if (name) {
           result.exports.push({
-            type: 'named',
-            name
+            type: "named",
+            name,
           });
-          result.isComponent = this.isComponentDeclaration(path.node.declaration);
+          result.isComponent = this.isComponentDeclaration(
+            path.node.declaration
+          );
         }
       }
     }
@@ -262,31 +276,34 @@ class ASTAnalyzer {
    */
   handleJSXElement(path, result) {
     const elementName = path.node.name.name;
-    
+
     // 只处理自定义组件（首字母大写）
     if (elementName && /^[A-Z]/.test(elementName)) {
       // 查找对应的导入
       for (const [depPath, dep] of result.dependencies) {
-        const matchingSpecifier = dep.specifiers.find(spec => 
-          spec.local === elementName || spec.imported === elementName
+        const matchingSpecifier = dep.specifiers.find(
+          (spec) => spec.local === elementName || spec.imported === elementName
         );
-        
+
         if (matchingSpecifier) {
           // 记录组件使用
           if (!result.componentUsages) {
             result.componentUsages = new Map();
           }
-          
-          const usage = result.componentUsages.get(depPath) || { count: 0, props: new Set() };
+
+          const usage = result.componentUsages.get(depPath) || {
+            count: 0,
+            props: new Set(),
+          };
           usage.count++;
-          
+
           // 记录传递的props
-          path.node.attributes.forEach(attr => {
+          path.node.attributes.forEach((attr) => {
             if (t.isJSXAttribute(attr) && attr.name) {
               usage.props.add(attr.name.name);
             }
           });
-          
+
           result.componentUsages.set(depPath, usage);
           break;
         }
@@ -337,9 +354,12 @@ class ASTAnalyzer {
    */
   handlePropsUsage(path, result) {
     const node = path.node;
-    
+
     // 检查 props.xxx 模式
-    if (t.isIdentifier(node.object, { name: 'props' }) && t.isIdentifier(node.property)) {
+    if (
+      t.isIdentifier(node.object, { name: "props" }) &&
+      t.isIdentifier(node.property)
+    ) {
       result.propsUsedInBody.add(node.property.name);
     }
   }
@@ -352,10 +372,11 @@ class ASTAnalyzer {
   handleObjectDestructuring(path, result) {
     // 检查是否是从props解构
     const parent = path.parent;
-    if (t.isVariableDeclarator(parent) && 
-        t.isIdentifier(parent.init, { name: 'props' })) {
-      
-      path.node.properties.forEach(prop => {
+    if (
+      t.isVariableDeclarator(parent) &&
+      t.isIdentifier(parent.init, { name: "props" })
+    ) {
+      path.node.properties.forEach((prop) => {
         if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
           result.propsUsedInBody.add(prop.key.name);
         }
@@ -371,27 +392,28 @@ class ASTAnalyzer {
    */
   analyzeVueTemplate(template, existingDeps) {
     const templateDeps = new Map();
-    
+
     // 简单的正则匹配自定义组件
     const componentRegex = /<([A-Z][a-zA-Z0-9]*)/g;
     let match;
-    
+
     while ((match = componentRegex.exec(template)) !== null) {
       const componentName = match[1];
-      
+
       // 查找对应的导入
       for (const [depPath, dep] of existingDeps) {
-        const matchingSpecifier = dep.specifiers.find(spec => 
-          spec.local === componentName || spec.imported === componentName
+        const matchingSpecifier = dep.specifiers.find(
+          (spec) =>
+            spec.local === componentName || spec.imported === componentName
         );
-        
+
         if (matchingSpecifier) {
           templateDeps.set(depPath, dep);
           break;
         }
       }
     }
-    
+
     return templateDeps;
   }
 
@@ -402,9 +424,9 @@ class ASTAnalyzer {
    */
   extractComponentName(filePath) {
     const basename = path.basename(filePath, path.extname(filePath));
-    return basename === 'index' ? 
-      path.basename(path.dirname(filePath)) : 
-      basename;
+    return basename === "index"
+      ? path.basename(path.dirname(filePath))
+      : basename;
   }
 
   /**
@@ -415,7 +437,10 @@ class ASTAnalyzer {
   extractExportName(declaration) {
     if (t.isIdentifier(declaration)) {
       return declaration.name;
-    } else if (t.isFunctionDeclaration(declaration) || t.isClassDeclaration(declaration)) {
+    } else if (
+      t.isFunctionDeclaration(declaration) ||
+      t.isClassDeclaration(declaration)
+    ) {
       return declaration.id ? declaration.id.name : null;
     } else if (t.isVariableDeclaration(declaration)) {
       const declarator = declaration.declarations[0];
@@ -437,7 +462,10 @@ class ASTAnalyzer {
     } else if (t.isClassDeclaration(declaration)) {
       return this.isClassComponent(declaration);
     } else if (t.isArrowFunctionExpression(declaration)) {
-      return true; // 假设箭头函数导出都是组件
+      return this.hasJSXReturn(declaration);
+    } else if (t.isIdentifier(declaration)) {
+      // 对于标识符导出（如 export default App），检查是否已经标记为组件
+      return declaration.name && /^[A-Z]/.test(declaration.name);
     }
     return false;
   }
@@ -448,8 +476,13 @@ class ASTAnalyzer {
    * @returns {boolean} 是否为函数组件
    */
   isFunctionComponent(node) {
-    // 简单判断：函数名首字母大写或有JSX返回
-    return node.id && /^[A-Z]/.test(node.id.name);
+    // 检查函数名首字母大写
+    if (!node.id || !/^[A-Z]/.test(node.id.name)) {
+      return false;
+    }
+
+    // 检查是否有JSX返回
+    return this.hasJSXReturn(node);
   }
 
   /**
@@ -461,7 +494,11 @@ class ASTAnalyzer {
     // 检查是否在变量声明中且变量名首字母大写
     const parent = path.parent;
     if (t.isVariableDeclarator(parent) && t.isIdentifier(parent.id)) {
-      return /^[A-Z]/.test(parent.id.name);
+      if (!/^[A-Z]/.test(parent.id.name)) {
+        return false;
+      }
+      // 检查是否有JSX返回
+      return this.hasJSXReturn(path.node);
     }
     return false;
   }
@@ -474,15 +511,48 @@ class ASTAnalyzer {
   isClassComponent(node) {
     // 检查是否继承自React.Component或Component
     if (node.superClass) {
-      if (t.isIdentifier(node.superClass, { name: 'Component' })) {
+      if (t.isIdentifier(node.superClass, { name: "Component" })) {
         return true;
       }
-      if (t.isMemberExpression(node.superClass) &&
-          t.isIdentifier(node.superClass.object, { name: 'React' }) &&
-          t.isIdentifier(node.superClass.property, { name: 'Component' })) {
+      if (
+        t.isMemberExpression(node.superClass) &&
+        t.isIdentifier(node.superClass.object, { name: "React" }) &&
+        t.isIdentifier(node.superClass.property, { name: "Component" })
+      ) {
         return true;
       }
     }
+    return false;
+  }
+
+  /**
+   * 检查函数是否返回JSX
+   * @param {Object} node - 函数节点
+   * @returns {boolean} 是否返回JSX
+   */
+  hasJSXReturn(node) {
+    // 对于箭头函数的表达式体
+    if (
+      t.isArrowFunctionExpression(node) &&
+      (t.isJSXElement(node.body) || t.isJSXFragment(node.body))
+    ) {
+      return true;
+    }
+
+    // 简单检查函数体是否包含JSX
+    if (node.body && node.body.body) {
+      for (const statement of node.body.body) {
+        if (t.isReturnStatement(statement) && statement.argument) {
+          if (
+            t.isJSXElement(statement.argument) ||
+            t.isJSXFragment(statement.argument)
+          ) {
+            return true;
+          }
+        }
+      }
+    }
+
     return false;
   }
 
@@ -495,10 +565,10 @@ class ASTAnalyzer {
     const params = path.node.params;
     if (params.length > 0) {
       const propsParam = params[0];
-      
+
       if (t.isObjectPattern(propsParam)) {
         // 解构参数
-        propsParam.properties.forEach(prop => {
+        propsParam.properties.forEach((prop) => {
           if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
             result.propsDeclared.add(prop.key.name);
             result.propsUsedInBody.add(prop.key.name);
@@ -518,14 +588,15 @@ class ASTAnalyzer {
    */
   extractPropsFromClass(path, result) {
     // 查找propTypes静态属性
-    const propTypesProperty = path.node.body.body.find(member => 
-      t.isClassProperty(member) && 
-      t.isIdentifier(member.key, { name: 'propTypes' }) &&
-      member.static
+    const propTypesProperty = path.node.body.body.find(
+      (member) =>
+        t.isClassProperty(member) &&
+        t.isIdentifier(member.key, { name: "propTypes" }) &&
+        member.static
     );
-    
+
     if (propTypesProperty && t.isObjectExpression(propTypesProperty.value)) {
-      propTypesProperty.value.properties.forEach(prop => {
+      propTypesProperty.value.properties.forEach((prop) => {
         if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
           result.propsDeclared.add(prop.key.name);
         }

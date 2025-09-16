@@ -365,7 +365,7 @@
             <div class="project-info">
                 <span>项目: src</span>
                 <span>框架: react</span>
-                <span>生成时间: 2025/9/16 09:39:28</span>
+                <span>生成时间: 2025/9/16 11:44:12</span>
             </div>
         </header>
         
@@ -376,15 +376,15 @@
                     <div class="stats">
                         <div class="stat-item">
                             <span class="stat-label">组件总数:</span>
-                            <span class="stat-value">0</span>
+                            <span class="stat-value">4</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-label">依赖关系:</span>
-                            <span class="stat-value">0</span>
+                            <span class="stat-value">3</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-label">孤岛组件:</span>
-                            <span class="stat-value warning">0</span>
+                            <span class="stat-value warning">2</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-label">未使用Props:</span>
@@ -396,7 +396,7 @@
                         </div>
                         <div class="stat-item">
                             <span class="stat-label">图密度:</span>
-                            <span class="stat-value">0.00%</span>
+                            <span class="stat-value">25.00%</span>
                         </div>
                     </div>
                 </div>
@@ -404,7 +404,12 @@
                 <div class="panel">
                     <h3>🎯 优化建议</h3>
                     <div class="recommendations">
-                        <p class="no-recommendations">🎉 暂无优化建议，代码结构良好！</p>
+                        
+        <div class="recommendation priority-high">
+          <div class="rec-title">移除孤立组件</div>
+          <div class="rec-description">发现 1 个孤立组件，建议检查是否可以安全删除</div>
+        </div>
+      
                     </div>
                 </div>
                 
@@ -470,8 +475,8 @@
     
     <script>
         // 数据注入
-        const graphData = {"nodes":[],"links":[]};
-        const analysisData = {"summary":{"totalComponents":0,"totalDependencies":0,"orphanCount":0,"unusedPropsCount":0,"circularDependenciesCount":0,"deadCodeCount":0,"density":0},"orphanComponents":[],"unusedProps":[],"circularDependencies":[],"componentComplexity":[],"dependencyDepth":{"averageDepth":null,"maxDepth":null,"deepestComponents":[],"depthDistribution":{}},"hubComponents":[],"deadCode":[],"couplingAnalysis":{"metrics":{"afferentCoupling":{},"efferentCoupling":{},"instability":{},"abstractness":{}},"highCouplingComponents":[],"averageCoupling":0,"couplingDistribution":{"low":0,"medium":0,"high":0,"very_high":0}},"recommendations":[]};
+        const graphData = {"nodes":[{"id":"/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/App.jsx","name":"App","group":0,"inDegree":0,"outDegree":2,"totalDegree":2,"unusedProps":[],"propsDeclared":[],"propsUsedInBody":[],"relativePath":"App.jsx"},{"id":"/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx","name":"Button","group":0,"inDegree":2,"outDegree":0,"totalDegree":2,"unusedProps":[],"propsDeclared":["children","variant","size","disabled","onClick","className","unusedProp"],"propsUsedInBody":["children","variant","size","disabled","onClick","className","unusedProp"],"relativePath":"components/Button.jsx"},{"id":"/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Card.jsx","name":"Card","group":0,"inDegree":1,"outDegree":1,"totalDegree":2,"unusedProps":[],"propsDeclared":["title","content","imageUrl","actions","className"],"propsUsedInBody":["title","content","imageUrl","actions","className"],"relativePath":"components/Card.jsx"},{"id":"/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx","name":"OrphanComponent","group":1,"inDegree":0,"outDegree":0,"totalDegree":0,"unusedProps":[],"propsDeclared":["message","type","onClose","unusedProp1","unusedProp2","unusedProp3"],"propsUsedInBody":["message","type","onClose","unusedProp1","unusedProp2","unusedProp3"],"relativePath":"components/OrphanComponent.jsx"}],"links":[{"source":"/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/App.jsx","target":"/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx","value":4},{"source":"/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/App.jsx","target":"/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Card.jsx","value":1},{"source":"/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Card.jsx","target":"/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx","value":1}]};
+        const analysisData = {"summary":{"totalComponents":4,"totalDependencies":3,"orphanCount":2,"unusedPropsCount":0,"circularDependenciesCount":0,"deadCodeCount":1,"density":0.25},"orphanComponents":[{"id":"/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/App.jsx","name":"App","outDegree":2,"reason":"entry_point"},{"id":"/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx","name":"OrphanComponent","outDegree":0,"reason":"isolated"}],"unusedProps":[],"circularDependencies":[],"componentComplexity":[{"id":"/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx","name":"Button","complexity":6.5,"inDegree":2,"outDegree":0,"propsCount":7,"category":"low"},{"id":"/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/Card.jsx","name":"Card","complexity":6,"inDegree":1,"outDegree":1,"propsCount":5,"category":"low"},{"id":"/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/App.jsx","name":"App","complexity":4,"inDegree":0,"outDegree":2,"propsCount":0,"category":"very_low"},{"id":"/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx","name":"OrphanComponent","complexity":3,"inDegree":0,"outDegree":0,"propsCount":6,"category":"very_low"}],"dependencyDepth":{"averageDepth":0.75,"maxDepth":2,"deepestComponents":[{"id":"/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/App.jsx","name":"App","depth":2,"outDegree":2}],"depthDistribution":{"0":2,"1":1,"2":1}},"hubComponents":[],"deadCode":[{"id":"/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx","name":"OrphanComponent","reason":"isolated_component","confidence":0.9}],"couplingAnalysis":{"metrics":{"afferentCoupling":{},"efferentCoupling":{},"instability":{},"abstractness":{}},"highCouplingComponents":[],"averageCoupling":1.5,"couplingDistribution":{"low":4,"medium":0,"high":0,"very_high":0}},"recommendations":[{"type":"orphan_components","priority":"high","title":"移除孤立组件","description":"发现 1 个孤立组件，建议检查是否可以安全删除","components":[{"id":"/Users/xiamuguizhi/code/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx","name":"OrphanComponent","outDegree":0,"reason":"isolated"}]}]};
         
         
         // 全局变量

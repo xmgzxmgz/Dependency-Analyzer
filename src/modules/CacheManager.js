@@ -1,6 +1,6 @@
-const fs = require('fs-extra');
-const path = require('path');
-const crypto = require('crypto');
+const fs = require("fs-extra");
+const path = require("path");
+const crypto = require("crypto");
 
 /**
  * 缓存管理器
@@ -11,11 +11,11 @@ class CacheManager {
     this.config = {
       enabled: config.enabled !== false,
       ttl: config.ttl || 3600000, // 1小时
-      directory: config.directory || '.dep-analyzer-cache',
+      directory: config.directory || ".dep-analyzer-cache",
       maxMemoryItems: config.maxMemoryItems || 1000,
-      ...config
+      ...config,
     };
-    
+
     this.memoryCache = new Map();
     this.cacheDir = null;
     this.initialized = false;
@@ -29,13 +29,13 @@ class CacheManager {
     if (!this.config.enabled || this.initialized) {
       return;
     }
-    
+
     this.cacheDir = path.join(projectPath, this.config.directory);
     await fs.ensureDir(this.cacheDir);
-    
+
     // 清理过期缓存
     await this.cleanExpiredCache();
-    
+
     this.initialized = true;
   }
 
@@ -46,10 +46,10 @@ class CacheManager {
    * @returns {string} 缓存键
    */
   generateCacheKey(key, data = {}) {
-    const hash = crypto.createHash('md5');
+    const hash = crypto.createHash("md5");
     hash.update(key);
     hash.update(JSON.stringify(data));
-    return hash.digest('hex');
+    return hash.digest("hex");
   }
 
   /**
@@ -76,13 +76,13 @@ class CacheManager {
     if (!cacheData || !cacheData.timestamp) {
       return false;
     }
-    
+
     // 检查TTL
     const now = Date.now();
     if (now - cacheData.timestamp > this.config.ttl) {
       return false;
     }
-    
+
     // 检查文件修改时间
     if (filePath) {
       const fileModTime = await this.getFileModTime(filePath);
@@ -90,7 +90,7 @@ class CacheManager {
         return false;
       }
     }
-    
+
     return true;
   }
 
@@ -104,13 +104,13 @@ class CacheManager {
     if (!item) {
       return null;
     }
-    
+
     // 检查过期
     if (Date.now() - item.timestamp > this.config.ttl) {
       this.memoryCache.delete(key);
       return null;
     }
-    
+
     return item.data;
   }
 
@@ -126,10 +126,10 @@ class CacheManager {
       const firstKey = this.memoryCache.keys().next().value;
       this.memoryCache.delete(firstKey);
     }
-    
+
     this.memoryCache.set(key, {
       data,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
   }
 
@@ -143,16 +143,16 @@ class CacheManager {
     if (!this.initialized) {
       return null;
     }
-    
+
     const cacheFile = path.join(this.cacheDir, `${key}.json`);
-    
+
     try {
-      if (!await fs.pathExists(cacheFile)) {
+      if (!(await fs.pathExists(cacheFile))) {
         return null;
       }
-      
+
       const cacheData = await fs.readJson(cacheFile);
-      
+
       if (await this.isCacheValid(cacheData, filePath)) {
         return cacheData.data;
       } else {
@@ -177,16 +177,16 @@ class CacheManager {
     if (!this.initialized) {
       return;
     }
-    
+
     const cacheFile = path.join(this.cacheDir, `${key}.json`);
     const fileModTime = filePath ? await this.getFileModTime(filePath) : 0;
-    
+
     const cacheData = {
       data,
       timestamp: Date.now(),
-      fileModTime
+      fileModTime,
     };
-    
+
     try {
       await fs.writeJson(cacheFile, cacheData);
     } catch (error) {
@@ -204,15 +204,15 @@ class CacheManager {
     if (!this.config.enabled) {
       return null;
     }
-    
+
     const cacheKey = this.generateCacheKey(key, { filePath });
-    
+
     // 先尝试内存缓存
     let data = this.getFromMemory(cacheKey);
     if (data !== null) {
       return data;
     }
-    
+
     // 再尝试文件缓存
     data = await this.getFromFile(cacheKey, filePath);
     if (data !== null) {
@@ -220,7 +220,7 @@ class CacheManager {
       this.setToMemory(cacheKey, data);
       return data;
     }
-    
+
     return null;
   }
 
@@ -234,12 +234,12 @@ class CacheManager {
     if (!this.config.enabled) {
       return;
     }
-    
+
     const cacheKey = this.generateCacheKey(key, { filePath });
-    
+
     // 存储到内存缓存
     this.setToMemory(cacheKey, data);
-    
+
     // 存储到文件缓存
     await this.setToFile(cacheKey, data, filePath);
   }
@@ -250,10 +250,10 @@ class CacheManager {
    */
   async delete(key) {
     const cacheKey = this.generateCacheKey(key);
-    
+
     // 从内存缓存删除
     this.memoryCache.delete(cacheKey);
-    
+
     // 从文件缓存删除
     if (this.initialized) {
       const cacheFile = path.join(this.cacheDir, `${cacheKey}.json`);
@@ -268,22 +268,25 @@ class CacheManager {
     if (!this.initialized) {
       return;
     }
-    
+
     try {
       const files = await fs.readdir(this.cacheDir);
       const now = Date.now();
-      
+
       for (const file of files) {
-        if (!file.endsWith('.json')) {
+        if (!file.endsWith(".json")) {
           continue;
         }
-        
+
         const filePath = path.join(this.cacheDir, file);
-        
+
         try {
           const cacheData = await fs.readJson(filePath);
-          
-          if (!cacheData.timestamp || now - cacheData.timestamp > this.config.ttl) {
+
+          if (
+            !cacheData.timestamp ||
+            now - cacheData.timestamp > this.config.ttl
+          ) {
             await fs.remove(filePath);
           }
         } catch (error) {
@@ -302,7 +305,7 @@ class CacheManager {
   async clear() {
     // 清空内存缓存
     this.memoryCache.clear();
-    
+
     // 清空文件缓存
     if (this.initialized) {
       await fs.emptyDir(this.cacheDir).catch(() => {});
@@ -317,14 +320,14 @@ class CacheManager {
     const stats = {
       memoryItems: this.memoryCache.size,
       fileItems: 0,
-      totalSize: 0
+      totalSize: 0,
     };
-    
+
     if (this.initialized) {
       try {
         const files = await fs.readdir(this.cacheDir);
-        stats.fileItems = files.filter(f => f.endsWith('.json')).length;
-        
+        stats.fileItems = files.filter((f) => f.endsWith(".json")).length;
+
         for (const file of files) {
           const filePath = path.join(this.cacheDir, file);
           const stat = await fs.stat(filePath);
@@ -334,7 +337,7 @@ class CacheManager {
         // 忽略统计错误
       }
     }
-    
+
     return stats;
   }
 }

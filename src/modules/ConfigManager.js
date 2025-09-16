@@ -1,5 +1,5 @@
-const fs = require('fs-extra');
-const path = require('path');
+const fs = require("fs-extra");
+const path = require("path");
 
 /**
  * 配置管理器
@@ -9,9 +9,9 @@ class ConfigManager {
   constructor() {
     this.config = {};
     this.configPaths = [
-      '.dep-analyzer.json',
-      '.dep-analyzer.js',
-      'dep-analyzer.config.js'
+      ".dep-analyzer.json",
+      ".dep-analyzer.js",
+      "dep-analyzer.config.js",
     ];
   }
 
@@ -29,7 +29,7 @@ class ConfigManager {
       const fullPath = path.join(projectPath, configPath);
       if (await fs.pathExists(fullPath)) {
         try {
-          if (configPath.endsWith('.json')) {
+          if (configPath.endsWith(".json")) {
             userConfig = await fs.readJson(fullPath);
           } else {
             delete require.cache[require.resolve(fullPath)];
@@ -44,11 +44,11 @@ class ConfigManager {
 
     // 合并环境变量配置
     const envConfig = this.loadEnvConfig();
-    
+
     this.config = {
       ...defaultConfig,
       ...userConfig,
-      ...envConfig
+      ...envConfig,
     };
 
     return this.config;
@@ -65,51 +65,51 @@ class ConfigManager {
         maxFileSize: 1024 * 1024, // 1MB
         timeout: 30000, // 30秒
         parallel: true,
-        maxConcurrency: 4
+        maxConcurrency: 4,
       },
-      
+
       // 缓存配置
       cache: {
         enabled: true,
         ttl: 3600000, // 1小时
-        directory: '.dep-analyzer-cache'
+        directory: ".dep-analyzer-cache",
       },
-      
+
       // 日志配置
       logging: {
-        level: 'info',
-        file: 'dep-analyzer.log',
+        level: "info",
+        file: "dep-analyzer.log",
         maxSize: 10 * 1024 * 1024, // 10MB
-        maxFiles: 5
+        maxFiles: 5,
       },
-      
+
       // 输出配置
       output: {
-        format: 'html',
-        template: 'default',
-        includeSourceMaps: false
+        format: "html",
+        template: "default",
+        includeSourceMaps: false,
       },
-      
+
       // 排除模式
       exclude: [
-        '**/node_modules/**',
-        '**/*.test.*',
-        '**/*.spec.*',
-        '**/dist/**',
-        '**/build/**'
+        "**/node_modules/**",
+        "**/*.test.*",
+        "**/*.spec.*",
+        "**/dist/**",
+        "**/build/**",
       ],
-      
+
       // 框架特定配置
       frameworks: {
         react: {
-          extensions: ['.js', '.jsx', '.ts', '.tsx'],
-          componentPatterns: ['**/*Component.*', '**/components/**/*']
+          extensions: [".js", ".jsx", ".ts", ".tsx"],
+          componentPatterns: ["**/*Component.*", "**/components/**/*"],
         },
         vue: {
-          extensions: ['.vue', '.js', '.ts'],
-          componentPatterns: ['**/*.vue', '**/components/**/*']
-        }
-      }
+          extensions: [".vue", ".js", ".ts"],
+          componentPatterns: ["**/*.vue", "**/components/**/*"],
+        },
+      },
     };
   }
 
@@ -119,21 +119,21 @@ class ConfigManager {
    */
   loadEnvConfig() {
     const envConfig = {};
-    
+
     if (process.env.DEP_ANALYZER_LOG_LEVEL) {
       envConfig.logging = { level: process.env.DEP_ANALYZER_LOG_LEVEL };
     }
-    
+
     if (process.env.DEP_ANALYZER_CACHE_DISABLED) {
       envConfig.cache = { enabled: false };
     }
-    
+
     if (process.env.DEP_ANALYZER_MAX_CONCURRENCY) {
-      envConfig.analysis = { 
-        maxConcurrency: parseInt(process.env.DEP_ANALYZER_MAX_CONCURRENCY) 
+      envConfig.analysis = {
+        maxConcurrency: parseInt(process.env.DEP_ANALYZER_MAX_CONCURRENCY),
       };
     }
-    
+
     return envConfig;
   }
 
@@ -143,23 +143,26 @@ class ConfigManager {
    * @returns {boolean} 是否有效
    */
   validateConfig(config) {
-    const required = ['analysis', 'cache', 'logging', 'output'];
-    
+    const required = ["analysis", "cache", "logging", "output"];
+
     for (const key of required) {
       if (!config[key]) {
         throw new Error(`缺少必需的配置项: ${key}`);
       }
     }
-    
+
     // 验证数值范围
-    if (config.analysis.maxConcurrency < 1 || config.analysis.maxConcurrency > 16) {
-      throw new Error('maxConcurrency 必须在 1-16 之间');
+    if (
+      config.analysis.maxConcurrency < 1 ||
+      config.analysis.maxConcurrency > 16
+    ) {
+      throw new Error("maxConcurrency 必须在 1-16 之间");
     }
-    
+
     if (config.cache.ttl < 0) {
-      throw new Error('缓存TTL不能为负数');
+      throw new Error("缓存TTL不能为负数");
     }
-    
+
     return true;
   }
 
@@ -170,17 +173,17 @@ class ConfigManager {
    * @returns {*} 配置值
    */
   get(key, defaultValue = null) {
-    const keys = key.split('.');
+    const keys = key.split(".");
     let value = this.config;
-    
+
     for (const k of keys) {
-      if (value && typeof value === 'object' && k in value) {
+      if (value && typeof value === "object" && k in value) {
         value = value[k];
       } else {
         return defaultValue;
       }
     }
-    
+
     return value;
   }
 
@@ -190,17 +193,17 @@ class ConfigManager {
    * @param {*} value - 配置值
    */
   set(key, value) {
-    const keys = key.split('.');
+    const keys = key.split(".");
     let target = this.config;
-    
+
     for (let i = 0; i < keys.length - 1; i++) {
       const k = keys[i];
-      if (!target[k] || typeof target[k] !== 'object') {
+      if (!target[k] || typeof target[k] !== "object") {
         target[k] = {};
       }
       target = target[k];
     }
-    
+
     target[keys[keys.length - 1]] = value;
   }
 }

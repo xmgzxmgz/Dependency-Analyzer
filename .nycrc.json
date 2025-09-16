@@ -1,19 +1,7 @@
 {
-  "include": [
-    "src/**/*.js",
-    "bin/**/*.js"
-  ],
-  "exclude": [
-    "tests/**/*.js",
-    "node_modules/**",
-    "coverage/**"
-  ],
-  "reporter": [
-    "text",
-    "html",
-    "lcov",
-    "json"
-  ],
+  "include": ["src/**/*.js", "bin/**/*.js"],
+  "exclude": ["tests/**/*.js", "node_modules/**", "coverage/**"],
+  "reporter": ["text", "html", "lcov", "json"],
   "report-dir": "coverage",
   "temp-dir": ".nyc_output",
   "check-coverage": true,

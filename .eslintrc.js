@@ -4,38 +4,31 @@ module.exports = {
     commonjs: true,
     es2021: true,
     node: true,
-    mocha: true
+    mocha: true,
   },
-  extends: [
-    'eslint:recommended'
-  ],
+  extends: ["eslint:recommended"],
   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module'
+    ecmaVersion: "latest",
+    sourceType: "module",
   },
   rules: {
-    'indent': ['error', 2],
-    'linebreak-style': ['error', 'unix'],
-    'quotes': ['error', 'single'],
-    'semi': ['error', 'always'],
-    'no-unused-vars': ['warn'],
-    'no-console': ['warn'],
-    'no-debugger': ['error'],
-    'no-trailing-spaces': ['error'],
-    'eol-last': ['error', 'always'],
-    'comma-dangle': ['error', 'never'],
-    'object-curly-spacing': ['error', 'always'],
-    'array-bracket-spacing': ['error', 'never'],
-    'space-before-function-paren': ['error', 'never'],
-    'keyword-spacing': ['error', { 'before': true, 'after': true }],
-    'space-infix-ops': ['error'],
-    'no-multiple-empty-lines': ['error', { 'max': 2 }],
-    'max-len': ['warn', { 'code': 100 }]
+    indent: ["error", 2],
+    "linebreak-style": ["error", "unix"],
+    quotes: ["error", "single"],
+    semi: ["error", "always"],
+    "no-unused-vars": ["warn"],
+    "no-console": ["warn"],
+    "no-debugger": ["error"],
+    "no-trailing-spaces": ["error"],
+    "eol-last": ["error", "always"],
+    "comma-dangle": ["error", "never"],
+    "object-curly-spacing": ["error", "always"],
+    "array-bracket-spacing": ["error", "never"],
+    "space-before-function-paren": ["error", "never"],
+    "keyword-spacing": ["error", { before: true, after: true }],
+    "space-infix-ops": ["error"],
+    "no-multiple-empty-lines": ["error", { max: 2 }],
+    "max-len": ["warn", { code: 100 }],
   },
-  ignorePatterns: [
-    'node_modules/',
-    'coverage/',
-    'dist/',
-    'build/'
-  ]
+  ignorePatterns: ["node_modules/", "coverage/", "dist/", "build/"],
 };

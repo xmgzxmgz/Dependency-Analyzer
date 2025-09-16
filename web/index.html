@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>前端依赖分析工具 - Web界面</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app">
+        <!-- 顶部导航 -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-project-diagram"></i>
+                    <h1>前端依赖分析工具</h1>
+                </div>
+                <nav class="nav-tabs">
+                    <button class="nav-tab active" data-tab="analyze">
+                        <i class="fas fa-search"></i>
+                        分析项目
+                    </button>
+                    <button class="nav-tab" data-tab="reports">
+                        <i class="fas fa-chart-bar"></i>
+                        查看报告
+                    </button>
+                    <button class="nav-tab" data-tab="settings">
+                        <i class="fas fa-cog"></i>
+                        设置
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- 主要内容区域 -->
+        <main class="main">
+            <!-- 分析项目页面 -->
+            <div class="tab-content active" id="analyze">
+                <div class="analyze-container">
+                    <div class="analyze-header">
+                        <h2><i class="fas fa-folder-open"></i> 项目分析</h2>
+                        <p>选择项目目录并配置分析参数</p>
+                    </div>
+
+                    <div class="analyze-form">
+                        <!-- 项目选择 -->
+                        <div class="form-section">
+                            <h3><i class="fas fa-folder"></i> 项目目录</h3>
+                            <div class="file-input-group">
+                                <input type="text" id="projectPath" placeholder="选择项目目录..." readonly>
+                                <button type="button" id="selectProject" class="btn btn-secondary">
+                                    <i class="fas fa-folder-open"></i>
+                                    浏览
+                                </button>
+                            </div>
+                            <div class="quick-select">
+                                <span>快速选择：</span>
+                                <button type="button" class="btn btn-small" data-path="examples/react-demo/src">
+                                    React Demo
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 框架选择 -->
+                        <div class="form-section">
+                            <h3><i class="fas fa-code"></i> 框架类型</h3>
+                            <div class="framework-options">
+                                <label class="radio-option">
+                                    <input type="radio" name="framework" value="react" checked>
+                                    <span class="radio-custom"></span>
+                                    <i class="fab fa-react"></i>
+                                    React
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="framework" value="vue">
+                                    <span class="radio-custom"></span>
+                                    <i class="fab fa-vuejs"></i>
+                                    Vue
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="framework" value="angular">
+                                    <span class="radio-custom"></span>
+                                    <i class="fab fa-angular"></i>
+                                    Angular
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="framework" value="auto">
+                                    <span class="radio-custom"></span>
+                                    <i class="fas fa-magic"></i>
+                                    自动检测
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 高级选项 -->
+                        <div class="form-section">
+                            <h3>
+                                <i class="fas fa-sliders-h"></i> 
+                                高级选项
+                                <button type="button" class="toggle-advanced" id="toggleAdvanced">
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                            </h3>
+                            <div class="advanced-options" id="advancedOptions">
+                                <div class="option-group">
+                                    <label class="checkbox-option">
+                                        <input type="checkbox" id="includeNodeModules">
+                                        <span class="checkbox-custom"></span>
+                                        包含 node_modules
+                                    </label>
+                                    <label class="checkbox-option">
+                                        <input type="checkbox" id="enableCache" checked>
+                                        <span class="checkbox-custom"></span>
+                                        启用缓存
+                                    </label>
+                                    <label class="checkbox-option">
+                                        <input type="checkbox" id="deepAnalysis">
+                                        <span class="checkbox-custom"></span>
+                                        深度分析
+                                    </label>
+                                </div>
+                                <div class="option-group">
+                                    <label for="maxDepth">最大分析深度：</label>
+                                    <input type="range" id="maxDepth" min="1" max="10" value="5">
+                                    <span id="maxDepthValue">5</span>
+                                </div>
+                                <div class="option-group">
+                                    <label for="excludePatterns">排除模式（用逗号分隔）：</label>
+                                    <input type="text" id="excludePatterns" placeholder="*.test.js, *.spec.js, __tests__">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 分析按钮 -->
+                        <div class="form-actions">
+                            <button type="button" id="startAnalysis" class="btn btn-primary">
+                                <i class="fas fa-play"></i>
+                                开始分析
+                            </button>
+                            <button type="button" id="stopAnalysis" class="btn btn-danger" style="display: none;">
+                                <i class="fas fa-stop"></i>
+                                停止分析
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 分析进度 -->
+                    <div class="analysis-progress" id="analysisProgress" style="display: none;">
+                        <div class="progress-header">
+                            <h3><i class="fas fa-spinner fa-spin"></i> 分析进行中...</h3>
+                            <div class="progress-stats">
+                                <span id="progressFiles">0/0 文件</span>
+                                <span id="progressTime">00:00</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-logs" id="progressLogs"></div>
+                    </div>
+
+                    <!-- 快速结果预览 -->
+                    <div class="quick-results" id="quickResults" style="display: none;">
+                        <h3><i class="fas fa-chart-pie"></i> 分析结果概览</h3>
+                        <div class="results-grid">
+                            <div class="result-card">
+                                <div class="result-icon">
+                                    <i class="fas fa-cubes"></i>
+                                </div>
+                                <div class="result-content">
+                                    <div class="result-number" id="totalComponents">0</div>
+                                    <div class="result-label">组件总数</div>
+                                </div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-icon">
+                                    <i class="fas fa-link"></i>
+                                </div>
+                                <div class="result-content">
+                                    <div class="result-number" id="totalDependencies">0</div>
+                                    <div class="result-label">依赖关系</div>
+                                </div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-icon">
+                                    <i class="fas fa-island-tropical"></i>
+                                </div>
+                                <div class="result-content">
+                                    <div class="result-number" id="orphanComponents">0</div>
+                                    <div class="result-label">孤岛组件</div>
+                                </div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="result-content">
+                                    <div class="result-number" id="unusedProps">0</div>
+                                    <div class="result-label">未使用Props</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="results-actions">
+                            <button type="button" class="btn btn-primary" id="viewFullReport">
+                                <i class="fas fa-external-link-alt"></i>
+                                查看完整报告
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="downloadJson">
+                                <i class="fas fa-download"></i>
+                                下载JSON数据
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 查看报告页面 -->
+            <div class="tab-content" id="reports">
+                <div class="reports-container">
+                    <div class="reports-header">
+                        <h2><i class="fas fa-chart-bar"></i> 分析报告</h2>
+                        <div class="reports-actions">
+                            <button type="button" class="btn btn-secondary" id="refreshReports">
+                                <i class="fas fa-sync-alt"></i>
+                                刷新
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 报告列表 -->
+                    <div class="reports-list" id="reportsList">
+                        <!-- 动态生成报告列表 -->
+                    </div>
+
+                    <!-- 报告查看器 -->
+                    <div class="report-viewer" id="reportViewer" style="display: none;">
+                        <div class="viewer-header">
+                            <h3 id="viewerTitle">报告详情</h3>
+                            <button type="button" class="btn btn-secondary" id="closeViewer">
+                                <i class="fas fa-times"></i>
+                                关闭
+                            </button>
+                        </div>
+                        <div class="viewer-content">
+                            <iframe id="reportFrame" src="" frameborder="0"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 设置页面 -->
+            <div class="tab-content" id="settings">
+                <div class="settings-container">
+                    <div class="settings-header">
+                        <h2><i class="fas fa-cog"></i> 系统设置</h2>
+                    </div>
+
+                    <div class="settings-sections">
+                        <!-- 分析设置 -->
+                        <div class="settings-section">
+                            <h3><i class="fas fa-search"></i> 分析设置</h3>
+                            <div class="setting-item">
+                                <label for="defaultFramework">默认框架：</label>
+                                <select id="defaultFramework">
+                                    <option value="auto">自动检测</option>
+                                    <option value="react">React</option>
+                                    <option value="vue">Vue</option>
+                                    <option value="angular">Angular</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label for="defaultMaxDepth">默认最大深度：</label>
+                                <input type="number" id="defaultMaxDepth" min="1" max="20" value="5">
+                            </div>
+                            <div class="setting-item">
+                                <label class="checkbox-option">
+                                    <input type="checkbox" id="autoSaveReports" checked>
+                                    <span class="checkbox-custom"></span>
+                                    自动保存报告
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 界面设置 -->
+                        <div class="settings-section">
+                            <h3><i class="fas fa-palette"></i> 界面设置</h3>
+                            <div class="setting-item">
+                                <label for="theme">主题：</label>
+                                <select id="theme">
+                                    <option value="light">浅色</option>
+                                    <option value="dark">深色</option>
+                                    <option value="auto">跟随系统</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label class="checkbox-option">
+                                    <input type="checkbox" id="showAnimations" checked>
+                                    <span class="checkbox-custom"></span>
+                                    显示动画效果
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 性能设置 -->
+                        <div class="settings-section">
+                            <h3><i class="fas fa-tachometer-alt"></i> 性能设置</h3>
+                            <div class="setting-item">
+                                <label for="maxCacheSize">最大缓存大小（MB）：</label>
+                                <input type="number" id="maxCacheSize" min="10" max="1000" value="100">
+                            </div>
+                            <div class="setting-item">
+                                <label for="workerThreads">工作线程数：</label>
+                                <input type="number" id="workerThreads" min="1" max="8" value="4">
+                            </label>
+                            </div>
+                            <div class="setting-item">
+                                <button type="button" class="btn btn-secondary" id="clearCache">
+                                    <i class="fas fa-trash"></i>
+                                    清除缓存
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 导出设置 -->
+                        <div class="settings-section">
+                            <h3><i class="fas fa-download"></i> 导出设置</h3>
+                            <div class="setting-item">
+                                <label for="exportFormat">默认导出格式：</label>
+                                <select id="exportFormat">
+                                    <option value="html">HTML报告</option>
+                                    <option value="json">JSON数据</option>
+                                    <option value="both">HTML + JSON</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label class="checkbox-option">
+                                    <input type="checkbox" id="includeSourceMaps" checked>
+                                    <span class="checkbox-custom"></span>
+                                    包含源码映射
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-actions">
+                        <button type="button" class="btn btn-primary" id="saveSettings">
+                            <i class="fas fa-save"></i>
+                            保存设置
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="resetSettings">
+                            <i class="fas fa-undo"></i>
+                            重置为默认
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 状态栏 -->
+        <footer class="status-bar">
+            <div class="status-left">
+                <span id="statusText">就绪</span>
+            </div>
+            <div class="status-right">
+                <span id="versionInfo">v1.0.0</span>
+            </div>
+        </footer>
+
+        <!-- 通知系统 -->
+        <div class="notifications" id="notifications"></div>
+
+        <!-- 模态框 -->
+        <div class="modal" id="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalTitle">标题</h3>
+                    <button type="button" class="modal-close" id="modalClose">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    内容
+                </div>
+                <div class="modal-footer" id="modalFooter">
+                    <button type="button" class="btn btn-secondary" id="modalCancel">取消</button>
+                    <button type="button" class="btn btn-primary" id="modalConfirm">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
