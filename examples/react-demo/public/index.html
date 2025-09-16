@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- 基础元数据 -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  
+  <!-- SEO 元数据 -->
+  <title>React 依赖分析演示</title>
+  <meta name="description" content="React 依赖分析演示应用，展示现代前端开发技术栈和最佳实践" />
+  <meta name="keywords" content="React, TypeScript, 依赖分析, 前端开发, 演示应用" />
+  <meta name="author" content="Dependency Analyzer Team" />
+  
+  <!-- Open Graph 元数据 -->
+  <meta property="og:title" content="React 依赖分析演示" />
+  <meta property="og:description" content="React 依赖分析演示应用，展示现代前端开发技术栈和最佳实践" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://example.com" />
+  <meta property="og:image" content="%PUBLIC_URL%/og-image.png" />
+  
+  <!-- Twitter Card 元数据 -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="React 依赖分析演示" />
+  <meta name="twitter:description" content="React 依赖分析演示应用，展示现代前端开发技术栈和最佳实践" />
+  <meta name="twitter:image" content="%PUBLIC_URL%/twitter-image.png" />
+  
+  <!-- 图标 -->
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  
+  <!-- PWA 清单文件 -->
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  
+  <!-- 预加载关键资源 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  
+  <!-- 字体 -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <!-- 主题色彩 -->
+  <meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#4dabf7" media="(prefers-color-scheme: dark)" />
+  
+  <!-- iOS Safari 支持 -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="React Demo" />
+  
+  <!-- Microsoft Tiles -->
+  <meta name="msapplication-TileColor" content="#007bff" />
+  <meta name="msapplication-config" content="%PUBLIC_URL%/browserconfig.xml" />
+  
+  <!-- 安全策略 -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="DENY" />
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+  
+  <!-- 内联样式用于关键渲染路径优化 -->
+  <style>
+    /* 关键CSS - 首屏渲染优化 */
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background-color: #ffffff;
+      color: #333333;
+    }
+    
+    /* 加载指示器样式 */
+    .loading-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #007bff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    .loading-text {
+      margin-top: 16px;
+      font-size: 16px;
+      color: #666666;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* 深色主题支持 */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #1a1a1a;
+        color: #ffffff;
+      }
+      
+      .loading-container {
+        background-color: #1a1a1a;
+      }
+      
+      .loading-spinner {
+        border-color: #333333;
+        border-top-color: #4dabf7;
+      }
+      
+      .loading-text {
+        color: #cccccc;
+      }
+    }
+    
+    /* 减少动画模式支持 */
+    @media (prefers-reduced-motion: reduce) {
+      .loading-spinner {
+        animation: none;
+        border-top-color: #007bff;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 无脚本提示 -->
+  <noscript>
+    <div style="
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+    ">
+      <h1 style="color: #dc3545; margin-bottom: 16px;">需要启用 JavaScript</h1>
+      <p style="color: #6c757d; font-size: 16px; line-height: 1.5; max-width: 500px;">
+        此应用需要 JavaScript 才能正常运行。请在浏览器设置中启用 JavaScript，然后刷新页面。
+      </p>
+      <p style="color: #6c757d; font-size: 14px; margin-top: 16px;">
+        You need to enable JavaScript to run this app.
+      </p>
+    </div>
+  </noscript>
+  
+  <!-- React 应用挂载点 -->
+  <div id="root">
+    <!-- 加载指示器 -->
+    <div class="loading-container">
+      <div class="loading-spinner" aria-hidden="true"></div>
+      <div class="loading-text" role="status" aria-live="polite">
+        正在加载应用...
+      </div>
+    </div>
+  </div>
+  
+  <!-- 错误处理脚本 -->
+  <script>
+    // 全局错误处理
+    window.addEventListener('error', function(event) {
+      console.error('Global error:', event.error);
+      
+      // 如果React应用加载失败，显示错误信息
+      if (event.filename && event.filename.includes('static/js/')) {
+        const root = document.getElementById('root');
+        if (root && root.innerHTML.includes('loading-container')) {
+          root.innerHTML = `
+            <div style="
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background-color: #f8f9fa;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              text-align: center;
+              padding: 20px;
+              box-sizing: border-box;
+            ">
+              <h1 style="color: #dc3545; margin-bottom: 16px;">应用加载失败</h1>
+              <p style="color: #6c757d; font-size: 16px; line-height: 1.5; max-width: 500px;">
+                应用无法正常加载，请检查网络连接或稍后重试。
+              </p>
+              <button onclick="window.location.reload()" style="
+                margin-top: 16px;
+                padding: 8px 16px;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 14px;
+              ">
+                重新加载
+              </button>
+            </div>
+          `;
+        }
+      }
+    });
+    
+    // Promise 错误处理
+    window.addEventListener('unhandledrejection', function(event) {
+      console.error('Unhandled promise rejection:', event.reason);
+    });
+    
+    // 性能监控
+    if ('performance' in window) {
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          const perfData = performance.getEntriesByType('navigation')[0];
+          if (perfData) {
+            console.log('Page load time:', perfData.loadEventEnd - perfData.fetchStart, 'ms');
+          }
+        }, 0);
+      });
+    }
+    
+    // 移除加载指示器（备用方案）
+    setTimeout(function() {
+      const loadingContainer = document.querySelector('.loading-container');
+      if (loadingContainer && loadingContainer.parentNode) {
+        console.warn('React app took too long to load, removing loading indicator');
+        loadingContainer.style.display = 'none';
+      }
+    }, 10000); // 10秒超时
+  </script>
+  
+  <!-- 
+    此处将自动插入构建后的 JavaScript 和 CSS 文件
+    在开发模式下，这些文件由开发服务器提供
+    在生产模式下，这些文件由构建工具生成
+  -->
+</body>
+</html>

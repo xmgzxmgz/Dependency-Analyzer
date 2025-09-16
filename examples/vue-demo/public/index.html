@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- 基础元数据 -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  
+  <!-- SEO 元数据 -->
+  <title>Vue 依赖分析演示</title>
+  <meta name="description" content="Vue.js 依赖分析工具演示应用，展示现代前端开发最佳实践">
+  <meta name="keywords" content="Vue.js, 依赖分析, 前端开发, TypeScript, 演示应用">
+  <meta name="author" content="依赖分析工具">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph 元数据 -->
+  <meta property="og:title" content="Vue 依赖分析演示">
+  <meta property="og:description" content="Vue.js 依赖分析工具演示应用">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://example.com/vue-demo">
+  <meta property="og:image" content="https://example.com/vue-demo/img/og-image.png">
+  <meta property="og:site_name" content="依赖分析工具">
+  <meta property="og:locale" content="zh_CN">
+  
+  <!-- Twitter Card 元数据 -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Vue 依赖分析演示">
+  <meta name="twitter:description" content="Vue.js 依赖分析工具演示应用">
+  <meta name="twitter:image" content="https://example.com/vue-demo/img/twitter-image.png">
+  
+  <!-- 图标 -->
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="<%= BASE_URL %>img/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="<%= BASE_URL %>img/icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="<%= BASE_URL %>img/icons/apple-touch-icon.png">
+  <link rel="mask-icon" href="<%= BASE_URL %>img/icons/safari-pinned-tab.svg" color="#4DBA87">
+  
+  <!-- PWA 清单 -->
+  <link rel="manifest" href="<%= BASE_URL %>manifest.json">
+  
+  <!-- 预加载关键资源 -->
+  <link rel="preload" href="<%= BASE_URL %>fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- 字体 -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- 主题色彩 -->
+  <meta name="theme-color" content="#4DBA87">
+  <meta name="msapplication-TileColor" content="#4DBA87">
+  <meta name="msapplication-config" content="<%= BASE_URL %>browserconfig.xml">
+  
+  <!-- iOS Safari 支持 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Vue 依赖分析">
+  
+  <!-- 安全策略 -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' ws: wss:;">
+  
+  <!-- 内联样式 - 关键渲染路径优化 -->
+  <style>
+    /* 关键 CSS - 首屏渲染优化 */
+    * {
+      box-sizing: border-box;
+    }
+    
+    html {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: #2c3e50;
+      background-color: #ffffff;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    /* 加载指示器 */
+    .loading-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      z-index: 9999;
+    }
+    
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid #ffffff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    .loading-text {
+      margin-top: 20px;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* 深色主题支持 */
+    @media (prefers-color-scheme: dark) {
+      html {
+        color: #ffffff;
+        background-color: #1a1a1a;
+      }
+      
+      body {
+        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+      }
+      
+      .loading-container {
+        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+      }
+    }
+    
+    /* 减少动画模式支持 */
+    @media (prefers-reduced-motion: reduce) {
+      .loading-spinner {
+        animation: none;
+      }
+      
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    
+    /* 高对比度模式支持 */
+    @media (prefers-contrast: high) {
+      .loading-container {
+        background: #000000;
+      }
+      
+      .loading-text {
+        color: #ffffff;
+        font-weight: 700;
+      }
+    }
+    
+    /* 焦点样式 */
+    :focus {
+      outline: 2px solid #4DBA87;
+      outline-offset: 2px;
+    }
+    
+    /* 跳转到主内容链接 */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 6px;
+      background: #4DBA87;
+      color: white;
+      padding: 8px;
+      text-decoration: none;
+      border-radius: 4px;
+      z-index: 10000;
+    }
+    
+    .skip-link:focus {
+      top: 6px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 无脚本提示 -->
+  <noscript>
+    <div style="
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    ">
+      <h1 style="color: #dc3545; margin-bottom: 20px;">需要启用 JavaScript</h1>
+      <p style="color: #6c757d; font-size: 16px; line-height: 1.5; max-width: 500px;">
+        此应用需要 JavaScript 才能正常运行。请在浏览器设置中启用 JavaScript，然后刷新页面。
+      </p>
+      <p style="color: #6c757d; font-size: 14px; margin-top: 20px;">
+        如果您不知道如何启用 JavaScript，请查看浏览器帮助文档或联系技术支持。
+      </p>
+    </div>
+  </noscript>
+  
+  <!-- 跳转到主内容链接（无障碍功能） -->
+  <a href="#app" class="skip-link">跳转到主内容</a>
+  
+  <!-- Vue 应用挂载点 -->
+  <div id="app">
+    <!-- 加载指示器 -->
+    <div class="loading-container" id="initial-loading">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">正在加载 Vue 应用...</div>
+    </div>
+  </div>
+  
+  <!-- 错误处理脚本 -->
+  <script>
+    // 全局错误处理
+    window.addEventListener('error', function(event) {
+      console.error('全局错误:', event.error);
+      
+      // 显示用户友好的错误信息
+      const errorContainer = document.createElement('div');
+      errorContainer.innerHTML = `
+        <div style="
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: #dc3545;
+          color: white;
+          padding: 15px;
+          border-radius: 5px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          z-index: 10000;
+          max-width: 300px;
+        ">
+          <strong>应用错误</strong><br>
+          页面遇到了一个错误，请刷新页面重试。
+          <button onclick="this.parentElement.parentElement.remove()" style="
+            background: none;
+            border: none;
+            color: white;
+            float: right;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: -5px;
+          ">&times;</button>
+        </div>
+      `;
+      document.body.appendChild(errorContainer);
+      
+      // 5秒后自动移除错误提示
+      setTimeout(() => {
+        if (errorContainer.parentElement) {
+          errorContainer.remove();
+        }
+      }, 5000);
+    });
+    
+    // Promise 错误处理
+    window.addEventListener('unhandledrejection', function(event) {
+      console.error('未处理的 Promise 拒绝:', event.reason);
+      event.preventDefault();
+    });
+    
+    // 性能监控
+    window.addEventListener('load', function() {
+      if ('performance' in window) {
+        const perfData = performance.timing;
+        const loadTime = perfData.loadEventEnd - perfData.navigationStart;
+        console.log('页面加载时间:', loadTime + 'ms');
+        
+        // 如果加载时间过长，显示提示
+        if (loadTime > 5000) {
+          console.warn('页面加载时间较长，可能影响用户体验');
+        }
+      }
+    });
+    
+    // 加载超时处理
+    setTimeout(function() {
+      const loadingElement = document.getElementById('initial-loading');
+      if (loadingElement && loadingElement.style.display !== 'none') {
+        loadingElement.innerHTML = `
+          <div class="loading-spinner"></div>
+          <div class="loading-text">加载时间较长，请稍候...</div>
+          <button onclick="location.reload()" style="
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #4DBA87;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+          ">刷新页面</button>
+        `;
+      }
+    }, 10000);
+    
+    // 移除加载指示器的函数（Vue 应用启动后调用）
+    window.removeInitialLoading = function() {
+      const loadingElement = document.getElementById('initial-loading');
+      if (loadingElement) {
+        loadingElement.style.opacity = '0';
+        loadingElement.style.transition = 'opacity 0.3s ease-out';
+        setTimeout(() => {
+          loadingElement.remove();
+        }, 300);
+      }
+    };
+  </script>
+</body>
+</html>

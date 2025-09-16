@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>Angular 依赖分析演示</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Angular 依赖分析演示应用">
+  <meta name="keywords" content="Angular, 依赖分析, 演示, TypeScript">
+  <meta name="author" content="Dependency Analyzer">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  
+  <!-- 预加载关键资源 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- 字体 -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- 主题色 -->
+  <meta name="theme-color" content="#007bff">
+  <meta name="msapplication-TileColor" content="#007bff">
+  
+  <!-- PWA 支持 -->
+  <link rel="manifest" href="manifest.json">
+  
+  <!-- iOS Safari 支持 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Angular Demo">
+  
+  <!-- 无障碍功能 -->
+  <meta name="color-scheme" content="light dark">
+</head>
+<body>
+  <app-root>
+    <!-- 加载指示器 -->
+    <div id="initial-loader" style="
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8f9fa;
+      color: #343a40;
+    ">
+      <div style="
+        width: 40px;
+        height: 40px;
+        border: 4px solid #e9ecef;
+        border-top: 4px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 16px;
+      "></div>
+      <p style="margin: 0; font-size: 16px;">正在加载 Angular 应用...</p>
+    </div>
+    
+    <style>
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      /* 深色主题支持 */
+      @media (prefers-color-scheme: dark) {
+        #initial-loader {
+          background: #212529 !important;
+          color: #f8f9fa !important;
+        }
+      }
+    </style>
+  </app-root>
+  
+  <!-- 错误处理 -->
+  <noscript>
+    <div style="
+      padding: 20px;
+      text-align: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+      border-radius: 4px;
+      margin: 20px;
+    ">
+      <h2>JavaScript 已禁用</h2>
+      <p>此应用需要启用 JavaScript 才能正常运行。请在浏览器设置中启用 JavaScript 并刷新页面。</p>
+    </div>
+  </noscript>
+</body>
+</html>

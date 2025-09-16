@@ -1,0 +1,204 @@
+<!-- 主应用组件模板 -->
+<div class="app-container" [attr.data-theme]="'light'">
+  <!-- 导航栏 -->
+  <nav class="navbar" role="navigation" aria-label="主导航">
+    <div class="navbar-brand">
+      <h1>{{ title }}</h1>
+    </div>
+    <div class="navbar-menu">
+      <button 
+        class="btn btn-primary"
+        (click)="toggleDemo()"
+        [attr.aria-expanded]="showDemo"
+        aria-controls="demo-section">
+        {{ showDemo ? '隐藏演示' : '显示演示' }}
+      </button>
+    </div>
+  </nav>
+
+  <!-- 加载状态 -->
+  <div *ngIf="loading" class="loading-container" role="status" aria-live="polite">
+    <div class="spinner" aria-hidden="true"></div>
+    <p>正在加载数据...</p>
+  </div>
+
+  <!-- 错误状态 -->
+  <div *ngIf="error" class="error-container" role="alert" aria-live="assertive">
+    <div class="error-message">
+      <h3>加载失败</h3>
+      <p>{{ error }}</p>
+      <button class="btn btn-secondary" (click)="loadData()">重试</button>
+    </div>
+  </div>
+
+  <!-- 主要内容 -->
+  <main *ngIf="!loading && !error" class="main-content">
+    <!-- 统计面板 -->
+    <section class="stats-panel" aria-labelledby="stats-heading">
+      <h2 id="stats-heading" class="sr-only">统计信息</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>总任务</h3>
+          <span class="stat-number">{{ getTaskStats().total }}</span>
+        </div>
+        <div class="stat-card">
+          <h3>已完成</h3>
+          <span class="stat-number">{{ getTaskStats().completed }}</span>
+        </div>
+        <div class="stat-card">
+          <h3>待处理</h3>
+          <span class="stat-number">{{ getTaskStats().pending }}</span>
+        </div>
+        <div class="stat-card">
+          <h3>逾期</h3>
+          <span class="stat-number">{{ getTaskStats().overdue }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 内容网格 -->
+    <div class="content-grid">
+      <!-- 任务列表 -->
+      <section class="tasks-section" aria-labelledby="tasks-heading">
+        <h2 id="tasks-heading">任务列表</h2>
+        <div class="task-list">
+          <div 
+            *ngFor="let task of tasks; trackBy: trackByTaskId"
+            class="task-item"
+            [class.completed]="task.completed"
+            [class.selected]="selectedTask?.id === task.id"
+            (click)="onTaskSelect(task)"
+            (keydown.enter)="onTaskSelect(task)"
+            (keydown.space)="onTaskSelect(task)"
+            tabindex="0"
+            role="button"
+            [attr.aria-label]="'任务: ' + task.title + (task.completed ? ' (已完成)' : ' (待处理)')">
+            
+            <div class="task-header">
+              <h3>{{ task.title }}</h3>
+              <span class="priority-badge" [class]="'priority-' + task.priority">
+                {{ task.priority }}
+              </span>
+            </div>
+            
+            <p class="task-description">{{ task.description }}</p>
+            
+            <div class="task-meta">
+              <span class="assignee">负责人: {{ getUserName(task.assigneeId) }}</span>
+              <span *ngIf="task.dueDate" class="due-date">
+                截止: {{ task.dueDate | date:'short' }}
+              </span>
+            </div>
+            
+            <div class="task-actions">
+              <button 
+                class="btn btn-sm"
+                [class.btn-success]="!task.completed"
+                [class.btn-warning]="task.completed"
+                (click)="onTaskToggle(task); $event.stopPropagation()"
+                [attr.aria-label]="task.completed ? '标记为未完成' : '标记为已完成'">
+                {{ task.completed ? '取消完成' : '标记完成' }}
+              </button>
+              <button 
+                class="btn btn-sm btn-danger"
+                (click)="onTaskDelete(task.id); $event.stopPropagation()"
+                [attr.aria-label]="'删除任务: ' + task.title">
+                删除
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 用户列表 -->
+      <section class="users-section" aria-labelledby="users-heading">
+        <h2 id="users-heading">用户列表</h2>
+        <div class="user-list">
+          <div 
+            *ngFor="let user of users; trackBy: trackByUserId"
+            class="user-item"
+            [class.selected]="selectedUser?.id === user.id"
+            [class.inactive]="!user.isActive"
+            (click)="onUserSelect(user)"
+            (keydown.enter)="onUserSelect(user)"
+            (keydown.space)="onUserSelect(user)"
+            tabindex="0"
+            role="button"
+            [attr.aria-label]="'用户: ' + user.name + ' (' + user.role + ')'">
+            
+            <div class="user-avatar">
+              <img 
+                [src]="user.avatar || '/assets/default-avatar.png'"
+                [alt]="user.name + '的头像'"
+                (error)="onImageError($event)">
+            </div>
+            
+            <div class="user-info">
+              <h3>{{ user.name }}</h3>
+              <p class="user-email">{{ user.email }}</p>
+              <p class="user-role">{{ user.role }} - {{ user.department }}</p>
+              <p class="task-count">任务数: {{ getUserTaskCount(user.id) }}</p>
+            </div>
+            
+            <div class="user-status">
+              <span 
+                class="status-indicator"
+                [class.active]="user.isActive"
+                [attr.aria-label]="user.isActive ? '活跃用户' : '非活跃用户'">
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 演示区域 -->
+    <section 
+      *ngIf="showDemo" 
+      id="demo-section"
+      class="demo-section"
+      aria-labelledby="demo-heading">
+      <h2 id="demo-heading">组件演示</h2>
+      
+      <div class="demo-grid">
+        <!-- 演示按钮 -->
+        <div class="demo-item">
+          <h3>交互按钮</h3>
+          <button 
+            class="btn btn-primary btn-lg"
+            (click)="onDemoButtonClick()"
+            [attr.aria-label]="'演示按钮: ' + demoData.buttonText">
+            {{ demoData.buttonText }}
+          </button>
+        </div>
+
+        <!-- 演示卡片 -->
+        <div class="demo-item">
+          <div class="demo-card">
+            <h3>{{ demoData.cardTitle }}</h3>
+            <p>{{ demoData.cardContent }}</p>
+            <div class="card-actions">
+              <button class="btn btn-outline">了解更多</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 通知列表 -->
+        <div class="demo-item">
+          <h3>通知中心</h3>
+          <div class="notifications" role="log" aria-live="polite">
+            <div 
+              *ngFor="let notification of demoData.notifications; trackBy: trackByNotification"
+              class="notification-item"
+              [@slideIn]>
+              {{ notification }}
+            </div>
+            <p *ngIf="demoData.notifications.length === 0" class="no-notifications">
+              暂无通知
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
