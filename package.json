@@ -1,0 +1,41 @@
+{
+  "name": "frontend-dependency-analyzer",
+  "version": "1.0.0",
+  "description": "前端组件库依赖关系可视化与冗余代码分析工具",
+  "main": "src/index.js",
+  "bin": {
+    "dep-analyzer": "./bin/cli.js"
+  },
+  "scripts": {
+    "start": "node bin/cli.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "dependency",
+    "analysis",
+    "visualization",
+    "frontend",
+    "react",
+    "vue",
+    "ast"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^11.1.0",
+    "@babel/parser": "^7.23.0",
+    "@babel/traverse": "^7.23.0",
+    "@babel/types": "^7.23.0",
+    "@vue/compiler-sfc": "^3.3.0",
+    "glob": "^10.3.0",
+    "fs-extra": "^11.1.0",
+    "path": "^0.12.7",
+    "chalk": "^4.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

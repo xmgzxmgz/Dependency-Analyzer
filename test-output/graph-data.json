@@ -1,0 +1,84 @@
+{
+  "graph": {
+    "nodes": {},
+    "edges": [],
+    "metadata": {
+      "nodeCount": 0,
+      "edgeCount": 0,
+      "density": 0,
+      "degreeDistribution": {
+        "inDegree": {
+          "min": 0,
+          "max": 0,
+          "mean": 0,
+          "median": 0,
+          "std": 0
+        },
+        "outDegree": {
+          "min": 0,
+          "max": 0,
+          "mean": 0,
+          "median": 0,
+          "std": 0
+        },
+        "totalDegree": {
+          "min": 0,
+          "max": 0,
+          "mean": 0,
+          "median": 0,
+          "std": 0
+        }
+      },
+      "isolatedNodes": [],
+      "leafNodes": [],
+      "rootNodes": [],
+      "connectedComponents": 0,
+      "largestComponentSize": null
+    }
+  },
+  "analysis": {
+    "summary": {
+      "totalComponents": 0,
+      "totalDependencies": 0,
+      "orphanCount": 0,
+      "unusedPropsCount": 0,
+      "circularDependenciesCount": 0,
+      "deadCodeCount": 0,
+      "density": 0
+    },
+    "orphanComponents": [],
+    "unusedProps": [],
+    "circularDependencies": [],
+    "componentComplexity": [],
+    "dependencyDepth": {
+      "averageDepth": null,
+      "maxDepth": null,
+      "deepestComponents": [],
+      "depthDistribution": {}
+    },
+    "hubComponents": [],
+    "deadCode": [],
+    "couplingAnalysis": {
+      "metrics": {
+        "afferentCoupling": {},
+        "efferentCoupling": {},
+        "instability": {},
+        "abstractness": {}
+      },
+      "highCouplingComponents": [],
+      "averageCoupling": 0,
+      "couplingDistribution": {
+        "low": 0,
+        "medium": 0,
+        "high": 0,
+        "very_high": 0
+      }
+    },
+    "recommendations": []
+  },
+  "metadata": {
+    "generatedAt": "2025-09-16T01:39:28.788Z",
+    "projectPath": "/Users/xiamuguizhi/前端依赖可视化/examples/react-demo/src",
+    "framework": "react"
+  }
+}
