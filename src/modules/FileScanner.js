@@ -18,6 +18,8 @@ class FileScanner {
     this.projectPath = config.projectPath;
     this.framework = config.framework;
     this.excludePatterns = config.excludePatterns || [];
+    this.tsConfig = this.loadTSConfig();
+    this.aliasResolver = this.buildAliasResolver();
     
     // 根据框架定义文件扩展名
     this.fileExtensions = this.getFileExtensions();
@@ -126,8 +128,15 @@ class FileScanner {
    * @returns {string|null} 解析后的绝对路径，如果无法解析则返回null
    */
   resolveImportPath(importPath, currentFile) {
-    // 跳过node_modules中的包
-    if (!importPath.startsWith('.')) {
+    // 优先处理 TS 路径别名（如 @/、~、自定义别名）
+    const aliasResolved = this.resolveAliasImport(importPath);
+    if (aliasResolved) {
+      const resolvedWithFs = this.tryResolveWithExtensions(aliasResolved);
+      if (resolvedWithFs) return resolvedWithFs;
+    }
+
+    // 跳过第三方包（node_modules）
+    if (!importPath.startsWith('.') && !importPath.startsWith('/')) {
       return null;
     }
     
@@ -135,20 +144,12 @@ class FileScanner {
     let resolvedPath = path.resolve(currentDir, importPath);
     
     // 尝试添加文件扩展名
-    for (const ext of this.fileExtensions) {
-      const pathWithExt = resolvedPath + ext;
-      if (fs.existsSync(pathWithExt)) {
-        return pathWithExt;
-      }
-    }
+    const withExt = this.tryResolveWithExtensions(resolvedPath);
+    if (withExt) return withExt;
     
     // 尝试index文件
-    for (const ext of this.fileExtensions) {
-      const indexPath = path.join(resolvedPath, `index${ext}`);
-      if (fs.existsSync(indexPath)) {
-        return indexPath;
-      }
-    }
+    const asIndex = this.tryResolveIndexFile(resolvedPath);
+    if (asIndex) return asIndex;
     
     // 如果已经有扩展名，直接检查
     if (path.extname(resolvedPath) && fs.existsSync(resolvedPath)) {
@@ -166,6 +167,89 @@ class FileScanner {
   isInProjectScope(filePath) {
     const relativePath = path.relative(this.projectPath, filePath);
     return !relativePath.startsWith('..') && !path.isAbsolute(relativePath);
+  }
+
+  /**
+   * 读取 tsconfig.json（如存在）
+   */
+  loadTSConfig() {
+    const tsConfigPath = path.join(this.projectPath, 'tsconfig.json');
+    try {
+      if (fs.existsSync(tsConfigPath)) {
+        return fs.readJsonSync(tsConfigPath);
+      }
+    } catch (e) {
+      // 忽略读取错误
+    }
+    return null;
+  }
+
+  /**
+   * 构建别名解析器
+   */
+  buildAliasResolver() {
+    const resolver = [];
+    const cfg = this.tsConfig?.compilerOptions || {};
+    const baseUrl = cfg.baseUrl ? path.resolve(this.projectPath, cfg.baseUrl) : this.projectPath;
+    const paths = cfg.paths || {};
+
+    for (const [alias, targets] of Object.entries(paths)) {
+      // alias e.g. "@/*" or "@/components/*"
+      const hasWildcard = alias.includes('*');
+      const aliasPrefix = hasWildcard ? alias.split('*')[0] : alias;
+      const targetList = Array.isArray(targets) ? targets : [targets];
+      for (const target of targetList) {
+        const targetHasWildcard = String(target).includes('*');
+        const targetPrefix = targetHasWildcard ? String(target).split('*')[0] : String(target);
+        const absoluteTargetPrefix = path.resolve(baseUrl, targetPrefix);
+        resolver.push({ aliasPrefix, hasWildcard, absoluteTargetPrefix });
+      }
+    }
+    return resolver;
+  }
+
+  /**
+   * 解析别名导入到绝对路径（不含扩展名）
+   */
+  resolveAliasImport(importPath) {
+    for (const rule of this.aliasResolver) {
+      if (importPath.startsWith(rule.aliasPrefix)) {
+        const suffix = importPath.slice(rule.aliasPrefix.length);
+        const candidate = path.join(rule.absoluteTargetPrefix, suffix);
+        return candidate;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * 尝试为给定路径添加扩展名进行解析
+   */
+  tryResolveWithExtensions(resolvedPath) {
+    // 如果已经包含扩展名
+    if (path.extname(resolvedPath)) {
+      return fs.existsSync(resolvedPath) ? resolvedPath : null;
+    }
+    for (const ext of this.fileExtensions) {
+      const pathWithExt = resolvedPath + ext;
+      if (fs.existsSync(pathWithExt)) {
+        return pathWithExt;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * 尝试解析为目录下的 index 文件
+   */
+  tryResolveIndexFile(resolvedPath) {
+    for (const ext of this.fileExtensions) {
+      const indexPath = path.join(resolvedPath, `index${ext}`);
+      if (fs.existsSync(indexPath)) {
+        return indexPath;
+      }
+    }
+    return null;
   }
 }
 

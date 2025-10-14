@@ -30,6 +30,12 @@ describe("性能基准测试", () => {
     console.log(`创建包含 ${componentCount} 个组件的测试项目...`);
 
     const components = [];
+    // 准备 CommonJS 工具函数供 require 使用
+    await fs.ensureDir(path.join(testProjectDir, 'utils'));
+    await fs.writeFile(
+      path.join(testProjectDir, 'utils', 'commonjsUtil.js'),
+      `module.exports = function util(x){ return x * 2; }\n`
+    );
 
     for (let i = 0; i < componentCount; i++) {
       const componentName = `Component${i}`;
@@ -42,8 +48,18 @@ describe("性能基准测试", () => {
         dependencies.push(`Component${depIndex}`);
       }
 
+      const dynamicImportLine = i % 10 === 0 && i > 0
+        ? `const Lazy${i} = React.lazy(() => import('./Component${i - 1}'));\n`
+        : '';
+      const requireLine = i % 7 === 0
+        ? `const util = require('./utils/commonjsUtil');\n`
+        : '';
+      const lazyUsage = i % 10 === 0 && i > 0 ? `<Lazy${i} />` : '';
+      const utilUsage = i % 7 === 0 ? `{util(${i})}` : '';
+
       const componentCode = `
 import React from 'react';
+${dynamicImportLine}${requireLine}
 ${dependencies.map((dep) => `import ${dep} from './${dep}';`).join("\n")}
 
 const ${componentName} = ({ 
@@ -58,6 +74,8 @@ const ${componentName} = ({
       <h2>{title}</h2>
       <div>{data}</div>
       ${dependencies.map((dep) => `<${dep} />`).join("\n      ")}
+      ${lazyUsage}
+      ${utilUsage}
     </div>
   );
 };
@@ -79,13 +97,15 @@ export default ${componentName};
       );
     }
 
-    // 创建入口文件
+    // 创建入口文件，包含一个 LazyRoot 动态导入示例
     const indexCode = `
 import React from 'react';
 ${components
   .slice(0, 10)
   .map((c) => `import ${c.name} from './${c.name}';`)
   .join("\n")}
+
+const LazyRoot = React.lazy(() => import('./Component1'));
 
 const App = () => {
   return (
@@ -94,6 +114,7 @@ const App = () => {
         .slice(0, 10)
         .map((c) => `<${c.name} title="Test" data="Sample" />`)
         .join("\n      ")}
+      <LazyRoot />
     </div>
   );
 };

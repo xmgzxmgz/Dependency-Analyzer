@@ -106,6 +106,8 @@ class DependencyEdge {
  * 依赖图谱构建器
  * 将AST分析结果组织成结构化的依赖图谱
  */
+const path = require('path');
+
 class GraphBuilder {
   constructor() {
     this.nodes = new Map(); // 组件节点映射
@@ -144,7 +146,11 @@ class GraphBuilder {
    */
   createNodes(analysisResults) {
     for (const result of analysisResults) {
-      if (!result || !result.isComponent) {
+      if (!result) {
+        continue;
+      }
+      // 同时为具有导出的模块创建节点（例如 re-exports 桶文件）
+      if (!result.isComponent && (!result.exports || result.exports.length === 0)) {
         continue;
       }
 
@@ -153,6 +159,8 @@ class GraphBuilder {
       // 设置Props信息
       node.propsDeclared = new Set(result.propsDeclared);
       node.propsUsedInBody = new Set(result.propsUsedInBody);
+      // 标记是否使用了 ...rest 展开，供未使用props分析跳过处理
+      node.usesRestSpread = !!result.usesRestSpread;
       
       // 设置组件使用情况
       if (result.componentUsages) {
@@ -177,7 +185,18 @@ class GraphBuilder {
 
       // 遍历所有依赖
       for (const [targetPath, dependency] of result.dependencies) {
-        const targetNode = this.nodes.get(targetPath);
+        let targetNode = this.nodes.get(targetPath);
+        // 若目标节点不存在，创建占位节点以确保图完整性
+        if (!targetNode) {
+          const base = path.basename(targetPath, path.extname(targetPath));
+          const name = base === 'index' ? path.basename(path.dirname(targetPath)) : base;
+          targetNode = new ComponentNode(targetPath, name);
+          // 占位节点不含 props 信息
+          targetNode.propsDeclared = new Set();
+          targetNode.propsUsedInBody = new Set();
+          targetNode.usesRestSpread = false;
+          this.nodes.set(targetPath, targetNode);
+        }
         
         if (targetNode) {
           // 创建边

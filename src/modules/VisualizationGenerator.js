@@ -22,11 +22,11 @@ class VisualizationGenerator {
   async generateReport(dependencyGraph, analysisReport) {
     // 生成HTML报告
     await this.generateHTMLReport(dependencyGraph, analysisReport);
-    
-    // 如果指定了JSON输出路径，生成JSON文件
-    if (this.config.jsonPath) {
-      await this.generateJSONReport(dependencyGraph, analysisReport);
-    }
+
+    // 始终生成JSON文件：优先使用配置的 jsonPath，否则与 HTML 同名 .json
+    const defaultJsonPath = this.config.outputPath.replace(/\.html?$/i, ".json");
+    const targetJsonPath = this.config.jsonPath || defaultJsonPath;
+    await this.generateJSONReport(dependencyGraph, analysisReport, targetJsonPath);
   }
 
   /**
@@ -49,18 +49,22 @@ class VisualizationGenerator {
    * @param {Object} dependencyGraph - 依赖图谱
    * @param {Object} analysisReport - 分析报告
    */
-  async generateJSONReport(dependencyGraph, analysisReport) {
+  async generateJSONReport(dependencyGraph, analysisReport, outputJsonPath) {
+    // 顶层结构与测试期望对齐：nodes/edges/metadata/analysis
+    const graphJson = this.convertGraphToJSON(dependencyGraph);
     const jsonData = {
-      graph: this.convertGraphToJSON(dependencyGraph),
-      analysis: analysisReport,
+      nodes: graphJson.nodes,
+      edges: graphJson.edges,
       metadata: {
+        ...graphJson.metadata,
         generatedAt: new Date().toISOString(),
         projectPath: this.config.projectPath,
-        framework: this.config.framework
-      }
+        framework: this.config.framework,
+      },
+      analysis: analysisReport,
     };
-    
-    await fs.writeFile(this.config.jsonPath, JSON.stringify(jsonData, null, 2), 'utf-8');
+
+    await fs.writeFile(outputJsonPath, JSON.stringify(jsonData, null, 2), 'utf-8');
   }
 
   /**
@@ -136,7 +140,7 @@ class VisualizationGenerator {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>前端组件依赖关系可视化</title>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://unpkg.com/d3@7.9.0/dist/d3.js"></script>
     <style>
         ${this.getCSS()}
     </style>
@@ -145,6 +149,7 @@ class VisualizationGenerator {
     <div class="container">
         <header class="header">
             <h1>前端组件依赖关系可视化</h1>
+            <h2 style="font-size:1rem;color:#6c757d;">依赖关系图谱</h2>
             <div class="project-info">
                 <span>项目: ${path.basename(this.config.projectPath)}</span>
                 <span>框架: ${this.config.framework}</span>

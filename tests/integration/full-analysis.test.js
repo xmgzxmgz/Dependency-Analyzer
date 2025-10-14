@@ -25,7 +25,7 @@ describe("完整分析流程集成测试", () => {
   });
 
   async function createTestProject() {
-    // 创建React组件
+    // 创建React组件（基础依赖 + 孤岛 + 循环）
     const componentA = `
 import React from 'react';
 import ComponentB from './ComponentB';
@@ -125,12 +125,92 @@ export default App;
     await fs.writeFile(path.join(testProjectDir, "CircularB.jsx"), circularB);
     await fs.writeFile(path.join(testProjectDir, "index.js"), indexFile);
 
+    // 动态导入与 Suspense
+    const lazyComp = `
+import React from 'react';
+
+export default function LazyComp(){
+  return <div>Lazy Loaded</div>;
+}
+`;
+    const dynamicLoader = `
+import React, { Suspense } from 'react';
+const LazyComp = React.lazy(() => import('./LazyComp'));
+
+export default function DynamicLoader(){
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LazyComp />
+    </Suspense>
+  );
+}
+`;
+
+    // CommonJS require 示例
+    const commonjsUtil = `
+module.exports = function util(x){
+  return x * 2;
+}
+`;
+    const requireUser = `
+const util = require('./utils/commonjsUtil');
+export default function RequireUser(){
+  return util(21);
+}
+`;
+
+    // re-export 示例
+    const utilEsModule = `
+export const Util = (x) => x + 1;
+`;
+    const reexportIndex = `
+export { Util } from '../utils/Util.js';
+`;
+
+    // TS 路径别名示例（@components/*）
+    const tsconfig = {
+      compilerOptions: {
+        baseUrl: '.',
+        paths: {
+          '@components/*': ['components/*']
+        }
+      }
+    };
+    const aliasComp = `
+import React from 'react';
+export default function AliasComp(){
+  return <span>Alias</span>;
+}
+`;
+    const aliasEntry = `
+import React from 'react';
+import AliasComp from '@components/AliasComp';
+export default function AliasEntry(){
+  return <AliasComp />;
+}
+`;
+
+    // 写入扩展文件结构
+    await fs.writeFile(path.join(testProjectDir, 'LazyComp.jsx'), lazyComp);
+    await fs.writeFile(path.join(testProjectDir, 'DynamicLoader.jsx'), dynamicLoader);
+    await fs.ensureDir(path.join(testProjectDir, 'utils'));
+    await fs.writeFile(path.join(testProjectDir, 'utils', 'commonjsUtil.js'), commonjsUtil);
+    await fs.writeFile(path.join(testProjectDir, 'RequireUser.js'), requireUser);
+    await fs.writeFile(path.join(testProjectDir, 'utils', 'Util.js'), utilEsModule);
+    await fs.ensureDir(path.join(testProjectDir, 'reexports'));
+    await fs.writeFile(path.join(testProjectDir, 'reexports', 'index.js'), reexportIndex);
+    await fs.writeJson(path.join(testProjectDir, 'tsconfig.json'), tsconfig);
+    await fs.ensureDir(path.join(testProjectDir, 'components'));
+    await fs.writeFile(path.join(testProjectDir, 'components', 'AliasComp.tsx'), aliasComp);
+    await fs.writeFile(path.join(testProjectDir, 'AliasEntry.tsx'), aliasEntry);
+
     // 创建package.json
     const packageJson = {
       name: "test-project",
       version: "1.0.0",
       dependencies: {
         react: "^18.0.0",
+        vue: "^3.4.0"
       },
     };
     await fs.writeJson(path.join(testProjectDir, "package.json"), packageJson);
@@ -218,6 +298,73 @@ export default App;
 
       // ComponentA中的unused prop应该被检测到
       expect(result.unusedProps).to.be.above(0);
+    });
+
+    it("应该分析动态导入与require以及re-export与路径别名", async () => {
+      const analyzer = new DependencyAnalyzer({
+        projectPath: testProjectDir,
+        framework: "react",
+        outputPath: path.join(outputDir, "advanced-react.html"),
+        jsonPath: path.join(outputDir, "advanced-react.json"),
+        excludePatterns: [],
+      });
+
+      await analyzer.analyze();
+      const jsonData = await fs.readJson(
+        path.join(outputDir, "advanced-react.json")
+      );
+
+      // 节点应包含动态加载组件与别名组件
+      const nodeKeys = Object.keys(jsonData.nodes || {});
+      expect(nodeKeys.some((k) => k.endsWith("LazyComp.jsx"))).to.be.true;
+      expect(nodeKeys.some((k) => k.endsWith("components/AliasComp.tsx"))).to.be
+        .true;
+      expect(nodeKeys.some((k) => k.endsWith("utils/commonjsUtil.js"))).to.be
+        .true;
+      // re-export 来源文件也应参与图谱
+      expect(nodeKeys.some((k) => k.endsWith("reexports/index.js"))).to.be.true;
+
+      // 边应包含到 LazyComp 的依赖（动态导入）
+      const edges = jsonData.edges || [];
+      expect(
+        edges.some(
+          (e) => typeof e.target === 'string' && e.target.endsWith('LazyComp.jsx')
+        )
+      ).to.be.true;
+    });
+  });
+
+  describe("Vue项目分析", () => {
+    it("应该成功分析Vue项目并生成报告", async () => {
+      // 创建简单的 Vue 结构
+      const vueDir = path.join(testProjectDir, 'vue');
+      await fs.ensureDir(vueDir);
+      const appVue = `<template><div><Child /></div></template>
+<script setup>
+import Child from './components/Child.vue';
+</script>`;
+      const childVue = `<template><span>Child</span></template>`;
+      const orphanVue = `<template><div>Orphan Vue</div></template>`;
+
+      await fs.ensureDir(path.join(vueDir, 'components'));
+      await fs.writeFile(path.join(vueDir, 'App.vue'), appVue);
+      await fs.writeFile(path.join(vueDir, 'components', 'Child.vue'), childVue);
+      await fs.writeFile(path.join(vueDir, 'Orphan.vue'), orphanVue);
+
+      const analyzer = new DependencyAnalyzer({
+        projectPath: testProjectDir,
+        framework: "vue",
+        outputPath: path.join(outputDir, "vue-analysis.html"),
+        jsonPath: path.join(outputDir, "vue-data.json"),
+        excludePatterns: [],
+      });
+
+      const report = await analyzer.analyze();
+      expect(report.totalComponents).to.be.above(0);
+      expect(await fs.pathExists(path.join(outputDir, "vue-analysis.html"))).to
+        .be.true;
+      expect(await fs.pathExists(path.join(outputDir, "vue-data.json"))).to.be
+        .true;
     });
   });
 

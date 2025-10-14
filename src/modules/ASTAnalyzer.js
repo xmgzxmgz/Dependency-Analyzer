@@ -146,6 +146,7 @@ class ASTAnalyzer {
       propsDeclared: new Set(),
       propsUsedInBody: new Set(),
       isComponent: false,
+      usesRestSpread: false, // 新增标记
     };
 
     // 遍历AST
@@ -162,6 +163,30 @@ class ASTAnalyzer {
 
       ExportNamedDeclaration: (path) => {
         this.handleExportDeclaration(path, result);
+      },
+
+      // 处理 export * from '...'
+      ExportAllDeclaration: (path) => {
+        if (path.node.source && path.node.source.value) {
+          const src = path.node.source.value;
+          const resolvedPath = this.fileScanner.resolveImportPath(src, result.filePath);
+          if (resolvedPath && this.fileScanner.isInProjectScope(resolvedPath)) {
+            if (!result.dependencies) result.dependencies = new Map();
+            result.dependencies.set(resolvedPath, {
+              source: src,
+              resolvedPath,
+              specifiers: ['*'],
+              type: 'reexport'
+            });
+            // 记录通配符重导出到 exports
+            result.exports.push({ type: 'named', name: '*', reexport: true, from: src });
+          }
+        }
+      },
+
+      // 处理动态导入与 CommonJS require
+      CallExpression: (path) => {
+        this.handleCallExpression(path, result, filePath);
       },
 
       // 处理JSX元素
@@ -191,6 +216,10 @@ class ASTAnalyzer {
       // 处理对象解构
       ObjectPattern: (path) => {
         this.handleObjectDestructuring(path, result);
+      },
+      // 处理 ...rest
+      RestElement: (path) => {
+        this.handleRestElement(path, result);
       },
     });
 
@@ -264,6 +293,31 @@ class ASTAnalyzer {
           result.isComponent = this.isComponentDeclaration(
             path.node.declaration
           );
+        }
+      }
+      // 支持 re-export: export { X } from './X'
+      if (path.node.source && path.node.source.value) {
+        const src = path.node.source.value;
+        const resolvedPath = this.fileScanner.resolveImportPath(src, result.filePath);
+        if (resolvedPath && this.fileScanner.isInProjectScope(resolvedPath)) {
+          if (!result.dependencies) result.dependencies = new Map();
+          result.dependencies.set(resolvedPath, {
+            source: src,
+            resolvedPath,
+            specifiers: [],
+          });
+          // 将重导出视为导出的一部分，以便该文件参与图谱
+          const exportedNames = (path.node.specifiers || [])
+            .map(s => (t.isExportSpecifier(s) && s.exported ? s.exported.name : null))
+            .filter(Boolean);
+          if (exportedNames.length > 0) {
+            exportedNames.forEach(name => {
+              result.exports.push({ type: 'named', name, reexport: true, from: src });
+            });
+          } else {
+            // 无显式名称时，记录通配符
+            result.exports.push({ type: 'named', name: '*', reexport: true, from: src });
+          }
         }
       }
     }
@@ -385,6 +439,23 @@ class ASTAnalyzer {
   }
 
   /**
+   * 处理 ...rest 语法
+   * @param {Object} path - AST路径
+   * @param {Object} result - 结果对象
+   */
+  handleRestElement(path, result) {
+    // 检查是否是从props解构
+    const parent = path.parent;
+    if (
+      t.isObjectPattern(parent) &&
+      t.isVariableDeclarator(parent.parent) &&
+      t.isIdentifier(parent.parent.init, { name: "props" })
+    ) {
+      result.usesRestSpread = true;
+    }
+  }
+
+  /**
    * 分析Vue模板
    * @param {string} template - 模板内容
    * @param {Map} existingDeps - 已存在的依赖
@@ -427,6 +498,45 @@ class ASTAnalyzer {
     return basename === "index"
       ? path.basename(path.dirname(filePath))
       : basename;
+  }
+
+  /**
+   * 处理动态导入 import() 和 CommonJS require()
+   */
+  handleCallExpression(path, result, currentFile) {
+    const callee = path.node.callee;
+    // import('...')
+    if (t.isImport(callee) && path.node.arguments?.length === 1) {
+      const arg = path.node.arguments[0];
+      if (t.isStringLiteral(arg)) {
+        const src = arg.value;
+        const resolved = this.fileScanner.resolveImportPath(src, currentFile);
+        if (resolved && this.fileScanner.isInProjectScope(resolved)) {
+          result.dependencies.set(resolved, {
+            source: src,
+            resolvedPath: resolved,
+            specifiers: [],
+            dynamic: true,
+          });
+        }
+      }
+    }
+    // require('...')
+    if (t.isIdentifier(callee, { name: 'require' }) && path.node.arguments?.length >= 1) {
+      const arg = path.node.arguments[0];
+      if (t.isStringLiteral(arg)) {
+        const src = arg.value;
+        const resolved = this.fileScanner.resolveImportPath(src, currentFile);
+        if (resolved && this.fileScanner.isInProjectScope(resolved)) {
+          result.dependencies.set(resolved, {
+            source: src,
+            resolvedPath: resolved,
+            specifiers: [],
+            require: true,
+          });
+        }
+      }
+    }
   }
 
   /**
@@ -567,13 +677,35 @@ class ASTAnalyzer {
       const propsParam = params[0];
 
       if (t.isObjectPattern(propsParam)) {
-        // 解构参数
+        // 解构参数：记录声明的 prop，但不立即标记为使用
+        const declared = new Set();
         propsParam.properties.forEach((prop) => {
           if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
+            declared.add(prop.key.name);
             result.propsDeclared.add(prop.key.name);
-            result.propsUsedInBody.add(prop.key.name);
+          } else if (t.isRestElement(prop)) {
+            // 如果在props解构中使用了 ...rest，标记以便跳过未使用判断
+            result.usesRestSpread = true;
           }
         });
+
+        // 遍历函数体，标记被实际引用的解构标识符为已使用
+        // 仅遍历函数体，避免将形参本身计为使用
+        const bodyPath = path.get('body');
+        if (bodyPath && typeof bodyPath.traverse === 'function') {
+          const used = new Set();
+          bodyPath.traverse({
+            Identifier(p) {
+              const name = p.node.name;
+              if (declared.has(name)) {
+                used.add(name);
+              }
+            }
+          });
+          for (const name of used) {
+            result.propsUsedInBody.add(name);
+          }
+        }
       } else if (t.isIdentifier(propsParam)) {
         // props参数，需要在函数体中查找使用
         // 这部分在handlePropsUsage中处理
