@@ -147,6 +147,20 @@ class ASTAnalyzer {
       propsUsedInBody: new Set(),
       isComponent: false,
       usesRestSpread: false, // 新增标记
+      cyclomaticComplexity: 0,
+      // 新增：增强的代码关联性分析
+      functionCalls: new Map(), // 函数调用关系
+      variableReferences: new Map(), // 变量引用关系
+      dataFlow: new Map(), // 数据流分析
+      hookUsage: new Set(), // React Hooks 使用
+      eventHandlers: new Set(), // 事件处理器
+      stateManagement: new Map(), // 状态管理分析
+      componentLifecycle: new Set(), // 组件生命周期
+      conditionalRendering: [], // 条件渲染分析
+      dynamicImports: new Set(), // 动态导入
+      contextUsage: new Set(), // Context 使用
+      methodChains: new Map(), // 方法链调用
+      asyncOperations: new Set(), // 异步操作
     };
 
     // 遍历AST
@@ -169,17 +183,25 @@ class ASTAnalyzer {
       ExportAllDeclaration: (path) => {
         if (path.node.source && path.node.source.value) {
           const src = path.node.source.value;
-          const resolvedPath = this.fileScanner.resolveImportPath(src, result.filePath);
+          const resolvedPath = this.fileScanner.resolveImportPath(
+            src,
+            result.filePath
+          );
           if (resolvedPath && this.fileScanner.isInProjectScope(resolvedPath)) {
             if (!result.dependencies) result.dependencies = new Map();
             result.dependencies.set(resolvedPath, {
               source: src,
               resolvedPath,
-              specifiers: ['*'],
-              type: 'reexport'
+              specifiers: ["*"],
+              type: "reexport",
             });
             // 记录通配符重导出到 exports
-            result.exports.push({ type: 'named', name: '*', reexport: true, from: src });
+            result.exports.push({
+              type: "named",
+              name: "*",
+              reexport: true,
+              from: src,
+            });
           }
         }
       },
@@ -187,30 +209,41 @@ class ASTAnalyzer {
       // 处理动态导入与 CommonJS require
       CallExpression: (path) => {
         this.handleCallExpression(path, result, filePath);
+        this.analyzeFunctionCalls(path, result); // 新增：分析函数调用
+        this.analyzeHookUsage(path, result); // 新增：分析Hook使用
+        this.analyzeStateManagement(path, result); // 新增：分析状态管理
+        this.analyzeContextUsage(path, result); // 新增：分析Context使用
+        this.analyzeMethodChains(path, result); // 新增：分析方法链
+        this.analyzeAsyncOperations(path, result); // 新增：分析异步操作
       },
 
       // 处理JSX元素
       JSXOpeningElement: (path) => {
         this.handleJSXElement(path, result);
+        this.analyzeEventHandlers(path, result); // 新增：分析事件处理器
       },
 
       // 处理函数组件
       FunctionDeclaration: (path) => {
         this.handleFunctionComponent(path, result);
+        this.analyzeFunctionDefinition(path, result); // 新增：分析函数定义
       },
 
       ArrowFunctionExpression: (path) => {
         this.handleArrowFunctionComponent(path, result);
+        this.analyzeFunctionDefinition(path, result); // 新增：分析箭头函数定义
       },
 
       // 处理类组件
       ClassDeclaration: (path) => {
         this.handleClassComponent(path, result);
+        this.analyzeLifecycleMethods(path, result); // 新增：分析生命周期方法
       },
 
       // 处理Props使用
       MemberExpression: (path) => {
         this.handlePropsUsage(path, result);
+        this.analyzeVariableReferences(path, result); // 新增：分析变量引用
       },
 
       // 处理对象解构
@@ -220,6 +253,31 @@ class ASTAnalyzer {
       // 处理 ...rest
       RestElement: (path) => {
         this.handleRestElement(path, result);
+      },
+
+      // 新增：处理变量声明
+      VariableDeclarator: (path) => {
+        this.analyzeDataFlow(path, result);
+      },
+
+      // 新增：处理赋值表达式
+      AssignmentExpression: (path) => {
+        this.analyzeDataFlow(path, result);
+      },
+
+      // 新增：处理条件表达式
+      ConditionalExpression: (path) => {
+        this.analyzeConditionalRendering(path, result);
+      },
+
+      // 新增：处理逻辑表达式
+      LogicalExpression: (path) => {
+        this.analyzeConditionalRendering(path, result);
+      },
+
+      // 新增：处理动态导入
+      Import: (path) => {
+        this.analyzeDynamicImports(path, result);
       },
     });
 
@@ -298,7 +356,10 @@ class ASTAnalyzer {
       // 支持 re-export: export { X } from './X'
       if (path.node.source && path.node.source.value) {
         const src = path.node.source.value;
-        const resolvedPath = this.fileScanner.resolveImportPath(src, result.filePath);
+        const resolvedPath = this.fileScanner.resolveImportPath(
+          src,
+          result.filePath
+        );
         if (resolvedPath && this.fileScanner.isInProjectScope(resolvedPath)) {
           if (!result.dependencies) result.dependencies = new Map();
           result.dependencies.set(resolvedPath, {
@@ -308,15 +369,27 @@ class ASTAnalyzer {
           });
           // 将重导出视为导出的一部分，以便该文件参与图谱
           const exportedNames = (path.node.specifiers || [])
-            .map(s => (t.isExportSpecifier(s) && s.exported ? s.exported.name : null))
+            .map((s) =>
+              t.isExportSpecifier(s) && s.exported ? s.exported.name : null
+            )
             .filter(Boolean);
           if (exportedNames.length > 0) {
-            exportedNames.forEach(name => {
-              result.exports.push({ type: 'named', name, reexport: true, from: src });
+            exportedNames.forEach((name) => {
+              result.exports.push({
+                type: "named",
+                name,
+                reexport: true,
+                from: src,
+              });
             });
           } else {
             // 无显式名称时，记录通配符
-            result.exports.push({ type: 'named', name: '*', reexport: true, from: src });
+            result.exports.push({
+              type: "named",
+              name: "*",
+              reexport: true,
+              from: src,
+            });
           }
         }
       }
@@ -374,6 +447,19 @@ class ASTAnalyzer {
     if (this.isFunctionComponent(path.node)) {
       result.isComponent = true;
       this.extractPropsFromFunction(path, result);
+      // 圈复杂度计算（函数体）
+      try {
+        const bodyNode =
+          path.node.body &&
+          (t.isBlockStatement(path.node.body) ? path.node.body : null);
+        const computed = this.computeCyclomaticComplexity(
+          bodyNode || path.node.body || path.node
+        );
+        result.cyclomaticComplexity = Math.max(
+          result.cyclomaticComplexity || 0,
+          computed || 0
+        );
+      } catch (_) {}
     }
   }
 
@@ -386,6 +472,19 @@ class ASTAnalyzer {
     if (this.isArrowFunctionComponent(path)) {
       result.isComponent = true;
       this.extractPropsFromFunction(path, result);
+      // 圈复杂度计算（箭头函数体）
+      try {
+        const bodyNode =
+          path.node.body &&
+          (t.isBlockStatement(path.node.body) ? path.node.body : null);
+        const computed = this.computeCyclomaticComplexity(
+          bodyNode || path.node.body || path.node
+        );
+        result.cyclomaticComplexity = Math.max(
+          result.cyclomaticComplexity || 0,
+          computed || 0
+        );
+      } catch (_) {}
     }
   }
 
@@ -398,6 +497,22 @@ class ASTAnalyzer {
     if (this.isClassComponent(path.node)) {
       result.isComponent = true;
       this.extractPropsFromClass(path, result);
+      // 圈复杂度计算（render方法）
+      try {
+        const renderMethod = path.node.body?.body?.find(
+          (member) =>
+            t.isClassMethod(member) &&
+            t.isIdentifier(member.key, { name: "render" })
+        );
+        const bodyNode = renderMethod?.body || null;
+        const computed = this.computeCyclomaticComplexity(
+          bodyNode || path.node.body || path.node
+        );
+        result.cyclomaticComplexity = Math.max(
+          result.cyclomaticComplexity || 0,
+          computed || 0
+        );
+      } catch (_) {}
     }
   }
 
@@ -522,7 +637,10 @@ class ASTAnalyzer {
       }
     }
     // require('...')
-    if (t.isIdentifier(callee, { name: 'require' }) && path.node.arguments?.length >= 1) {
+    if (
+      t.isIdentifier(callee, { name: "require" }) &&
+      path.node.arguments?.length >= 1
+    ) {
       const arg = path.node.arguments[0];
       if (t.isStringLiteral(arg)) {
         const src = arg.value;
@@ -667,6 +785,44 @@ class ASTAnalyzer {
   }
 
   /**
+   * 计算圈复杂度（Cyclomatic Complexity）
+   * @param {Object} bodyNode - 函数或方法的主体节点
+   * @returns {number} 圈复杂度
+   */
+  computeCyclomaticComplexity(bodyNode) {
+    if (!bodyNode) return 0;
+    let complexity = 1; // 基础复杂度
+    try {
+      traverse(bodyNode, {
+        enter(p) {
+          const n = p.node;
+          if (t.isIfStatement(n)) complexity += 1;
+          else if (t.isSwitchCase(n) && n.test) complexity += 1;
+          else if (
+            t.isForStatement(n) ||
+            t.isForInStatement(n) ||
+            t.isForOfStatement(n)
+          )
+            complexity += 1;
+          else if (t.isWhileStatement(n) || t.isDoWhileStatement(n))
+            complexity += 1;
+          else if (t.isConditionalExpression(n)) complexity += 1;
+          else if (
+            t.isLogicalExpression(n) &&
+            (n.operator === "&&" || n.operator === "||")
+          )
+            complexity += 1;
+          else if (t.isCatchClause(n)) complexity += 1;
+        },
+      });
+    } catch (e) {
+      // 兜底，确保不抛错
+      complexity = Math.max(complexity, 1);
+    }
+    return complexity;
+  }
+
+  /**
    * 从函数中提取Props信息
    * @param {Object} path - AST路径
    * @param {Object} result - 结果对象
@@ -691,8 +847,8 @@ class ASTAnalyzer {
 
         // 遍历函数体，标记被实际引用的解构标识符为已使用
         // 仅遍历函数体，避免将形参本身计为使用
-        const bodyPath = path.get('body');
-        if (bodyPath && typeof bodyPath.traverse === 'function') {
+        const bodyPath = path.get("body");
+        if (bodyPath && typeof bodyPath.traverse === "function") {
           const used = new Set();
           bodyPath.traverse({
             Identifier(p) {
@@ -700,7 +856,7 @@ class ASTAnalyzer {
               if (declared.has(name)) {
                 used.add(name);
               }
-            }
+            },
           });
           for (const name of used) {
             result.propsUsedInBody.add(name);
@@ -734,6 +890,533 @@ class ASTAnalyzer {
         }
       });
     }
+  }
+
+  /**
+   * 新增：分析函数调用关系
+   * @param {Object} path - AST路径
+   * @param {Object} result - 分析结果
+   */
+  analyzeFunctionCalls(path, result) {
+    const callee = path.node.callee;
+    let callName = '';
+    let context = '';
+
+    if (t.isIdentifier(callee)) {
+      callName = callee.name;
+    } else if (t.isMemberExpression(callee)) {
+      if (t.isIdentifier(callee.object) && t.isIdentifier(callee.property)) {
+        context = callee.object.name;
+        callName = `${callee.object.name}.${callee.property.name}`;
+      }
+    }
+
+    if (callName) {
+      // 获取调用位置信息
+      const location = path.node.loc?.start.line || 0;
+      const args = path.node.arguments.map(arg => this.getExpressionType(arg));
+      
+      if (!result.functionCalls.has(callName)) {
+        result.functionCalls.set(callName, []);
+      }
+      
+      result.functionCalls.get(callName).push({
+        location,
+        context,
+        arguments: args,
+        argumentCount: path.node.arguments.length
+      });
+    }
+  }
+
+  /**
+   * 新增：分析函数定义
+   * @param {Object} path - AST路径
+   * @param {Object} result - 分析结果
+   */
+  analyzeFunctionDefinition(path, result) {
+    const functionName = path.node.id?.name || 'anonymous';
+    const calls = new Set();
+    const variables = new Set();
+
+    // 遍历函数体，收集内部调用和变量使用
+    path.traverse({
+      CallExpression(callPath) {
+        const callee = callPath.node.callee;
+        if (t.isIdentifier(callee)) {
+          calls.add(callee.name);
+        } else if (t.isMemberExpression(callee)) {
+          if (t.isIdentifier(callee.object) && t.isIdentifier(callee.property)) {
+            calls.add(`${callee.object.name}.${callee.property.name}`);
+          }
+        }
+      },
+      Identifier(idPath) {
+        if (idPath.isReferencedIdentifier()) {
+          variables.add(idPath.node.name);
+        }
+      }
+    });
+
+    if (!result.functionCalls.has(functionName)) {
+      result.functionCalls.set(functionName, []);
+    }
+    
+    result.functionCalls.set(functionName + '_definition', {
+      internalCalls: Array.from(calls),
+      referencedVariables: Array.from(variables),
+      parameters: path.node.params.map(param => {
+        if (t.isIdentifier(param)) return param.name;
+        if (t.isObjectPattern(param)) return 'destructured';
+        return 'complex';
+      })
+    });
+  }
+
+  /**
+   * 新增：分析React Hooks使用
+   * @param {Object} path - AST路径
+   * @param {Object} result - 分析结果
+   */
+  analyzeHookUsage(path, result) {
+    const callee = path.node.callee;
+    
+    if (t.isIdentifier(callee) && callee.name.startsWith('use')) {
+      const hookName = callee.name;
+      const location = path.node.loc?.start.line || 0;
+      const args = path.node.arguments.map(arg => this.getExpressionType(arg));
+      
+      result.hookUsage.add({
+        name: hookName,
+        location,
+        arguments: args,
+        argumentCount: path.node.arguments.length
+      });
+    }
+  }
+
+  /**
+   * 新增：分析生命周期方法
+   * @param {Object} path - AST路径
+   * @param {Object} result - 分析结果
+   */
+  analyzeLifecycleMethods(path, result) {
+    const lifecycleMethods = [
+      'componentDidMount', 'componentDidUpdate', 'componentWillUnmount',
+      'shouldComponentUpdate', 'getSnapshotBeforeUpdate', 'componentDidCatch',
+      'getDerivedStateFromProps', 'getDerivedStateFromError', 'constructor',
+      'render'
+    ];
+
+    path.traverse({
+      ClassMethod(methodPath) {
+        const methodName = methodPath.node.key.name;
+        if (lifecycleMethods.includes(methodName)) {
+          const location = methodPath.node.loc?.start.line || 0;
+          result.componentLifecycle.add({
+            name: methodName,
+            location,
+            isAsync: methodPath.node.async || false
+          });
+        }
+      }
+    });
+  }
+
+  /**
+   * 新增：分析变量引用关系
+   * @param {Object} path - AST路径
+   * @param {Object} result - 分析结果
+   */
+  analyzeVariableReferences(path, result) {
+    const node = path.node;
+    
+    if (t.isMemberExpression(node) && t.isIdentifier(node.object)) {
+      const objectName = node.object.name;
+      const propertyName = t.isIdentifier(node.property) ? node.property.name : 'computed';
+      const location = node.loc?.start.line || 0;
+      
+      if (!result.variableReferences.has(objectName)) {
+        result.variableReferences.set(objectName, []);
+      }
+      
+      result.variableReferences.get(objectName).push({
+        property: propertyName,
+        location,
+        isComputed: !t.isIdentifier(node.property)
+      });
+    }
+  }
+
+  /**
+   * 新增：分析数据流
+   * @param {Object} path - AST路径
+   * @param {Object} result - 分析结果
+   */
+  analyzeDataFlow(path, result) {
+    const node = path.node;
+    
+    if (t.isVariableDeclarator(node) && t.isIdentifier(node.id)) {
+      const varName = node.id.name;
+      const initType = this.getExpressionType(node.init);
+      const location = node.loc?.start.line || 0;
+      
+      result.dataFlow.set(varName, {
+        type: initType,
+        dependencies: this.extractDependencies(node.init),
+        location,
+        isDeclaration: true
+      });
+    } else if (t.isAssignmentExpression(node) && t.isIdentifier(node.left)) {
+      const varName = node.left.name;
+      const valueType = this.getExpressionType(node.right);
+      const location = node.loc?.start.line || 0;
+      
+      result.dataFlow.set(varName + '_reassign_' + location, {
+        variable: varName,
+        type: valueType,
+        dependencies: this.extractDependencies(node.right),
+        location,
+        isReassignment: true
+      });
+    }
+  }
+
+  /**
+   * 新增：分析状态管理
+   * @param {Object} path - AST路径
+   * @param {Object} result - 分析结果
+   */
+  analyzeStateManagement(path, result) {
+    const callee = path.node.callee;
+    const location = path.node.loc?.start.line || 0;
+    
+    // React state management
+    if (t.isIdentifier(callee)) {
+      if (callee.name === 'useState') {
+        const stateInfo = {
+          type: 'useState',
+          location,
+          initialValue: this.getExpressionType(path.node.arguments[0])
+        };
+        result.stateManagement.set('useState_' + location, stateInfo);
+      } else if (callee.name === 'useReducer') {
+        const stateInfo = {
+          type: 'useReducer',
+          location,
+          hasInitialState: path.node.arguments.length > 1
+        };
+        result.stateManagement.set('useReducer_' + location, stateInfo);
+      } else if (callee.name === 'useContext') {
+        const stateInfo = {
+          type: 'useContext',
+          location,
+          contextName: this.getExpressionType(path.node.arguments[0])
+        };
+        result.stateManagement.set('useContext_' + location, stateInfo);
+      }
+    }
+    
+    // Redux/Zustand patterns
+    if (t.isMemberExpression(callee)) {
+      const objectName = callee.object.name;
+      const methodName = callee.property.name;
+      
+      if (objectName === 'dispatch' || methodName === 'dispatch') {
+        const stateInfo = {
+          type: 'redux-dispatch',
+          location,
+          actionType: this.extractActionType(path.node.arguments[0])
+        };
+        result.stateManagement.set('dispatch_' + location, stateInfo);
+      }
+    }
+  }
+
+  /**
+   * 新增：分析Context使用
+   * @param {Object} path - AST路径
+   * @param {Object} result - 分析结果
+   */
+  analyzeContextUsage(path, result) {
+    const callee = path.node.callee;
+    const location = path.node.loc?.start.line || 0;
+    
+    if (t.isIdentifier(callee) && callee.name === 'useContext') {
+      const arg = path.node.arguments[0];
+      if (t.isIdentifier(arg)) {
+        result.contextUsage.add({
+          type: 'useContext',
+          contextName: arg.name,
+          location
+        });
+      }
+    }
+    
+    if (t.isMemberExpression(callee) && 
+        t.isIdentifier(callee.property) && 
+        callee.property.name === 'createContext') {
+      result.contextUsage.add({
+        type: 'createContext',
+        location
+      });
+    }
+  }
+
+  /**
+   * 新增：分析条件渲染
+   * @param {Object} path - AST路径
+   * @param {Object} result - 分析结果
+   */
+  analyzeConditionalRendering(path, result) {
+    const node = path.node;
+    const location = node.loc?.start.line || 0;
+    
+    if (t.isConditionalExpression(node) || t.isLogicalExpression(node)) {
+      const condition = this.extractConditionInfo(node);
+      if (condition) {
+        result.conditionalRendering.push({
+          type: node.type,
+          condition: condition,
+          location,
+          operator: node.operator || '?:'
+        });
+      }
+    }
+  }
+
+  /**
+   * 新增：分析事件处理器
+   * @param {Object} path - AST路径
+   * @param {Object} result - 分析结果
+   */
+  analyzeEventHandlers(path, result) {
+    const attributes = path.node.attributes || [];
+    const location = path.node.loc?.start.line || 0;
+    
+    attributes.forEach(attr => {
+      if (t.isJSXAttribute(attr) && t.isJSXIdentifier(attr.name)) {
+        const attrName = attr.name.name;
+        if (attrName.startsWith('on') && attrName.length > 2) {
+          const eventType = attrName.slice(2).toLowerCase();
+          const handlerType = this.getExpressionType(attr.value?.expression);
+          
+          result.eventHandlers.add({
+            eventType,
+            handlerType,
+            location,
+            attributeName: attrName
+          });
+        }
+      }
+    });
+  }
+
+  /**
+   * 新增：分析方法链调用
+   * @param {Object} path - AST路径
+   * @param {Object} result - 分析结果
+   */
+  analyzeMethodChains(path, result) {
+    const callee = path.node.callee;
+    
+    if (t.isMemberExpression(callee)) {
+      const chain = this.extractMethodChain(callee);
+      if (chain.length > 1) {
+        const location = path.node.loc?.start.line || 0;
+        const chainKey = chain.join('.');
+        
+        if (!result.methodChains.has(chainKey)) {
+          result.methodChains.set(chainKey, []);
+        }
+        
+        result.methodChains.get(chainKey).push({
+          chain,
+          location,
+          argumentCount: path.node.arguments.length
+        });
+      }
+    }
+  }
+
+  /**
+   * 新增：分析异步操作
+   * @param {Object} path - AST路径
+   * @param {Object} result - 分析结果
+   */
+  analyzeAsyncOperations(path, result) {
+    const callee = path.node.callee;
+    const location = path.node.loc?.start.line || 0;
+    
+    // Promise相关
+    if (t.isMemberExpression(callee) && t.isIdentifier(callee.property)) {
+      const methodName = callee.property.name;
+      if (['then', 'catch', 'finally', 'all', 'race', 'resolve', 'reject'].includes(methodName)) {
+        result.asyncOperations.add({
+          type: 'promise',
+          method: methodName,
+          location
+        });
+      }
+    }
+    
+    // async/await 在函数声明中处理
+    if (t.isIdentifier(callee)) {
+      // setTimeout, setInterval等
+      if (['setTimeout', 'setInterval', 'requestAnimationFrame'].includes(callee.name)) {
+        result.asyncOperations.add({
+          type: 'timer',
+          method: callee.name,
+          location
+        });
+      }
+    }
+  }
+
+  /**
+   * 新增：分析动态导入
+   * @param {Object} path - AST路径
+   * @param {Object} result - 分析结果
+   */
+  analyzeDynamicImports(path, result) {
+    const parent = path.parent;
+    if (t.isCallExpression(parent) && t.isImport(parent.callee)) {
+      const arg = parent.arguments[0];
+      if (t.isStringLiteral(arg)) {
+        const location = parent.loc?.start.line || 0;
+        result.dynamicImports.add({
+          module: arg.value,
+          location
+        });
+      }
+    }
+  }
+
+  /**
+   * 新增：获取表达式类型
+   * @param {Object} node - AST节点
+   * @returns {string} 表达式类型
+   */
+  getExpressionType(node) {
+    if (!node) return 'undefined';
+    if (t.isStringLiteral(node)) return 'string';
+    if (t.isNumericLiteral(node)) return 'number';
+    if (t.isBooleanLiteral(node)) return 'boolean';
+    if (t.isArrayExpression(node)) return 'array';
+    if (t.isObjectExpression(node)) return 'object';
+    if (t.isFunctionExpression(node) || t.isArrowFunctionExpression(node)) return 'function';
+    if (t.isCallExpression(node)) return 'call-result';
+    if (t.isIdentifier(node)) return 'variable';
+    if (t.isJSXElement(node)) return 'jsx';
+    return 'unknown';
+  }
+
+  /**
+   * 新增：提取依赖关系
+   * @param {Object} node - AST节点
+   * @returns {Array} 依赖列表
+   */
+  extractDependencies(node) {
+    const dependencies = [];
+    
+    if (!node) return dependencies;
+    
+    if (t.isIdentifier(node)) {
+      dependencies.push(node.name);
+    } else if (t.isMemberExpression(node)) {
+      if (t.isIdentifier(node.object)) {
+        dependencies.push(node.object.name);
+      }
+    } else if (t.isCallExpression(node)) {
+      if (t.isIdentifier(node.callee)) {
+        dependencies.push(node.callee.name);
+      }
+      // 递归分析参数
+      node.arguments.forEach(arg => {
+        dependencies.push(...this.extractDependencies(arg));
+      });
+    } else if (t.isArrayExpression(node)) {
+      node.elements.forEach(element => {
+        if (element) {
+          dependencies.push(...this.extractDependencies(element));
+        }
+      });
+    } else if (t.isObjectExpression(node)) {
+      node.properties.forEach(prop => {
+        if (t.isObjectProperty(prop)) {
+          dependencies.push(...this.extractDependencies(prop.value));
+        }
+      });
+    }
+    
+    return dependencies;
+  }
+
+  /**
+   * 新增：提取条件信息
+   * @param {Object} node - AST节点
+   * @returns {string|null} 条件信息
+   */
+  extractConditionInfo(node) {
+    if (t.isIdentifier(node)) {
+      return node.name;
+    } else if (t.isMemberExpression(node)) {
+      if (t.isIdentifier(node.object) && t.isIdentifier(node.property)) {
+        return `${node.object.name}.${node.property.name}`;
+      }
+    } else if (t.isBinaryExpression(node)) {
+      const left = this.extractConditionInfo(node.left);
+      const right = this.extractConditionInfo(node.right);
+      return `${left} ${node.operator} ${right}`;
+    } else if (t.isLogicalExpression(node)) {
+      const left = this.extractConditionInfo(node.left);
+      const right = this.extractConditionInfo(node.right);
+      return `${left} ${node.operator} ${right}`;
+    }
+    return null;
+  }
+
+  /**
+   * 新增：提取方法链
+   * @param {Object} node - MemberExpression节点
+   * @returns {Array} 方法链数组
+   */
+  extractMethodChain(node) {
+    const chain = [];
+    let current = node;
+    
+    while (t.isMemberExpression(current)) {
+      if (t.isIdentifier(current.property)) {
+        chain.unshift(current.property.name);
+      }
+      current = current.object;
+    }
+    
+    if (t.isIdentifier(current)) {
+      chain.unshift(current.name);
+    }
+    
+    return chain;
+  }
+
+  /**
+   * 新增：提取Action类型
+   * @param {Object} node - AST节点
+   * @returns {string} Action类型
+   */
+  extractActionType(node) {
+    if (t.isObjectExpression(node)) {
+      const typeProp = node.properties.find(prop => 
+        t.isObjectProperty(prop) && 
+        t.isIdentifier(prop.key, { name: 'type' })
+      );
+      if (typeProp && t.isStringLiteral(typeProp.value)) {
+        return typeProp.value.value;
+      }
+    } else if (t.isStringLiteral(node)) {
+      return node.value;
+    }
+    return 'unknown';
   }
 }
 

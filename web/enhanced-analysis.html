@@ -1,141 +1,4 @@
-const fs = require('fs-extra');
-const path = require('path');
-
-/**
- * 可视化生成器
- * 负责生成HTML报告和D3.js可视化图表
- */
-class VisualizationGenerator {
-  /**
-   * 构造函数
-   * @param {Object} config - 配置对象
-   */
-  constructor(config) {
-    this.config = config;
-  }
-
-  /**
-   * 生成可视化报告
-   * @param {Object} dependencyGraph - 依赖图谱
-   * @param {Object} analysisReport - 分析报告
-   */
-  async generateReport(dependencyGraph, analysisReport) {
-    // 生成HTML报告
-    await this.generateHTMLReport(dependencyGraph, analysisReport);
-
-    // 始终生成JSON文件：优先使用配置的 jsonPath，否则与 HTML 同名 .json
-    const defaultJsonPath = this.config.outputPath.replace(/\.html?$/i, ".json");
-    const targetJsonPath = this.config.jsonPath || defaultJsonPath;
-    await this.generateJSONReport(dependencyGraph, analysisReport, targetJsonPath);
-  }
-
-  /**
-   * 生成HTML报告
-   * @param {Object} dependencyGraph - 依赖图谱
-   * @param {Object} analysisReport - 分析报告
-   */
-  async generateHTMLReport(dependencyGraph, analysisReport) {
-    const d3Data = dependencyGraph.nodes.size > 0 ? 
-      this.convertToD3Format(dependencyGraph) : 
-      { nodes: [], links: [] };
-    
-    const htmlContent = this.generateHTMLTemplate(d3Data, analysisReport);
-    
-    await fs.writeFile(this.config.outputPath, htmlContent, 'utf-8');
-  }
-
-  /**
-   * 生成JSON报告
-   * @param {Object} dependencyGraph - 依赖图谱
-   * @param {Object} analysisReport - 分析报告
-   */
-  async generateJSONReport(dependencyGraph, analysisReport, outputJsonPath) {
-    // 顶层结构与测试期望对齐：nodes/edges/metadata/analysis
-    const graphJson = this.convertGraphToJSON(dependencyGraph);
-    const jsonData = {
-      nodes: graphJson.nodes,
-      edges: graphJson.edges,
-      metadata: {
-        ...graphJson.metadata,
-        generatedAt: new Date().toISOString(),
-        projectPath: this.config.projectPath,
-        framework: this.config.framework,
-      },
-      analysis: analysisReport,
-    };
-
-    await fs.writeFile(outputJsonPath, JSON.stringify(jsonData, null, 2), 'utf-8');
-  }
-
-  /**
-   * 转换为D3.js格式
-   * @param {Object} dependencyGraph - 依赖图谱
-   * @returns {Object} D3.js格式数据
-   */
-  convertToD3Format(dependencyGraph) {
-    const nodes = [];
-    const links = [];
-    
-    // 转换节点
-    for (const [nodeId, node] of dependencyGraph.nodes) {
-      nodes.push({
-        id: nodeId,
-        name: node.name,
-        group: node.componentId || 0,
-        inDegree: node.inDegree,
-        outDegree: node.outDegree,
-        totalDegree: node.inDegree + node.outDegree,
-        cyclomaticComplexity: node.cyclomaticComplexity || 0,
-        unusedProps: node.getUnusedProps(),
-        propsDeclared: Array.from(node.propsDeclared),
-        propsUsedInBody: Array.from(node.propsUsedInBody),
-        relativePath: path.relative(this.config.projectPath, nodeId)
-      });
-    }
-    
-    // 转换边
-    for (const edge of dependencyGraph.edges) {
-      links.push({
-        source: edge.source,
-        target: edge.target,
-        value: edge.metadata.usage ? edge.metadata.usage.count : 1
-      });
-    }
-    
-    return { nodes, links };
-  }
-
-  /**
-   * 转换图谱为JSON格式
-   * @param {Object} dependencyGraph - 依赖图谱
-   * @returns {Object} JSON格式图谱
-   */
-  convertGraphToJSON(dependencyGraph) {
-    const nodes = {};
-    for (const [nodeId, node] of dependencyGraph.nodes) {
-      nodes[nodeId] = {
-        ...node.toJSON(),
-        relativePath: path.relative(this.config.projectPath, nodeId)
-      };
-    }
-    
-    const edges = dependencyGraph.edges.map(edge => edge.toJSON());
-    
-    return {
-      nodes,
-      edges,
-      metadata: dependencyGraph.metadata
-    };
-  }
-
-  /**
-   * 生成HTML模板
-   * @param {Object} d3Data - D3.js数据
-   * @param {Object} analysisReport - 分析报告
-   * @returns {string} HTML内容
-   */
-  generateHTMLTemplate(d3Data, analysisReport) {
-    return `<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -143,271 +6,7 @@ class VisualizationGenerator {
     <title>前端组件依赖关系可视化</title>
     <script src="https://unpkg.com/d3@7.9.0/dist/d3.js"></script>
     <style>
-        ${this.getCSS()}
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header class="header">
-            <h1>前端组件依赖关系可视化</h1>
-            <h2 style="font-size:1rem;color:#6c757d;">依赖关系图谱</h2>
-            <div class="project-info">
-                <span>项目: ${path.basename(this.config.projectPath)}</span>
-                <span>框架: ${this.config.framework}</span>
-                <span>生成时间: ${new Date().toLocaleString('zh-CN')}</span>
-            </div>
-        </header>
         
-        <div class="main-content">
-            <div class="sidebar">
-                <div class="panel">
-                    <h3>📊 统计概览</h3>
-                    <div class="stats">
-                        <div class="stat-item">
-                            <span class="stat-label">组件总数:</span>
-                            <span class="stat-value">${analysisReport.summary.totalComponents}</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">依赖关系:</span>
-                            <span class="stat-value">${analysisReport.summary.totalDependencies}</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">孤岛组件:</span>
-                            <span class="stat-value warning">${analysisReport.summary.orphanCount}</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">未使用Props:</span>
-                            <span class="stat-value warning">${analysisReport.summary.unusedPropsCount}</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">循环依赖:</span>
-                            <span class="stat-value error">${analysisReport.summary.circularDependenciesCount}</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">图密度:</span>
-                            <span class="stat-value">${(analysisReport.summary.density * 100).toFixed(2)}%</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="panel">
-                    <h3>🔗 代码关联性分析</h3>
-                    <div class="stats">
-                        <div class="stat-item">
-                            <span class="stat-label">平均函数调用复杂度:</span>
-                            <span class="stat-value">${this.calculateAverageComplexity(d3Data.nodes, 'functionCallComplexity')}</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">平均数据流复杂度:</span>
-                            <span class="stat-value">${this.calculateAverageComplexity(d3Data.nodes, 'dataFlowComplexity')}</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">平均状态管理复杂度:</span>
-                            <span class="stat-value">${this.calculateAverageComplexity(d3Data.nodes, 'stateComplexity')}</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">平均异步操作复杂度:</span>
-                            <span class="stat-value">${this.calculateAverageComplexity(d3Data.nodes, 'asyncComplexity')}</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">平均关联性得分:</span>
-                            <span class="stat-value ${this.getComplexityClass(this.calculateAverageComplexity(d3Data.nodes, 'relationshipScore'))}">${this.calculateAverageComplexity(d3Data.nodes, 'relationshipScore')}</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">高关联性组件:</span>
-                            <span class="stat-value warning">${this.countHighComplexityNodes(d3Data.nodes)}</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="panel">
-                    <h3>🎯 优化建议</h3>
-                    <div class="recommendations">
-                        ${this.generateRecommendationsHTML(analysisReport.recommendations)}
-                    </div>
-                </div>
-                
-                <div class="panel">
-                    <h3>🔍 图例</h3>
-                    <div class="legend">
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #69b3a2;"></div>
-                            <span>普通组件</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #ff6b6b;"></div>
-                            <span>孤岛组件</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #4ecdc4;"></div>
-                            <span>枢纽组件</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #45b7d1;"></div>
-                            <span>高复杂度组件</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #ff9f43;"></div>
-                            <span>高关联性组件</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #a55eea;"></div>
-                            <span>状态管理组件</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #26de81;"></div>
-                            <span>异步操作组件</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="panel">
-                    <h3>⚙️ 控制面板</h3>
-                    <div class="controls">
-                        <button id="resetZoom" class="btn">重置视图</button>
-                        <button id="toggleLabels" class="btn">切换标签</button>
-                        <button id="togglePhysics" class="btn">暂停/继续</button>
-                        
-                        <div class="control-group">
-                            <label for="colorMode">节点着色模式:</label>
-                            <select id="colorMode" class="select-control">
-                                <option value="default">默认模式</option>
-                                <option value="relationship">关联性得分</option>
-                                <option value="functionCall">函数调用复杂度</option>
-                                <option value="dataFlow">数据流复杂度</option>
-                                <option value="state">状态管理复杂度</option>
-                                <option value="async">异步操作复杂度</option>
-                            </select>
-                        </div>
-                        
-                        <div class="control-group">
-                            <label for="nodeSize">节点大小基准:</label>
-                            <select id="nodeSize" class="select-control">
-                                <option value="degree">连接度</option>
-                                <option value="relationship">关联性得分</option>
-                                <option value="complexity">圈复杂度</option>
-                            </select>
-                        </div>
-                        
-                        <div class="slider-group">
-                            <label for="linkDistance">连线距离:</label>
-                            <input type="range" id="linkDistance" min="30" max="200" value="80">
-                        </div>
-                        <div class="slider-group">
-                            <label for="chargeStrength">排斥力:</label>
-                            <input type="range" id="chargeStrength" min="-500" max="-50" value="-200">
-                        </div>
-                        
-                        <div class="slider-group">
-                            <label for="complexityThreshold">关联性阈值:</label>
-                            <input type="range" id="complexityThreshold" min="0" max="20" value="8" step="0.5">
-                            <span id="thresholdValue">8.0</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="visualization-area">
-                <div id="graph-container">
-                    <svg id="dependency-graph"></svg>
-                </div>
-                
-                <div id="tooltip" class="tooltip"></div>
-                
-                <div id="details-panel" class="details-panel">
-                    <div class="details-header">
-                        <h3>组件详情</h3>
-                        <button id="closeDetails" class="close-btn">×</button>
-                    </div>
-                    <div class="details-content">
-                        <p>点击组件节点查看详细信息</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <script>
-        // 数据注入
-        const graphData = ${JSON.stringify(d3Data)};
-        const analysisData = ${JSON.stringify(analysisReport)};
-        
-        ${this.getJavaScript()}
-    </script>
-</body>
-</html>`;
-  }
-
-  /**
-   * 生成建议HTML
-   * @param {Array} recommendations - 建议列表
-   * @returns {string} HTML字符串
-   */
-  generateRecommendationsHTML(recommendations) {
-    if (!recommendations || recommendations.length === 0) {
-      return '<p class="no-recommendations">🎉 暂无优化建议，代码结构良好！</p>';
-    }
-    
-    return recommendations.slice(0, 5).map(rec => {
-      const priorityClass = {
-        critical: 'priority-critical',
-        high: 'priority-high',
-        medium: 'priority-medium',
-        low: 'priority-low'
-      }[rec.priority] || 'priority-low';
-      
-      return `
-        <div class="recommendation ${priorityClass}">
-          <div class="rec-title">${rec.title}</div>
-          <div class="rec-description">${rec.description}</div>
-        </div>
-      `;
-    }).join('');
-  }
-
-  /**
-   * 计算平均复杂度
-   * @param {Array} nodes - 节点数组
-   * @param {string} field - 字段名
-   * @returns {string} 格式化的平均值
-   */
-  calculateAverageComplexity(nodes, field) {
-    if (!nodes || nodes.length === 0) return '0.00';
-    
-    const sum = nodes.reduce((acc, node) => acc + (node[field] || 0), 0);
-    const average = sum / nodes.length;
-    return average.toFixed(2);
-  }
-
-  /**
-   * 获取复杂度等级的CSS类
-   * @param {number|string} value - 复杂度值
-   * @returns {string} CSS类名
-   */
-  getComplexityClass(value) {
-    const numValue = parseFloat(value);
-    if (numValue >= 10) return 'error';
-    if (numValue >= 5) return 'warning';
-    return '';
-  }
-
-  /**
-   * 统计高关联性组件数量
-   * @param {Array} nodes - 节点数组
-   * @returns {number} 高关联性组件数量
-   */
-  countHighComplexityNodes(nodes) {
-    if (!nodes || nodes.length === 0) return 0;
-    
-    return nodes.filter(node => (node.relationshipScore || 0) >= 8).length;
-  }
-
-  /**
-   * 获取CSS样式
-   * @returns {string} CSS字符串
-   */
-  getCSS() {
-    return `
         * {
             margin: 0;
             padding: 0;
@@ -789,15 +388,211 @@ class VisualizationGenerator {
                 max-width: 400px;
             }
         }
-    `;
-  }
-
-  /**
-   * 获取JavaScript代码
-   * @returns {string} JavaScript字符串
-   */
-  getJavaScript() {
-    return `
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>前端组件依赖关系可视化</h1>
+            <h2 style="font-size:1rem;color:#6c757d;">依赖关系图谱</h2>
+            <div class="project-info">
+                <span>项目: react-demo</span>
+                <span>框架: react</span>
+                <span>生成时间: 2025/10/15 11:31:09</span>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="panel">
+                    <h3>📊 统计概览</h3>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <span class="stat-label">组件总数:</span>
+                            <span class="stat-value">9</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">依赖关系:</span>
+                            <span class="stat-value">10</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">孤岛组件:</span>
+                            <span class="stat-value warning">3</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">未使用Props:</span>
+                            <span class="stat-value warning">4</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">循环依赖:</span>
+                            <span class="stat-value error">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">图密度:</span>
+                            <span class="stat-value">13.89%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <h3>🔗 代码关联性分析</h3>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <span class="stat-label">平均函数调用复杂度:</span>
+                            <span class="stat-value">0.00</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">平均数据流复杂度:</span>
+                            <span class="stat-value">0.00</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">平均状态管理复杂度:</span>
+                            <span class="stat-value">0.00</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">平均异步操作复杂度:</span>
+                            <span class="stat-value">0.00</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">平均关联性得分:</span>
+                            <span class="stat-value ">0.00</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">高关联性组件:</span>
+                            <span class="stat-value warning">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <h3>🎯 优化建议</h3>
+                    <div class="recommendations">
+                        
+        <div class="recommendation priority-high">
+          <div class="rec-title">移除孤立组件</div>
+          <div class="rec-description">发现 1 个孤立组件，建议检查是否可以安全删除</div>
+        </div>
+      
+        <div class="recommendation priority-medium">
+          <div class="rec-title">清理未使用的Props</div>
+          <div class="rec-description">发现 4 个未使用的Props，建议清理以简化组件接口</div>
+        </div>
+      
+        <div class="recommendation priority-medium">
+          <div class="rec-title">关注枢纽组件</div>
+          <div class="rec-description">发现 1 个枢纽组件，建议重点维护和测试</div>
+        </div>
+      
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <h3>🔍 图例</h3>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #69b3a2;"></div>
+                            <span>普通组件</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #ff6b6b;"></div>
+                            <span>孤岛组件</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #4ecdc4;"></div>
+                            <span>枢纽组件</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #45b7d1;"></div>
+                            <span>高复杂度组件</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #ff9f43;"></div>
+                            <span>高关联性组件</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #a55eea;"></div>
+                            <span>状态管理组件</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #26de81;"></div>
+                            <span>异步操作组件</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <h3>⚙️ 控制面板</h3>
+                    <div class="controls">
+                        <button id="resetZoom" class="btn">重置视图</button>
+                        <button id="toggleLabels" class="btn">切换标签</button>
+                        <button id="togglePhysics" class="btn">暂停/继续</button>
+                        
+                        <div class="control-group">
+                            <label for="colorMode">节点着色模式:</label>
+                            <select id="colorMode" class="select-control">
+                                <option value="default">默认模式</option>
+                                <option value="relationship">关联性得分</option>
+                                <option value="functionCall">函数调用复杂度</option>
+                                <option value="dataFlow">数据流复杂度</option>
+                                <option value="state">状态管理复杂度</option>
+                                <option value="async">异步操作复杂度</option>
+                            </select>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label for="nodeSize">节点大小基准:</label>
+                            <select id="nodeSize" class="select-control">
+                                <option value="degree">连接度</option>
+                                <option value="relationship">关联性得分</option>
+                                <option value="complexity">圈复杂度</option>
+                            </select>
+                        </div>
+                        
+                        <div class="slider-group">
+                            <label for="linkDistance">连线距离:</label>
+                            <input type="range" id="linkDistance" min="30" max="200" value="80">
+                        </div>
+                        <div class="slider-group">
+                            <label for="chargeStrength">排斥力:</label>
+                            <input type="range" id="chargeStrength" min="-500" max="-50" value="-200">
+                        </div>
+                        
+                        <div class="slider-group">
+                            <label for="complexityThreshold">关联性阈值:</label>
+                            <input type="range" id="complexityThreshold" min="0" max="20" value="8" step="0.5">
+                            <span id="thresholdValue">8.0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="visualization-area">
+                <div id="graph-container">
+                    <svg id="dependency-graph"></svg>
+                </div>
+                
+                <div id="tooltip" class="tooltip"></div>
+                
+                <div id="details-panel" class="details-panel">
+                    <div class="details-header">
+                        <h3>组件详情</h3>
+                        <button id="closeDetails" class="close-btn">×</button>
+                    </div>
+                    <div class="details-content">
+                        <p>点击组件节点查看详细信息</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 数据注入
+        const graphData = {"nodes":[{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.jsx","name":"App","group":0,"inDegree":0,"outDegree":3,"totalDegree":3,"cyclomaticComplexity":1,"unusedProps":[],"propsDeclared":[],"propsUsedInBody":[],"relativePath":"src/App.jsx"},{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx","name":"App","group":0,"inDegree":0,"outDegree":4,"totalDegree":4,"cyclomaticComplexity":1,"unusedProps":[],"propsDeclared":[],"propsUsedInBody":[],"relativePath":"src/App.tsx"},{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx","name":"Button","group":0,"inDegree":2,"outDegree":0,"totalDegree":2,"cyclomaticComplexity":1,"unusedProps":["unusedProp"],"propsDeclared":["children","variant","size","disabled","onClick","className","unusedProp"],"propsUsedInBody":["variant","size","disabled","className","onClick","children"],"relativePath":"src/components/Button.jsx"},{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Card.jsx","name":"Card","group":0,"inDegree":1,"outDegree":1,"totalDegree":2,"cyclomaticComplexity":1,"unusedProps":[],"propsDeclared":["title","content","imageUrl","actions","className"],"propsUsedInBody":["className","imageUrl","title","content","actions"],"relativePath":"src/components/Card.jsx"},{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx","name":"OrphanComponent","group":1,"inDegree":0,"outDegree":0,"totalDegree":0,"cyclomaticComplexity":1,"unusedProps":["unusedProp1","unusedProp2","unusedProp3"],"propsDeclared":["message","type","onClose","unusedProp1","unusedProp2","unusedProp3"],"propsUsedInBody":["type","message","onClose"],"relativePath":"src/components/OrphanComponent.jsx"},{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/hooks/useApi.ts","name":"useApi","group":0,"inDegree":1,"outDegree":1,"totalDegree":2,"cyclomaticComplexity":0,"unusedProps":[],"propsDeclared":[],"propsUsedInBody":[],"relativePath":"src/hooks/useApi.ts"},{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/services/api.ts","name":"api","group":0,"inDegree":1,"outDegree":1,"totalDegree":2,"cyclomaticComplexity":0,"unusedProps":[],"propsDeclared":[],"propsUsedInBody":[],"relativePath":"src/services/api.ts"},{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.css","name":"App","group":0,"inDegree":2,"outDegree":0,"totalDegree":2,"cyclomaticComplexity":0,"unusedProps":[],"propsDeclared":[],"propsUsedInBody":[],"relativePath":"src/App.css"},{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/types/index.ts","name":"types","group":0,"inDegree":3,"outDegree":0,"totalDegree":3,"cyclomaticComplexity":0,"unusedProps":[],"propsDeclared":[],"propsUsedInBody":[],"relativePath":"src/types/index.ts"}],"links":[{"source":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.jsx","target":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx","value":4},{"source":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.jsx","target":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Card.jsx","value":1},{"source":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.jsx","target":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.css","value":1},{"source":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx","target":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/types/index.ts","value":1},{"source":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx","target":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/services/api.ts","value":1},{"source":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx","target":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/hooks/useApi.ts","value":1},{"source":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx","target":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.css","value":1},{"source":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Card.jsx","target":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx","value":1},{"source":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/hooks/useApi.ts","target":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/types/index.ts","value":1},{"source":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/services/api.ts","target":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/types/index.ts","value":1}]};
+        const analysisData = {"summary":{"totalComponents":9,"totalDependencies":10,"orphanCount":3,"unusedPropsCount":4,"circularDependenciesCount":0,"deadCodeCount":1,"density":0.1388888888888889},"orphanComponents":[{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx","name":"App","outDegree":4,"reason":"entry_point"},{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.jsx","name":"App","outDegree":3,"reason":"entry_point"},{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx","name":"OrphanComponent","outDegree":0,"reason":"isolated"}],"unusedProps":[{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx","name":"OrphanComponent","unusedProps":["unusedProp1","unusedProp2","unusedProp3"],"totalProps":6,"usageRate":50},{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx","name":"Button","unusedProps":["unusedProp"],"totalProps":7,"usageRate":85.71428571428571}],"circularDependencies":[],"componentComplexity":[{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx","name":"App","complexity":8,"inDegree":0,"outDegree":4,"propsCount":0,"category":"low"},{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx","name":"Button","complexity":7.5,"inDegree":2,"outDegree":0,"propsCount":7,"category":"low"},{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.jsx","name":"App","complexity":6,"inDegree":0,"outDegree":3,"propsCount":0,"category":"low"},{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Card.jsx","name":"Card","complexity":6,"inDegree":1,"outDegree":1,"propsCount":5,"category":"low"},{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx","name":"OrphanComponent","complexity":6,"inDegree":0,"outDegree":0,"propsCount":6,"category":"low"},{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/types/index.ts","name":"types","complexity":4.5,"inDegree":3,"outDegree":0,"propsCount":0,"category":"very_low"},{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/hooks/useApi.ts","name":"useApi","complexity":3.5,"inDegree":1,"outDegree":1,"propsCount":0,"category":"very_low"},{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/services/api.ts","name":"api","complexity":3.5,"inDegree":1,"outDegree":1,"propsCount":0,"category":"very_low"},{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.css","name":"App","complexity":3,"inDegree":2,"outDegree":0,"propsCount":0,"category":"very_low"}],"dependencyDepth":{"averageDepth":0.78,"maxDepth":2,"deepestComponents":[{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.jsx","name":"App","depth":2,"outDegree":3},{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx","name":"App","depth":2,"outDegree":4}],"depthDistribution":{"0":4,"1":3,"2":2}},"hubComponents":[{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx","name":"App","totalDegree":4,"inDegree":0,"outDegree":4,"centrality":0.5,"impact":0}],"deadCode":[{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx","name":"OrphanComponent","reason":"isolated_component","confidence":0.9}],"couplingAnalysis":{"metrics":{"afferentCoupling":{},"efferentCoupling":{},"instability":{},"abstractness":{}},"highCouplingComponents":[],"averageCoupling":2.2222222222222223,"couplingDistribution":{"low":9,"medium":0,"high":0,"very_high":0}},"recommendations":[{"type":"orphan_components","priority":"high","title":"移除孤立组件","description":"发现 1 个孤立组件，建议检查是否可以安全删除","components":[{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx","name":"OrphanComponent","outDegree":0,"reason":"isolated"}]},{"type":"unused_props","priority":"medium","title":"清理未使用的Props","description":"发现 4 个未使用的Props，建议清理以简化组件接口","components":[{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx","name":"OrphanComponent","unusedProps":["unusedProp1","unusedProp2","unusedProp3"],"totalProps":6,"usageRate":50},{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx","name":"Button","unusedProps":["unusedProp"],"totalProps":7,"usageRate":85.71428571428571}]},{"type":"hub_components","priority":"medium","title":"关注枢纽组件","description":"发现 1 个枢纽组件，建议重点维护和测试","components":[{"id":"/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx","name":"App","totalDegree":4,"inDegree":0,"outDegree":4,"centrality":0.5,"impact":0}]}]};
+        
+        
         // 全局变量
         let simulation;
         let svg;
@@ -1034,14 +829,14 @@ class VisualizationGenerator {
         function showTooltip(event, d) {
             const tooltip = d3.select('#tooltip');
             
-            const tooltipContent = \`
-                <strong>\${d.name}</strong><br>
-                路径: \${d.relativePath}<br>
-                入度: \${d.inDegree} | 出度: \${d.outDegree}<br>
-                圈复杂度: \${d.cyclomaticComplexity || 0}<br>
-                关联性得分: \${(d.relationshipScore || 0).toFixed(1)}<br>
-                Props: \${d.propsDeclared.length} (未使用: \${d.unusedProps.length})
-            \`;
+            const tooltipContent = `
+                <strong>${d.name}</strong><br>
+                路径: ${d.relativePath}<br>
+                入度: ${d.inDegree} | 出度: ${d.outDegree}<br>
+                圈复杂度: ${d.cyclomaticComplexity || 0}<br>
+                关联性得分: ${(d.relationshipScore || 0).toFixed(1)}<br>
+                Props: ${d.propsDeclared.length} (未使用: ${d.unusedProps.length})
+            `;
             
             tooltip.style('opacity', 1)
                 .style('left', (event.pageX + 10) + 'px')
@@ -1057,51 +852,51 @@ class VisualizationGenerator {
             const panel = document.getElementById('details-panel');
             const content = document.querySelector('.details-content');
             
-            const correlationInfo = \`
+            const correlationInfo = `
                 <div class="detail-section">
                     <h4>代码关联性分析</h4>
                     <ul class="detail-list">
-                        <li><strong>关联性得分:</strong> \${(d.relationshipScore || 0).toFixed(2)}</li>
-                        <li><strong>函数调用复杂度:</strong> \${(d.functionCallComplexity || 0).toFixed(2)}</li>
-                        <li><strong>数据流复杂度:</strong> \${(d.dataFlowComplexity || 0).toFixed(2)}</li>
-                        <li><strong>状态管理复杂度:</strong> \${(d.stateComplexity || 0).toFixed(2)}</li>
-                        <li><strong>异步操作复杂度:</strong> \${(d.asyncComplexity || 0).toFixed(2)}</li>
+                        <li><strong>关联性得分:</strong> ${(d.relationshipScore || 0).toFixed(2)}</li>
+                        <li><strong>函数调用复杂度:</strong> ${(d.functionCallComplexity || 0).toFixed(2)}</li>
+                        <li><strong>数据流复杂度:</strong> ${(d.dataFlowComplexity || 0).toFixed(2)}</li>
+                        <li><strong>状态管理复杂度:</strong> ${(d.stateComplexity || 0).toFixed(2)}</li>
+                        <li><strong>异步操作复杂度:</strong> ${(d.asyncComplexity || 0).toFixed(2)}</li>
                     </ul>
                 </div>
                 <div class="detail-section">
                     <h4>详细统计</h4>
                     <ul class="detail-list">
-                        <li><strong>函数调用数:</strong> \${d.functionCallsCount || 0}</li>
-                        <li><strong>变量引用数:</strong> \${d.variableReferencesCount || 0}</li>
-                        <li><strong>Hook使用数:</strong> \${d.hookUsageCount || 0}</li>
-                        <li><strong>事件处理器数:</strong> \${d.eventHandlersCount || 0}</li>
-                        <li><strong>异步操作数:</strong> \${d.asyncOperationsCount || 0}</li>
+                        <li><strong>函数调用数:</strong> ${d.functionCallsCount || 0}</li>
+                        <li><strong>变量引用数:</strong> ${d.variableReferencesCount || 0}</li>
+                        <li><strong>Hook使用数:</strong> ${d.hookUsageCount || 0}</li>
+                        <li><strong>事件处理器数:</strong> ${d.eventHandlersCount || 0}</li>
+                        <li><strong>异步操作数:</strong> ${d.asyncOperationsCount || 0}</li>
                     </ul>
                 </div>
-            \`;
+            `;
             
-            content.innerHTML = \`
+            content.innerHTML = `
                 <div class="detail-section">
                     <h4>基本信息</h4>
                     <ul class="detail-list">
-                        <li><strong>组件名:</strong> \${d.name}</li>
-                        <li><strong>文件路径:</strong> \${d.relativePath}</li>
-                        <li><strong>入度:</strong> \${d.inDegree}</li>
-                        <li><strong>出度:</strong> \${d.outDegree}</li>
-                        <li><strong>圈复杂度:</strong> \${d.cyclomaticComplexity || 0}</li>
+                        <li><strong>组件名:</strong> ${d.name}</li>
+                        <li><strong>文件路径:</strong> ${d.relativePath}</li>
+                        <li><strong>入度:</strong> ${d.inDegree}</li>
+                        <li><strong>出度:</strong> ${d.outDegree}</li>
+                        <li><strong>圈复杂度:</strong> ${d.cyclomaticComplexity || 0}</li>
                     </ul>
                 </div>
                 <div class="detail-section">
                     <h4>Props信息</h4>
                     <ul class="detail-list">
-                        <li><strong>声明的Props:</strong> \${d.propsDeclared.join(', ') || '无'}</li>
-                        <li><strong>使用的Props:</strong> \${d.propsUsedInBody.join(', ') || '无'}</li>
-                        <li><strong>未使用的Props:</strong> \${d.unusedProps.join(', ') || '无'}</li>
+                        <li><strong>声明的Props:</strong> ${d.propsDeclared.join(', ') || '无'}</li>
+                        <li><strong>使用的Props:</strong> ${d.propsUsedInBody.join(', ') || '无'}</li>
+                        <li><strong>未使用的Props:</strong> ${d.unusedProps.join(', ') || '无'}</li>
                     </ul>
                 </div>
-                \${correlationInfo}
-                \${getNodeRecommendations(d)}
-            \`;
+                ${correlationInfo}
+                ${getNodeRecommendations(d)}
+            `;
             
             panel.style.display = 'block';
         }
@@ -1155,7 +950,7 @@ class VisualizationGenerator {
                 return '<div class="detail-section"><h4>✅ 无需优化</h4><p>此组件结构良好</p></div>';
             }
             
-            return \`<div class="detail-section"><h4>🎯 优化建议</h4><ul class="detail-list">\${recommendations.map(rec => \`<li>\${rec}</li>\`).join('')}</ul></div>\`;
+            return `<div class="detail-section"><h4>🎯 优化建议</h4><ul class="detail-list">${recommendations.map(rec => `<li>${rec}</li>`).join('')}</ul></div>`;
         }
         
         function setupEventListeners() {
@@ -1243,8 +1038,7 @@ class VisualizationGenerator {
                 }
             });
         }
-    `;
-  }
-}
-
-module.exports = VisualizationGenerator;
+    
+    </script>
+</body>
+</html>

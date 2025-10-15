@@ -1,0 +1,7430 @@
+{
+  "nodes": {
+    "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.jsx": {
+      "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.jsx",
+      "name": "App",
+      "propsDeclared": [],
+      "propsUsedInBody": [],
+      "unusedProps": [],
+      "inDegree": 0,
+      "outDegree": 3,
+      "cyclomaticComplexity": 1,
+      "dependencies": [
+        "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx",
+        "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Card.jsx",
+        "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.css"
+      ],
+      "dependents": [],
+      "functionCalls": {
+        "App": [],
+        "App_definition": {
+          "internalCalls": [
+            "useState",
+            "setCount",
+            "console.log",
+            "setCards",
+            "prev.filter",
+            "handleCardAction",
+            "cards.map",
+            "cardActions.map",
+            "action.onClick",
+            "Date.now"
+          ],
+          "referencedVariables": [
+            "useState",
+            "setCount",
+            "prev",
+            "console",
+            "cardId",
+            "actionType",
+            "setCards",
+            "card",
+            "handleCardAction",
+            "count",
+            "handleDecrement",
+            "handleIncrement",
+            "handleReset",
+            "cards",
+            "cardActions",
+            "action",
+            "Date"
+          ],
+          "parameters": []
+        },
+        "useState": [
+          {
+            "location": 11,
+            "context": "",
+            "arguments": [
+              "number"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 12,
+            "context": "",
+            "arguments": [
+              "array"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "anonymous": [],
+        "anonymous_definition": {
+          "internalCalls": [
+            "setCards",
+            "Date.now"
+          ],
+          "referencedVariables": [
+            "setCards",
+            "Date"
+          ],
+          "parameters": []
+        },
+        "setCount": [
+          {
+            "location": 28,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 32,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 36,
+            "context": "",
+            "arguments": [
+              "number"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "console.log": [
+          {
+            "location": 40,
+            "context": "console",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "setCards": [
+          {
+            "location": 43,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 118,
+            "context": "",
+            "arguments": [
+              "array"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "prev.filter": [
+          {
+            "location": 43,
+            "context": "prev",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "handleCardAction": [
+          {
+            "location": 50,
+            "context": "",
+            "arguments": [
+              "variable",
+              "string"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 55,
+            "context": "",
+            "arguments": [
+              "variable",
+              "string"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 60,
+            "context": "",
+            "arguments": [
+              "variable",
+              "string"
+            ],
+            "argumentCount": 2
+          }
+        ],
+        "cards.map": [
+          {
+            "location": 98,
+            "context": "cards",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "cardActions.map": [
+          {
+            "location": 104,
+            "context": "cardActions",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "action.onClick": [
+          {
+            "location": 106,
+            "context": "action",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "Date.now": [
+          {
+            "location": 120,
+            "context": "Date",
+            "arguments": [],
+            "argumentCount": 0
+          }
+        ]
+      },
+      "variableReferences": {
+        "console": [
+          {
+            "property": "log",
+            "location": 40,
+            "isComputed": false
+          }
+        ],
+        "prev": [
+          {
+            "property": "filter",
+            "location": 43,
+            "isComputed": false
+          }
+        ],
+        "card": [
+          {
+            "property": "id",
+            "location": 43,
+            "isComputed": false
+          },
+          {
+            "property": "id",
+            "location": 100,
+            "isComputed": false
+          },
+          {
+            "property": "title",
+            "location": 101,
+            "isComputed": false
+          },
+          {
+            "property": "content",
+            "location": 102,
+            "isComputed": false
+          },
+          {
+            "property": "imageUrl",
+            "location": 103,
+            "isComputed": false
+          },
+          {
+            "property": "id",
+            "location": 106,
+            "isComputed": false
+          }
+        ],
+        "cards": [
+          {
+            "property": "map",
+            "location": 98,
+            "isComputed": false
+          },
+          {
+            "property": "length",
+            "location": 112,
+            "isComputed": false
+          }
+        ],
+        "cardActions": [
+          {
+            "property": "map",
+            "location": 104,
+            "isComputed": false
+          }
+        ],
+        "action": [
+          {
+            "property": "onClick",
+            "location": 106,
+            "isComputed": false
+          }
+        ],
+        "Date": [
+          {
+            "property": "now",
+            "location": 120,
+            "isComputed": false
+          }
+        ]
+      },
+      "dataFlow": {
+        "handleIncrement": {
+          "type": "function",
+          "dependencies": [],
+          "location": 27,
+          "isDeclaration": true
+        },
+        "handleDecrement": {
+          "type": "function",
+          "dependencies": [],
+          "location": 31,
+          "isDeclaration": true
+        },
+        "handleReset": {
+          "type": "function",
+          "dependencies": [],
+          "location": 35,
+          "isDeclaration": true
+        },
+        "handleCardAction": {
+          "type": "function",
+          "dependencies": [],
+          "location": 39,
+          "isDeclaration": true
+        },
+        "cardActions": {
+          "type": "array",
+          "dependencies": [],
+          "location": 47,
+          "isDeclaration": true
+        }
+      },
+      "hookUsage": [
+        {
+          "name": "useState",
+          "location": 11,
+          "arguments": [
+            "number"
+          ],
+          "argumentCount": 1
+        },
+        {
+          "name": "useState",
+          "location": 12,
+          "arguments": [
+            "array"
+          ],
+          "argumentCount": 1
+        }
+      ],
+      "eventHandlers": [
+        {
+          "eventType": "click",
+          "handlerType": "variable",
+          "location": 78,
+          "attributeName": "onClick"
+        },
+        {
+          "eventType": "click",
+          "handlerType": "variable",
+          "location": 85,
+          "attributeName": "onClick"
+        },
+        {
+          "eventType": "click",
+          "handlerType": "variable",
+          "location": 88,
+          "attributeName": "onClick"
+        },
+        {
+          "eventType": "click",
+          "handlerType": "function",
+          "location": 115,
+          "attributeName": "onClick"
+        }
+      ],
+      "stateManagement": {
+        "useState_11": {
+          "type": "useState",
+          "location": 11,
+          "initialValue": "number"
+        },
+        "useState_12": {
+          "type": "useState",
+          "location": 12,
+          "initialValue": "array"
+        }
+      },
+      "componentLifecycle": [],
+      "conditionalRendering": [
+        {
+          "type": "LogicalExpression",
+          "condition": "cards.length === null && null",
+          "location": 112,
+          "operator": "&&"
+        }
+      ],
+      "dynamicImports": [],
+      "contextUsage": [],
+      "methodChains": {
+        "console.log": [
+          {
+            "chain": [
+              "console",
+              "log"
+            ],
+            "location": 40,
+            "argumentCount": 1
+          }
+        ],
+        "prev.filter": [
+          {
+            "chain": [
+              "prev",
+              "filter"
+            ],
+            "location": 43,
+            "argumentCount": 1
+          }
+        ],
+        "cards.map": [
+          {
+            "chain": [
+              "cards",
+              "map"
+            ],
+            "location": 98,
+            "argumentCount": 1
+          }
+        ],
+        "cardActions.map": [
+          {
+            "chain": [
+              "cardActions",
+              "map"
+            ],
+            "location": 104,
+            "argumentCount": 1
+          }
+        ],
+        "action.onClick": [
+          {
+            "chain": [
+              "action",
+              "onClick"
+            ],
+            "location": 106,
+            "argumentCount": 1
+          }
+        ],
+        "Date.now": [
+          {
+            "chain": [
+              "Date",
+              "now"
+            ],
+            "location": 120,
+            "argumentCount": 0
+          }
+        ]
+      },
+      "asyncOperations": [],
+      "relativePath": "App.jsx"
+    },
+    "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx": {
+      "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx",
+      "name": "App",
+      "propsDeclared": [],
+      "propsUsedInBody": [],
+      "unusedProps": [],
+      "inDegree": 0,
+      "outDegree": 4,
+      "cyclomaticComplexity": 1,
+      "dependencies": [
+        "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/types/index.ts",
+        "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/services/api.ts",
+        "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/hooks/useApi.ts",
+        "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.css"
+      ],
+      "dependents": [],
+      "functionCalls": {
+        "anonymous": [],
+        "anonymous_definition": {
+          "internalCalls": [
+            "func"
+          ],
+          "referencedVariables": [
+            "func",
+            "args"
+          ],
+          "parameters": []
+        },
+        "useState": [
+          {
+            "location": 9,
+            "context": "",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 38,
+            "context": "",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 45,
+            "context": "",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 52,
+            "context": "",
+            "arguments": [
+              "string"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 53,
+            "context": "",
+            "arguments": [
+              "string"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 56,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 57,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 58,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 61,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "useList": [
+          {
+            "location": 25,
+            "context": "",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 35,
+            "context": "",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "useMemo": [
+          {
+            "location": 64,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 65,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 66,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 67,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 69,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 73,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 77,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 82,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 91,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 100,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 104,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 111,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          }
+        ],
+        "tasks.filter": [
+          {
+            "location": 70,
+            "context": "tasks",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 85,
+            "context": "tasks",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "users.filter": [
+          {
+            "location": 74,
+            "context": "users",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 94,
+            "context": "users",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "Math.round": [
+          {
+            "location": 79,
+            "context": "Math",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "taskSearchQuery.toLowerCase": [
+          {
+            "location": 84,
+            "context": "taskSearchQuery",
+            "arguments": [],
+            "argumentCount": 0
+          }
+        ],
+        "userSearchQuery.toLowerCase": [
+          {
+            "location": 93,
+            "context": "userSearchQuery",
+            "arguments": [],
+            "argumentCount": 0
+          }
+        ],
+        "useAsyncOperation": [
+          {
+            "location": 116,
+            "context": "",
+            "arguments": [
+              "call-result"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "useCallback": [
+          {
+            "location": 117,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 123,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 127,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 134,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 139,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 145,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 152,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 159,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 184,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 195,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 209,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 237,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 248,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 262,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 271,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 279,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 288,
+            "context": "",
+            "arguments": [
+              "call-result",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 293,
+            "context": "",
+            "arguments": [
+              "call-result",
+              "array"
+            ],
+            "argumentCount": 2
+          }
+        ],
+        "Promise.all": [
+          {
+            "location": 118,
+            "context": "Promise",
+            "arguments": [
+              "array"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "refetchTasks": [
+          {
+            "location": 118,
+            "context": "",
+            "arguments": [],
+            "argumentCount": 0
+          }
+        ],
+        "refetchUsers": [
+          {
+            "location": 118,
+            "context": "",
+            "arguments": [],
+            "argumentCount": 0
+          }
+        ],
+        "setWindowWidth": [
+          {
+            "location": 124,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "setAppState": [
+          {
+            "location": 128,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 135,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 177,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 188,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 201,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 230,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 241,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 254,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "title.trim": [
+          {
+            "location": 140,
+            "context": "title",
+            "arguments": [],
+            "argumentCount": 0
+          }
+        ],
+        "email.trim": [
+          {
+            "location": 146,
+            "context": "email",
+            "arguments": [],
+            "argumentCount": 0
+          }
+        ],
+        "emailRegex.test": [
+          {
+            "location": 148,
+            "context": "emailRegex",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "name.trim": [
+          {
+            "location": 153,
+            "context": "name",
+            "arguments": [],
+            "argumentCount": 0
+          }
+        ],
+        "e.preventDefault": [
+          {
+            "location": 160,
+            "context": "e",
+            "arguments": [],
+            "argumentCount": 0
+          },
+          {
+            "location": 210,
+            "context": "e",
+            "arguments": [],
+            "argumentCount": 0
+          },
+          {
+            "location": 318,
+            "context": "e",
+            "arguments": [],
+            "argumentCount": 0
+          },
+          {
+            "location": 324,
+            "context": "e",
+            "arguments": [],
+            "argumentCount": 0
+          }
+        ],
+        "validateTaskTitle": [
+          {
+            "location": 162,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 436,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "setTaskTitleError": [
+          {
+            "location": 163,
+            "context": "",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 175,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 436,
+            "context": "",
+            "arguments": [
+              "call-result"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "createTask": [
+          {
+            "location": 168,
+            "context": "",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "setNewTask": [
+          {
+            "location": 169,
+            "context": "",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 435,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 455,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 466,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "updateTask": [
+          {
+            "location": 186,
+            "context": "",
+            "arguments": [
+              "unknown",
+              "object"
+            ],
+            "argumentCount": 2
+          }
+        ],
+        "window.confirm": [
+          {
+            "location": 196,
+            "context": "window",
+            "arguments": [
+              "string"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 249,
+            "context": "window",
+            "arguments": [
+              "string"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "deleteTask": [
+          {
+            "location": 199,
+            "context": "",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "validateUserName": [
+          {
+            "location": 212,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 568,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "validateEmail": [
+          {
+            "location": 213,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 590,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "setUserNameError": [
+          {
+            "location": 215,
+            "context": "",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 227,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 568,
+            "context": "",
+            "arguments": [
+              "call-result"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "setUserEmailError": [
+          {
+            "location": 216,
+            "context": "",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 228,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 590,
+            "context": "",
+            "arguments": [
+              "call-result"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "createUser": [
+          {
+            "location": 221,
+            "context": "",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "setNewUser": [
+          {
+            "location": 222,
+            "context": "",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 567,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 589,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 609,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "updateUser": [
+          {
+            "location": 239,
+            "context": "",
+            "arguments": [
+              "unknown",
+              "object"
+            ],
+            "argumentCount": 2
+          }
+        ],
+        "deleteUser": [
+          {
+            "location": 252,
+            "context": "",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "debounce": [
+          {
+            "location": 289,
+            "context": "",
+            "arguments": [
+              "function",
+              "number"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 294,
+            "context": "",
+            "arguments": [
+              "function",
+              "number"
+            ],
+            "argumentCount": 2
+          }
+        ],
+        "setTaskSearchQuery": [
+          {
+            "location": 289,
+            "context": "",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "setUserSearchQuery": [
+          {
+            "location": 294,
+            "context": "",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "useEffect": [
+          {
+            "location": 299,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 309,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          }
+        ],
+        "executeRefreshData": [
+          {
+            "location": 300,
+            "context": "",
+            "arguments": [],
+            "argumentCount": 0
+          },
+          {
+            "location": 319,
+            "context": "",
+            "arguments": [],
+            "argumentCount": 0
+          }
+        ],
+        "window.addEventListener": [
+          {
+            "location": 301,
+            "context": "window",
+            "arguments": [
+              "string",
+              "variable"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 329,
+            "context": "window",
+            "arguments": [
+              "string",
+              "variable"
+            ],
+            "argumentCount": 2
+          }
+        ],
+        "window.removeEventListener": [
+          {
+            "location": 304,
+            "context": "window",
+            "arguments": [
+              "string",
+              "variable"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 330,
+            "context": "window",
+            "arguments": [
+              "string",
+              "variable"
+            ],
+            "argumentCount": 2
+          }
+        ],
+        "clearError": [
+          {
+            "location": 313,
+            "context": "",
+            "arguments": [],
+            "argumentCount": 0
+          }
+        ],
+        "toggleTheme": [
+          {
+            "location": 325,
+            "context": "",
+            "arguments": [],
+            "argumentCount": 0
+          }
+        ],
+        "debouncedTaskSearch": [
+          {
+            "location": 496,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "filteredTasks.map": [
+          {
+            "location": 508,
+            "context": "filteredTasks",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "getPriorityText": [
+          {
+            "location": 520,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 522,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "formatDate": [
+          {
+            "location": 525,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "handleToggleTaskCompletion": [
+          {
+            "location": 531,
+            "context": "",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "handleDeleteTask": [
+          {
+            "location": 539,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "debouncedUserSearch": [
+          {
+            "location": 638,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "filteredUsers.map": [
+          {
+            "location": 650,
+            "context": "filteredUsers",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "getRoleText": [
+          {
+            "location": 662,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 664,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "handleToggleUserStatus": [
+          {
+            "location": 676,
+            "context": "",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "handleDeleteUser": [
+          {
+            "location": 684,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "debounce_definition": {
+          "internalCalls": [
+            "clearTimeout",
+            "setTimeout",
+            "func"
+          ],
+          "referencedVariables": [
+            "T",
+            "Parameters",
+            "NodeJS",
+            "Timeout",
+            "clearTimeout",
+            "timeout",
+            "setTimeout",
+            "func",
+            "args",
+            "wait"
+          ],
+          "parameters": [
+            "func",
+            "wait"
+          ]
+        },
+        "clearTimeout": [
+          {
+            "location": 748,
+            "context": "",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "setTimeout": [
+          {
+            "location": 749,
+            "context": "",
+            "arguments": [
+              "function",
+              "variable"
+            ],
+            "argumentCount": 2
+          }
+        ],
+        "func": [
+          {
+            "location": 749,
+            "context": "",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "React.memo": [
+          {
+            "location": 753,
+            "context": "React",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          }
+        ]
+      },
+      "variableReferences": {
+        "window": [
+          {
+            "property": "innerWidth",
+            "location": 61,
+            "isComputed": false
+          },
+          {
+            "property": "innerWidth",
+            "location": 124,
+            "isComputed": false
+          },
+          {
+            "property": "confirm",
+            "location": 196,
+            "isComputed": false
+          },
+          {
+            "property": "confirm",
+            "location": 249,
+            "isComputed": false
+          },
+          {
+            "property": "addEventListener",
+            "location": 301,
+            "isComputed": false
+          },
+          {
+            "property": "removeEventListener",
+            "location": 304,
+            "isComputed": false
+          },
+          {
+            "property": "addEventListener",
+            "location": 329,
+            "isComputed": false
+          },
+          {
+            "property": "removeEventListener",
+            "location": 330,
+            "isComputed": false
+          }
+        ],
+        "appState": [
+          {
+            "property": "theme",
+            "location": 64,
+            "isComputed": false
+          },
+          {
+            "property": "theme",
+            "location": 64,
+            "isComputed": false
+          },
+          {
+            "property": "error",
+            "location": 67,
+            "isComputed": false
+          },
+          {
+            "property": "error",
+            "location": 67,
+            "isComputed": false
+          }
+        ],
+        "tasks": [
+          {
+            "property": "filter",
+            "location": 70,
+            "isComputed": false
+          },
+          {
+            "property": "length",
+            "location": 78,
+            "isComputed": false
+          },
+          {
+            "property": "length",
+            "location": 79,
+            "isComputed": false
+          },
+          {
+            "property": "length",
+            "location": 80,
+            "isComputed": false
+          },
+          {
+            "property": "filter",
+            "location": 85,
+            "isComputed": false
+          },
+          {
+            "property": "length",
+            "location": 397,
+            "isComputed": false
+          },
+          {
+            "property": "length",
+            "location": 398,
+            "isComputed": false
+          }
+        ],
+        "task": [
+          {
+            "property": "completed",
+            "location": 70,
+            "isComputed": false
+          },
+          {
+            "property": "title",
+            "location": 86,
+            "isComputed": false
+          },
+          {
+            "property": "description",
+            "location": 87,
+            "isComputed": false
+          },
+          {
+            "property": "id",
+            "location": 186,
+            "isComputed": false
+          },
+          {
+            "property": "completed",
+            "location": 186,
+            "isComputed": false
+          },
+          {
+            "property": "id",
+            "location": 510,
+            "isComputed": false
+          },
+          {
+            "property": "completed",
+            "location": 511,
+            "isComputed": false
+          },
+          {
+            "property": "title",
+            "location": 515,
+            "isComputed": false
+          },
+          {
+            "property": "description",
+            "location": 516,
+            "isComputed": false
+          },
+          {
+            "property": "priority",
+            "location": 519,
+            "isComputed": false
+          },
+          {
+            "property": "priority",
+            "location": 520,
+            "isComputed": false
+          },
+          {
+            "property": "priority",
+            "location": 522,
+            "isComputed": false
+          },
+          {
+            "property": "createdAt",
+            "location": 525,
+            "isComputed": false
+          },
+          {
+            "property": "completed",
+            "location": 533,
+            "isComputed": false
+          },
+          {
+            "property": "completed",
+            "location": 534,
+            "isComputed": false
+          },
+          {
+            "property": "completed",
+            "location": 536,
+            "isComputed": false
+          },
+          {
+            "property": "id",
+            "location": 539,
+            "isComputed": false
+          },
+          {
+            "property": "title",
+            "location": 541,
+            "isComputed": false
+          }
+        ],
+        "users": [
+          {
+            "property": "filter",
+            "location": 74,
+            "isComputed": false
+          },
+          {
+            "property": "filter",
+            "location": 94,
+            "isComputed": false
+          }
+        ],
+        "user": [
+          {
+            "property": "isActive",
+            "location": 74,
+            "isComputed": false
+          },
+          {
+            "property": "name",
+            "location": 95,
+            "isComputed": false
+          },
+          {
+            "property": "email",
+            "location": 96,
+            "isComputed": false
+          },
+          {
+            "property": "id",
+            "location": 239,
+            "isComputed": false
+          },
+          {
+            "property": "isActive",
+            "location": 239,
+            "isComputed": false
+          },
+          {
+            "property": "id",
+            "location": 652,
+            "isComputed": false
+          },
+          {
+            "property": "isActive",
+            "location": 653,
+            "isComputed": false
+          },
+          {
+            "property": "name",
+            "location": 657,
+            "isComputed": false
+          },
+          {
+            "property": "email",
+            "location": 658,
+            "isComputed": false
+          },
+          {
+            "property": "role",
+            "location": 661,
+            "isComputed": false
+          },
+          {
+            "property": "role",
+            "location": 662,
+            "isComputed": false
+          },
+          {
+            "property": "role",
+            "location": 664,
+            "isComputed": false
+          },
+          {
+            "property": "isActive",
+            "location": 667,
+            "isComputed": false
+          },
+          {
+            "property": "isActive",
+            "location": 668,
+            "isComputed": false
+          },
+          {
+            "property": "isActive",
+            "location": 670,
+            "isComputed": false
+          },
+          {
+            "property": "isActive",
+            "location": 678,
+            "isComputed": false
+          },
+          {
+            "property": "isActive",
+            "location": 679,
+            "isComputed": false
+          },
+          {
+            "property": "isActive",
+            "location": 681,
+            "isComputed": false
+          },
+          {
+            "property": "id",
+            "location": 684,
+            "isComputed": false
+          },
+          {
+            "property": "name",
+            "location": 686,
+            "isComputed": false
+          }
+        ],
+        "Math": [
+          {
+            "property": "round",
+            "location": 79,
+            "isComputed": false
+          }
+        ],
+        "taskSearchQuery": [
+          {
+            "property": "toLowerCase",
+            "location": 84,
+            "isComputed": false
+          }
+        ],
+        "userSearchQuery": [
+          {
+            "property": "toLowerCase",
+            "location": 93,
+            "isComputed": false
+          }
+        ],
+        "newTask": [
+          {
+            "property": "title",
+            "location": 101,
+            "isComputed": false
+          },
+          {
+            "property": "title",
+            "location": 102,
+            "isComputed": false
+          },
+          {
+            "property": "title",
+            "location": 162,
+            "isComputed": false
+          },
+          {
+            "property": "title",
+            "location": 433,
+            "isComputed": false
+          },
+          {
+            "property": "description",
+            "location": 454,
+            "isComputed": false
+          },
+          {
+            "property": "priority",
+            "location": 465,
+            "isComputed": false
+          }
+        ],
+        "newUser": [
+          {
+            "property": "name",
+            "location": 105,
+            "isComputed": false
+          },
+          {
+            "property": "email",
+            "location": 106,
+            "isComputed": false
+          },
+          {
+            "property": "name",
+            "location": 109,
+            "isComputed": false
+          },
+          {
+            "property": "email",
+            "location": 109,
+            "isComputed": false
+          },
+          {
+            "property": "name",
+            "location": 212,
+            "isComputed": false
+          },
+          {
+            "property": "email",
+            "location": 213,
+            "isComputed": false
+          },
+          {
+            "property": "name",
+            "location": 565,
+            "isComputed": false
+          },
+          {
+            "property": "email",
+            "location": 587,
+            "isComputed": false
+          },
+          {
+            "property": "role",
+            "location": 608,
+            "isComputed": false
+          }
+        ],
+        "filteredTasks": [
+          {
+            "property": "length",
+            "location": 112,
+            "isComputed": false
+          },
+          {
+            "property": "length",
+            "location": 113,
+            "isComputed": false
+          },
+          {
+            "property": "length",
+            "location": 489,
+            "isComputed": false
+          },
+          {
+            "property": "length",
+            "location": 502,
+            "isComputed": false
+          },
+          {
+            "property": "map",
+            "location": 508,
+            "isComputed": false
+          }
+        ],
+        "filteredUsers": [
+          {
+            "property": "length",
+            "location": 112,
+            "isComputed": false
+          },
+          {
+            "property": "length",
+            "location": 113,
+            "isComputed": false
+          },
+          {
+            "property": "length",
+            "location": 631,
+            "isComputed": false
+          },
+          {
+            "property": "length",
+            "location": 644,
+            "isComputed": false
+          },
+          {
+            "property": "map",
+            "location": 650,
+            "isComputed": false
+          }
+        ],
+        "Promise": [
+          {
+            "property": "all",
+            "location": 118,
+            "isComputed": false
+          }
+        ],
+        "prev": [
+          {
+            "property": "theme",
+            "location": 130,
+            "isComputed": false
+          }
+        ],
+        "title": [
+          {
+            "property": "trim",
+            "location": 140,
+            "isComputed": false
+          },
+          {
+            "property": "length",
+            "location": 141,
+            "isComputed": false
+          }
+        ],
+        "email": [
+          {
+            "property": "trim",
+            "location": 146,
+            "isComputed": false
+          }
+        ],
+        "emailRegex": [
+          {
+            "property": "test",
+            "location": 148,
+            "isComputed": false
+          }
+        ],
+        "name": [
+          {
+            "property": "trim",
+            "location": 153,
+            "isComputed": false
+          },
+          {
+            "property": "length",
+            "location": 154,
+            "isComputed": false
+          }
+        ],
+        "e": [
+          {
+            "property": "preventDefault",
+            "location": 160,
+            "isComputed": false
+          },
+          {
+            "property": "preventDefault",
+            "location": 210,
+            "isComputed": false
+          },
+          {
+            "property": "key",
+            "location": 312,
+            "isComputed": false
+          },
+          {
+            "property": "ctrlKey",
+            "location": 317,
+            "isComputed": false
+          },
+          {
+            "property": "metaKey",
+            "location": 317,
+            "isComputed": false
+          },
+          {
+            "property": "key",
+            "location": 317,
+            "isComputed": false
+          },
+          {
+            "property": "preventDefault",
+            "location": 318,
+            "isComputed": false
+          },
+          {
+            "property": "ctrlKey",
+            "location": 323,
+            "isComputed": false
+          },
+          {
+            "property": "metaKey",
+            "location": 323,
+            "isComputed": false
+          },
+          {
+            "property": "key",
+            "location": 323,
+            "isComputed": false
+          },
+          {
+            "property": "preventDefault",
+            "location": 324,
+            "isComputed": false
+          },
+          {
+            "property": "target",
+            "location": 435,
+            "isComputed": false
+          },
+          {
+            "property": "target",
+            "location": 436,
+            "isComputed": false
+          },
+          {
+            "property": "target",
+            "location": 455,
+            "isComputed": false
+          },
+          {
+            "property": "target",
+            "location": 468,
+            "isComputed": false
+          },
+          {
+            "property": "target",
+            "location": 496,
+            "isComputed": false
+          },
+          {
+            "property": "target",
+            "location": 567,
+            "isComputed": false
+          },
+          {
+            "property": "target",
+            "location": 568,
+            "isComputed": false
+          },
+          {
+            "property": "target",
+            "location": 589,
+            "isComputed": false
+          },
+          {
+            "property": "target",
+            "location": 590,
+            "isComputed": false
+          },
+          {
+            "property": "target",
+            "location": 611,
+            "isComputed": false
+          },
+          {
+            "property": "target",
+            "location": 638,
+            "isComputed": false
+          }
+        ],
+        "err": [
+          {
+            "property": "message",
+            "location": 179,
+            "isComputed": false
+          },
+          {
+            "property": "message",
+            "location": 190,
+            "isComputed": false
+          },
+          {
+            "property": "message",
+            "location": 203,
+            "isComputed": false
+          },
+          {
+            "property": "message",
+            "location": 232,
+            "isComputed": false
+          },
+          {
+            "property": "message",
+            "location": 243,
+            "isComputed": false
+          },
+          {
+            "property": "message",
+            "location": 256,
+            "isComputed": false
+          }
+        ],
+        "map": [
+          {
+            "property": "priority",
+            "location": 268,
+            "isComputed": false
+          },
+          {
+            "property": "role",
+            "location": 276,
+            "isComputed": false
+          }
+        ],
+        "Intl": [
+          {
+            "property": "DateTimeFormat",
+            "location": 280,
+            "isComputed": false
+          }
+        ],
+        "React": [
+          {
+            "property": "memo",
+            "location": 753,
+            "isComputed": false
+          }
+        ]
+      },
+      "dataFlow": {
+        "App": {
+          "type": "function",
+          "dependencies": [],
+          "location": 7,
+          "isDeclaration": true
+        },
+        "isDarkTheme": {
+          "type": "call-result",
+          "dependencies": [
+            "useMemo",
+            "appState"
+          ],
+          "location": 64,
+          "isDeclaration": true
+        },
+        "isMobile": {
+          "type": "call-result",
+          "dependencies": [
+            "useMemo",
+            "windowWidth"
+          ],
+          "location": 65,
+          "isDeclaration": true
+        },
+        "loading": {
+          "type": "call-result",
+          "dependencies": [
+            "useMemo",
+            "tasksLoading",
+            "usersLoading"
+          ],
+          "location": 66,
+          "isDeclaration": true
+        },
+        "error": {
+          "type": "call-result",
+          "dependencies": [
+            "useMemo",
+            "tasksError",
+            "usersError",
+            "appState"
+          ],
+          "location": 67,
+          "isDeclaration": true
+        },
+        "completedTasks": {
+          "type": "call-result",
+          "dependencies": [
+            "useMemo",
+            "tasks"
+          ],
+          "location": 69,
+          "isDeclaration": true
+        },
+        "activeUsers": {
+          "type": "call-result",
+          "dependencies": [
+            "useMemo",
+            "users"
+          ],
+          "location": 73,
+          "isDeclaration": true
+        },
+        "completionRate": {
+          "type": "call-result",
+          "dependencies": [
+            "useMemo",
+            "completedTasks",
+            "tasks"
+          ],
+          "location": 77,
+          "isDeclaration": true
+        },
+        "filteredTasks": {
+          "type": "call-result",
+          "dependencies": [
+            "useMemo",
+            "tasks",
+            "taskSearchQuery"
+          ],
+          "location": 82,
+          "isDeclaration": true
+        },
+        "query": {
+          "type": "call-result",
+          "dependencies": [],
+          "location": 93,
+          "isDeclaration": true
+        },
+        "filteredUsers": {
+          "type": "call-result",
+          "dependencies": [
+            "useMemo",
+            "users",
+            "userSearchQuery"
+          ],
+          "location": 91,
+          "isDeclaration": true
+        },
+        "isTaskFormValid": {
+          "type": "call-result",
+          "dependencies": [
+            "useMemo",
+            "newTask",
+            "taskTitleError"
+          ],
+          "location": 100,
+          "isDeclaration": true
+        },
+        "isUserFormValid": {
+          "type": "call-result",
+          "dependencies": [
+            "useMemo",
+            "newUser",
+            "newUser",
+            "userNameError",
+            "userEmailError"
+          ],
+          "location": 104,
+          "isDeclaration": true
+        },
+        "visibleItemsCount": {
+          "type": "call-result",
+          "dependencies": [
+            "useMemo",
+            "filteredTasks",
+            "filteredUsers"
+          ],
+          "location": 111,
+          "isDeclaration": true
+        },
+        "handleResize": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback"
+          ],
+          "location": 123,
+          "isDeclaration": true
+        },
+        "toggleTheme": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback"
+          ],
+          "location": 127,
+          "isDeclaration": true
+        },
+        "clearError": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback"
+          ],
+          "location": 134,
+          "isDeclaration": true
+        },
+        "validateTaskTitle": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback"
+          ],
+          "location": 139,
+          "isDeclaration": true
+        },
+        "validateEmail": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback"
+          ],
+          "location": 145,
+          "isDeclaration": true
+        },
+        "emailRegex": {
+          "type": "unknown",
+          "dependencies": [],
+          "location": 147,
+          "isDeclaration": true
+        },
+        "validateUserName": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback"
+          ],
+          "location": 152,
+          "isDeclaration": true
+        },
+        "handleAddTask": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback",
+            "newTask",
+            "validateTaskTitle",
+            "createTask"
+          ],
+          "location": 159,
+          "isDeclaration": true
+        },
+        "titleError": {
+          "type": "call-result",
+          "dependencies": [
+            "validateTaskTitle",
+            "newTask"
+          ],
+          "location": 162,
+          "isDeclaration": true
+        },
+        "handleToggleTaskCompletion": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback",
+            "updateTask"
+          ],
+          "location": 184,
+          "isDeclaration": true
+        },
+        "handleDeleteTask": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback",
+            "deleteTask"
+          ],
+          "location": 195,
+          "isDeclaration": true
+        },
+        "handleAddUser": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback",
+            "newUser",
+            "validateUserName",
+            "validateEmail",
+            "createUser"
+          ],
+          "location": 209,
+          "isDeclaration": true
+        },
+        "nameError": {
+          "type": "call-result",
+          "dependencies": [
+            "validateUserName",
+            "newUser"
+          ],
+          "location": 212,
+          "isDeclaration": true
+        },
+        "emailError": {
+          "type": "call-result",
+          "dependencies": [
+            "validateEmail",
+            "newUser"
+          ],
+          "location": 213,
+          "isDeclaration": true
+        },
+        "handleToggleUserStatus": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback",
+            "updateUser"
+          ],
+          "location": 237,
+          "isDeclaration": true
+        },
+        "handleDeleteUser": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback",
+            "deleteUser"
+          ],
+          "location": 248,
+          "isDeclaration": true
+        },
+        "getPriorityText": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback"
+          ],
+          "location": 262,
+          "isDeclaration": true
+        },
+        "map": {
+          "type": "object",
+          "dependencies": [],
+          "location": 272,
+          "isDeclaration": true
+        },
+        "getRoleText": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback"
+          ],
+          "location": 271,
+          "isDeclaration": true
+        },
+        "formatDate": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback"
+          ],
+          "location": 279,
+          "isDeclaration": true
+        },
+        "debouncedTaskSearch": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback",
+            "debounce"
+          ],
+          "location": 288,
+          "isDeclaration": true
+        },
+        "debouncedUserSearch": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback",
+            "debounce"
+          ],
+          "location": 293,
+          "isDeclaration": true
+        },
+        "handleKeyDown": {
+          "type": "function",
+          "dependencies": [],
+          "location": 310,
+          "isDeclaration": true
+        },
+        "timeout": {
+          "type": "undefined",
+          "dependencies": [],
+          "location": 746,
+          "isDeclaration": true
+        },
+        "timeout_reassign_749": {
+          "variable": "timeout",
+          "type": "call-result",
+          "dependencies": [
+            "setTimeout",
+            "wait"
+          ],
+          "location": 749,
+          "isReassignment": true
+        }
+      },
+      "hookUsage": [
+        {
+          "name": "useState",
+          "location": 9,
+          "arguments": [
+            "object"
+          ],
+          "argumentCount": 1
+        },
+        {
+          "name": "useList",
+          "location": 25,
+          "arguments": [
+            "variable"
+          ],
+          "argumentCount": 1
+        },
+        {
+          "name": "useList",
+          "location": 35,
+          "arguments": [
+            "variable"
+          ],
+          "argumentCount": 1
+        },
+        {
+          "name": "useState",
+          "location": 38,
+          "arguments": [
+            "object"
+          ],
+          "argumentCount": 1
+        },
+        {
+          "name": "useState",
+          "location": 45,
+          "arguments": [
+            "object"
+          ],
+          "argumentCount": 1
+        },
+        {
+          "name": "useState",
+          "location": 52,
+          "arguments": [
+            "string"
+          ],
+          "argumentCount": 1
+        },
+        {
+          "name": "useState",
+          "location": 53,
+          "arguments": [
+            "string"
+          ],
+          "argumentCount": 1
+        },
+        {
+          "name": "useState",
+          "location": 56,
+          "arguments": [
+            "unknown"
+          ],
+          "argumentCount": 1
+        },
+        {
+          "name": "useState",
+          "location": 57,
+          "arguments": [
+            "unknown"
+          ],
+          "argumentCount": 1
+        },
+        {
+          "name": "useState",
+          "location": 58,
+          "arguments": [
+            "unknown"
+          ],
+          "argumentCount": 1
+        },
+        {
+          "name": "useState",
+          "location": 61,
+          "arguments": [
+            "unknown"
+          ],
+          "argumentCount": 1
+        },
+        {
+          "name": "useMemo",
+          "location": 64,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useMemo",
+          "location": 65,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useMemo",
+          "location": 66,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useMemo",
+          "location": 67,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useMemo",
+          "location": 69,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useMemo",
+          "location": 73,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useMemo",
+          "location": 77,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useMemo",
+          "location": 82,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useMemo",
+          "location": 91,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useMemo",
+          "location": 100,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useMemo",
+          "location": 104,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useMemo",
+          "location": 111,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useAsyncOperation",
+          "location": 116,
+          "arguments": [
+            "call-result"
+          ],
+          "argumentCount": 1
+        },
+        {
+          "name": "useCallback",
+          "location": 117,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 123,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 127,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 134,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 139,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 145,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 152,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 159,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 184,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 195,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 209,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 237,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 248,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 262,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 271,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 279,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 288,
+          "arguments": [
+            "call-result",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 293,
+          "arguments": [
+            "call-result",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useEffect",
+          "location": 299,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useEffect",
+          "location": 309,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        }
+      ],
+      "eventHandlers": [
+        {
+          "eventType": "click",
+          "handlerType": "variable",
+          "location": 345,
+          "attributeName": "onClick"
+        },
+        {
+          "eventType": "click",
+          "handlerType": "variable",
+          "location": 353,
+          "attributeName": "onClick"
+        },
+        {
+          "eventType": "click",
+          "handlerType": "variable",
+          "location": 379,
+          "attributeName": "onClick"
+        },
+        {
+          "eventType": "submit",
+          "handlerType": "variable",
+          "location": 427,
+          "attributeName": "onSubmit"
+        },
+        {
+          "eventType": "change",
+          "handlerType": "function",
+          "location": 430,
+          "attributeName": "onChange"
+        },
+        {
+          "eventType": "change",
+          "handlerType": "function",
+          "location": 452,
+          "attributeName": "onChange"
+        },
+        {
+          "eventType": "change",
+          "handlerType": "function",
+          "location": 463,
+          "attributeName": "onChange"
+        },
+        {
+          "eventType": "change",
+          "handlerType": "function",
+          "location": 492,
+          "attributeName": "onChange"
+        },
+        {
+          "eventType": "click",
+          "handlerType": "function",
+          "location": 530,
+          "attributeName": "onClick"
+        },
+        {
+          "eventType": "click",
+          "handlerType": "function",
+          "location": 538,
+          "attributeName": "onClick"
+        },
+        {
+          "eventType": "submit",
+          "handlerType": "variable",
+          "location": 559,
+          "attributeName": "onSubmit"
+        },
+        {
+          "eventType": "change",
+          "handlerType": "function",
+          "location": 562,
+          "attributeName": "onChange"
+        },
+        {
+          "eventType": "change",
+          "handlerType": "function",
+          "location": 584,
+          "attributeName": "onChange"
+        },
+        {
+          "eventType": "change",
+          "handlerType": "function",
+          "location": 606,
+          "attributeName": "onChange"
+        },
+        {
+          "eventType": "change",
+          "handlerType": "function",
+          "location": 634,
+          "attributeName": "onChange"
+        },
+        {
+          "eventType": "click",
+          "handlerType": "function",
+          "location": 675,
+          "attributeName": "onClick"
+        },
+        {
+          "eventType": "click",
+          "handlerType": "function",
+          "location": 683,
+          "attributeName": "onClick"
+        }
+      ],
+      "stateManagement": {
+        "useState_9": {
+          "type": "useState",
+          "location": 9,
+          "initialValue": "object"
+        },
+        "useState_38": {
+          "type": "useState",
+          "location": 38,
+          "initialValue": "object"
+        },
+        "useState_45": {
+          "type": "useState",
+          "location": 45,
+          "initialValue": "object"
+        },
+        "useState_52": {
+          "type": "useState",
+          "location": 52,
+          "initialValue": "string"
+        },
+        "useState_53": {
+          "type": "useState",
+          "location": 53,
+          "initialValue": "string"
+        },
+        "useState_56": {
+          "type": "useState",
+          "location": 56,
+          "initialValue": "unknown"
+        },
+        "useState_57": {
+          "type": "useState",
+          "location": 57,
+          "initialValue": "unknown"
+        },
+        "useState_58": {
+          "type": "useState",
+          "location": 58,
+          "initialValue": "unknown"
+        },
+        "useState_61": {
+          "type": "useState",
+          "location": 61,
+          "initialValue": "unknown"
+        }
+      },
+      "componentLifecycle": [],
+      "conditionalRendering": [
+        {
+          "type": "LogicalExpression",
+          "condition": "tasksLoading || usersLoading",
+          "location": 66,
+          "operator": "||"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "tasksError || usersError || appState.error",
+          "location": 67,
+          "operator": "||"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "tasksError || usersError",
+          "location": 67,
+          "operator": "||"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "null || null",
+          "location": 86,
+          "operator": "||"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "null || null",
+          "location": 95,
+          "operator": "||"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "null !== null && null",
+          "location": 101,
+          "operator": "&&"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "null !== null && null !== null && null && null",
+          "location": 105,
+          "operator": "&&"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "null !== null && null !== null && null",
+          "location": 105,
+          "operator": "&&"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "null !== null && null !== null",
+          "location": 105,
+          "operator": "&&"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "nameError || emailError",
+          "location": 218,
+          "operator": "||"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "map.priority || priority",
+          "location": 268,
+          "operator": "||"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "map.role || role",
+          "location": 276,
+          "operator": "||"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "e.key === null && error",
+          "location": 312,
+          "operator": "&&"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "e.ctrlKey || e.metaKey && e.key === null",
+          "location": 317,
+          "operator": "&&"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "e.ctrlKey || e.metaKey",
+          "location": 317,
+          "operator": "||"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "e.ctrlKey || e.metaKey && e.key === null",
+          "location": 323,
+          "operator": "&&"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "e.ctrlKey || e.metaKey",
+          "location": 323,
+          "operator": "||"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "loading && null",
+          "location": 367,
+          "operator": "&&"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "error && null",
+          "location": 375,
+          "operator": "&&"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "taskTitleError && null",
+          "location": 443,
+          "operator": "&&"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "null || loading",
+          "location": 480,
+          "operator": "||"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "userNameError && null",
+          "location": 575,
+          "operator": "&&"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "userEmailError && null",
+          "location": 597,
+          "operator": "&&"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "null || loading",
+          "location": 622,
+          "operator": "||"
+        }
+      ],
+      "dynamicImports": [],
+      "contextUsage": [],
+      "methodChains": {
+        "tasks.filter": [
+          {
+            "chain": [
+              "tasks",
+              "filter"
+            ],
+            "location": 70,
+            "argumentCount": 1
+          },
+          {
+            "chain": [
+              "tasks",
+              "filter"
+            ],
+            "location": 85,
+            "argumentCount": 1
+          }
+        ],
+        "users.filter": [
+          {
+            "chain": [
+              "users",
+              "filter"
+            ],
+            "location": 74,
+            "argumentCount": 1
+          },
+          {
+            "chain": [
+              "users",
+              "filter"
+            ],
+            "location": 94,
+            "argumentCount": 1
+          }
+        ],
+        "Math.round": [
+          {
+            "chain": [
+              "Math",
+              "round"
+            ],
+            "location": 79,
+            "argumentCount": 1
+          }
+        ],
+        "taskSearchQuery.toLowerCase": [
+          {
+            "chain": [
+              "taskSearchQuery",
+              "toLowerCase"
+            ],
+            "location": 84,
+            "argumentCount": 0
+          }
+        ],
+        "task.title.toLowerCase": [
+          {
+            "chain": [
+              "task",
+              "title",
+              "toLowerCase"
+            ],
+            "location": 86,
+            "argumentCount": 0
+          }
+        ],
+        "task.description.toLowerCase": [
+          {
+            "chain": [
+              "task",
+              "description",
+              "toLowerCase"
+            ],
+            "location": 87,
+            "argumentCount": 0
+          }
+        ],
+        "userSearchQuery.toLowerCase": [
+          {
+            "chain": [
+              "userSearchQuery",
+              "toLowerCase"
+            ],
+            "location": 93,
+            "argumentCount": 0
+          }
+        ],
+        "user.name.toLowerCase": [
+          {
+            "chain": [
+              "user",
+              "name",
+              "toLowerCase"
+            ],
+            "location": 95,
+            "argumentCount": 0
+          }
+        ],
+        "user.email.toLowerCase": [
+          {
+            "chain": [
+              "user",
+              "email",
+              "toLowerCase"
+            ],
+            "location": 96,
+            "argumentCount": 0
+          }
+        ],
+        "newTask.title.trim": [
+          {
+            "chain": [
+              "newTask",
+              "title",
+              "trim"
+            ],
+            "location": 101,
+            "argumentCount": 0
+          }
+        ],
+        "newUser.name.trim": [
+          {
+            "chain": [
+              "newUser",
+              "name",
+              "trim"
+            ],
+            "location": 105,
+            "argumentCount": 0
+          }
+        ],
+        "newUser.email.trim": [
+          {
+            "chain": [
+              "newUser",
+              "email",
+              "trim"
+            ],
+            "location": 106,
+            "argumentCount": 0
+          }
+        ],
+        "Promise.all": [
+          {
+            "chain": [
+              "Promise",
+              "all"
+            ],
+            "location": 118,
+            "argumentCount": 1
+          }
+        ],
+        "title.trim": [
+          {
+            "chain": [
+              "title",
+              "trim"
+            ],
+            "location": 140,
+            "argumentCount": 0
+          }
+        ],
+        "email.trim": [
+          {
+            "chain": [
+              "email",
+              "trim"
+            ],
+            "location": 146,
+            "argumentCount": 0
+          }
+        ],
+        "emailRegex.test": [
+          {
+            "chain": [
+              "emailRegex",
+              "test"
+            ],
+            "location": 148,
+            "argumentCount": 1
+          }
+        ],
+        "name.trim": [
+          {
+            "chain": [
+              "name",
+              "trim"
+            ],
+            "location": 153,
+            "argumentCount": 0
+          }
+        ],
+        "e.preventDefault": [
+          {
+            "chain": [
+              "e",
+              "preventDefault"
+            ],
+            "location": 160,
+            "argumentCount": 0
+          },
+          {
+            "chain": [
+              "e",
+              "preventDefault"
+            ],
+            "location": 210,
+            "argumentCount": 0
+          },
+          {
+            "chain": [
+              "e",
+              "preventDefault"
+            ],
+            "location": 318,
+            "argumentCount": 0
+          },
+          {
+            "chain": [
+              "e",
+              "preventDefault"
+            ],
+            "location": 324,
+            "argumentCount": 0
+          }
+        ],
+        "window.confirm": [
+          {
+            "chain": [
+              "window",
+              "confirm"
+            ],
+            "location": 196,
+            "argumentCount": 1
+          },
+          {
+            "chain": [
+              "window",
+              "confirm"
+            ],
+            "location": 249,
+            "argumentCount": 1
+          }
+        ],
+        "window.addEventListener": [
+          {
+            "chain": [
+              "window",
+              "addEventListener"
+            ],
+            "location": 301,
+            "argumentCount": 2
+          },
+          {
+            "chain": [
+              "window",
+              "addEventListener"
+            ],
+            "location": 329,
+            "argumentCount": 2
+          }
+        ],
+        "window.removeEventListener": [
+          {
+            "chain": [
+              "window",
+              "removeEventListener"
+            ],
+            "location": 304,
+            "argumentCount": 2
+          },
+          {
+            "chain": [
+              "window",
+              "removeEventListener"
+            ],
+            "location": 330,
+            "argumentCount": 2
+          }
+        ],
+        "filteredTasks.map": [
+          {
+            "chain": [
+              "filteredTasks",
+              "map"
+            ],
+            "location": 508,
+            "argumentCount": 1
+          }
+        ],
+        "filteredUsers.map": [
+          {
+            "chain": [
+              "filteredUsers",
+              "map"
+            ],
+            "location": 650,
+            "argumentCount": 1
+          }
+        ],
+        "React.memo": [
+          {
+            "chain": [
+              "React",
+              "memo"
+            ],
+            "location": 753,
+            "argumentCount": 1
+          }
+        ]
+      },
+      "asyncOperations": [
+        {
+          "type": "promise",
+          "method": "all",
+          "location": 118
+        },
+        {
+          "type": "timer",
+          "method": "setTimeout",
+          "location": 749
+        }
+      ],
+      "relativePath": "App.tsx"
+    },
+    "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx": {
+      "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx",
+      "name": "Button",
+      "propsDeclared": [
+        "children",
+        "variant",
+        "size",
+        "disabled",
+        "onClick",
+        "className",
+        "unusedProp"
+      ],
+      "propsUsedInBody": [
+        "variant",
+        "size",
+        "disabled",
+        "className",
+        "onClick",
+        "children"
+      ],
+      "unusedProps": [
+        "unusedProp"
+      ],
+      "inDegree": 2,
+      "outDegree": 0,
+      "cyclomaticComplexity": 1,
+      "dependencies": [],
+      "dependents": [
+        "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.jsx",
+        "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Card.jsx"
+      ],
+      "functionCalls": {
+        "anonymous": [],
+        "anonymous_definition": {
+          "internalCalls": [],
+          "referencedVariables": [
+            "variant",
+            "size",
+            "disabled",
+            "baseClass",
+            "variantClass",
+            "sizeClass",
+            "disabledClass",
+            "className",
+            "Boolean",
+            "buttonClass",
+            "onClick",
+            "children"
+          ],
+          "parameters": [
+            "destructured"
+          ]
+        },
+        "PropTypes.oneOf": [
+          {
+            "location": 52,
+            "context": "PropTypes",
+            "arguments": [
+              "array"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 53,
+            "context": "PropTypes",
+            "arguments": [
+              "array"
+            ],
+            "argumentCount": 1
+          }
+        ]
+      },
+      "variableReferences": {
+        "Button": [
+          {
+            "property": "propTypes",
+            "location": 50,
+            "isComputed": false
+          }
+        ],
+        "PropTypes": [
+          {
+            "property": "node",
+            "location": 51,
+            "isComputed": false
+          },
+          {
+            "property": "oneOf",
+            "location": 52,
+            "isComputed": false
+          },
+          {
+            "property": "oneOf",
+            "location": 53,
+            "isComputed": false
+          },
+          {
+            "property": "bool",
+            "location": 54,
+            "isComputed": false
+          },
+          {
+            "property": "func",
+            "location": 55,
+            "isComputed": false
+          },
+          {
+            "property": "string",
+            "location": 56,
+            "isComputed": false
+          },
+          {
+            "property": "string",
+            "location": 57,
+            "isComputed": false
+          }
+        ]
+      },
+      "dataFlow": {
+        "Button": {
+          "type": "function",
+          "dependencies": [],
+          "location": 16,
+          "isDeclaration": true
+        },
+        "baseClass": {
+          "type": "string",
+          "dependencies": [],
+          "location": 25,
+          "isDeclaration": true
+        },
+        "variantClass": {
+          "type": "unknown",
+          "dependencies": [],
+          "location": 26,
+          "isDeclaration": true
+        },
+        "sizeClass": {
+          "type": "unknown",
+          "dependencies": [],
+          "location": 27,
+          "isDeclaration": true
+        },
+        "disabledClass": {
+          "type": "unknown",
+          "dependencies": [],
+          "location": 28,
+          "isDeclaration": true
+        },
+        "buttonClass": {
+          "type": "call-result",
+          "dependencies": [],
+          "location": 30,
+          "isDeclaration": true
+        }
+      },
+      "hookUsage": [],
+      "eventHandlers": [
+        {
+          "eventType": "click",
+          "handlerType": "variable",
+          "location": 39,
+          "attributeName": "onClick"
+        }
+      ],
+      "stateManagement": {},
+      "componentLifecycle": [],
+      "conditionalRendering": [],
+      "dynamicImports": [],
+      "contextUsage": [],
+      "methodChains": {
+        "PropTypes.oneOf": [
+          {
+            "chain": [
+              "PropTypes",
+              "oneOf"
+            ],
+            "location": 52,
+            "argumentCount": 1
+          },
+          {
+            "chain": [
+              "PropTypes",
+              "oneOf"
+            ],
+            "location": 53,
+            "argumentCount": 1
+          }
+        ]
+      },
+      "asyncOperations": [],
+      "relativePath": "components/Button.jsx"
+    },
+    "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Card.jsx": {
+      "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Card.jsx",
+      "name": "Card",
+      "propsDeclared": [
+        "title",
+        "content",
+        "imageUrl",
+        "actions",
+        "className"
+      ],
+      "propsUsedInBody": [
+        "className",
+        "imageUrl",
+        "title",
+        "content",
+        "actions"
+      ],
+      "unusedProps": [],
+      "inDegree": 1,
+      "outDegree": 1,
+      "cyclomaticComplexity": 1,
+      "dependencies": [
+        "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx"
+      ],
+      "dependents": [
+        "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.jsx"
+      ],
+      "functionCalls": {
+        "anonymous": [],
+        "anonymous_definition": {
+          "internalCalls": [],
+          "referencedVariables": [
+            "index",
+            "action"
+          ],
+          "parameters": [
+            "action",
+            "index"
+          ]
+        },
+        "actions.map": [
+          {
+            "location": 37,
+            "context": "actions",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "PropTypes.arrayOf": [
+          {
+            "location": 57,
+            "context": "PropTypes",
+            "arguments": [
+              "call-result"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "PropTypes.shape": [
+          {
+            "location": 58,
+            "context": "PropTypes",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          }
+        ]
+      },
+      "variableReferences": {
+        "actions": [
+          {
+            "property": "length",
+            "location": 35,
+            "isComputed": false
+          },
+          {
+            "property": "map",
+            "location": 37,
+            "isComputed": false
+          }
+        ],
+        "action": [
+          {
+            "property": "variant",
+            "location": 40,
+            "isComputed": false
+          },
+          {
+            "property": "onClick",
+            "location": 42,
+            "isComputed": false
+          },
+          {
+            "property": "label",
+            "location": 44,
+            "isComputed": false
+          }
+        ],
+        "Card": [
+          {
+            "property": "propTypes",
+            "location": 53,
+            "isComputed": false
+          }
+        ],
+        "PropTypes": [
+          {
+            "property": "string",
+            "location": 54,
+            "isComputed": false
+          },
+          {
+            "property": "string",
+            "location": 55,
+            "isComputed": false
+          },
+          {
+            "property": "string",
+            "location": 56,
+            "isComputed": false
+          },
+          {
+            "property": "arrayOf",
+            "location": 57,
+            "isComputed": false
+          },
+          {
+            "property": "shape",
+            "location": 58,
+            "isComputed": false
+          },
+          {
+            "property": "string",
+            "location": 59,
+            "isComputed": false
+          },
+          {
+            "property": "func",
+            "location": 60,
+            "isComputed": false
+          },
+          {
+            "property": "string",
+            "location": 61,
+            "isComputed": false
+          },
+          {
+            "property": "string",
+            "location": 64,
+            "isComputed": false
+          }
+        ]
+      },
+      "dataFlow": {
+        "Card": {
+          "type": "function",
+          "dependencies": [],
+          "location": 15,
+          "isDeclaration": true
+        }
+      },
+      "hookUsage": [],
+      "eventHandlers": [
+        {
+          "eventType": "click",
+          "handlerType": "unknown",
+          "location": 38,
+          "attributeName": "onClick"
+        }
+      ],
+      "stateManagement": {},
+      "componentLifecycle": [],
+      "conditionalRendering": [
+        {
+          "type": "LogicalExpression",
+          "condition": "imageUrl && null",
+          "location": 24,
+          "operator": "&&"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "title && null",
+          "location": 31,
+          "operator": "&&"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "content && null",
+          "location": 32,
+          "operator": "&&"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "actions.length > null && null",
+          "location": 35,
+          "operator": "&&"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "action.variant || null",
+          "location": 40,
+          "operator": "||"
+        }
+      ],
+      "dynamicImports": [],
+      "contextUsage": [],
+      "methodChains": {
+        "actions.map": [
+          {
+            "chain": [
+              "actions",
+              "map"
+            ],
+            "location": 37,
+            "argumentCount": 1
+          }
+        ],
+        "PropTypes.arrayOf": [
+          {
+            "chain": [
+              "PropTypes",
+              "arrayOf"
+            ],
+            "location": 57,
+            "argumentCount": 1
+          }
+        ],
+        "PropTypes.shape": [
+          {
+            "chain": [
+              "PropTypes",
+              "shape"
+            ],
+            "location": 58,
+            "argumentCount": 1
+          }
+        ]
+      },
+      "asyncOperations": [],
+      "relativePath": "components/Card.jsx"
+    },
+    "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx": {
+      "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx",
+      "name": "OrphanComponent",
+      "propsDeclared": [
+        "message",
+        "type",
+        "onClose",
+        "unusedProp1",
+        "unusedProp2",
+        "unusedProp3"
+      ],
+      "propsUsedInBody": [
+        "type",
+        "message",
+        "onClose"
+      ],
+      "unusedProps": [
+        "unusedProp1",
+        "unusedProp2",
+        "unusedProp3"
+      ],
+      "inDegree": 0,
+      "outDegree": 0,
+      "cyclomaticComplexity": 1,
+      "dependencies": [],
+      "dependents": [],
+      "functionCalls": {
+        "anonymous": [],
+        "anonymous_definition": {
+          "internalCalls": [],
+          "referencedVariables": [
+            "type"
+          ],
+          "parameters": []
+        },
+        "getTypeClass": [
+          {
+            "location": 30,
+            "context": "",
+            "arguments": [],
+            "argumentCount": 0
+          }
+        ],
+        "PropTypes.oneOf": [
+          {
+            "location": 49,
+            "context": "PropTypes",
+            "arguments": [
+              "array"
+            ],
+            "argumentCount": 1
+          }
+        ]
+      },
+      "variableReferences": {
+        "OrphanComponent": [
+          {
+            "property": "propTypes",
+            "location": 47,
+            "isComputed": false
+          }
+        ],
+        "PropTypes": [
+          {
+            "property": "string",
+            "location": 48,
+            "isComputed": false
+          },
+          {
+            "property": "oneOf",
+            "location": 49,
+            "isComputed": false
+          },
+          {
+            "property": "func",
+            "location": 50,
+            "isComputed": false
+          },
+          {
+            "property": "string",
+            "location": 51,
+            "isComputed": false
+          },
+          {
+            "property": "number",
+            "location": 52,
+            "isComputed": false
+          },
+          {
+            "property": "bool",
+            "location": 53,
+            "isComputed": false
+          }
+        ]
+      },
+      "dataFlow": {
+        "OrphanComponent": {
+          "type": "function",
+          "dependencies": [],
+          "location": 8,
+          "isDeclaration": true
+        },
+        "getTypeClass": {
+          "type": "function",
+          "dependencies": [],
+          "location": 16,
+          "isDeclaration": true
+        }
+      },
+      "hookUsage": [],
+      "eventHandlers": [
+        {
+          "eventType": "click",
+          "handlerType": "variable",
+          "location": 34,
+          "attributeName": "onClick"
+        }
+      ],
+      "stateManagement": {},
+      "componentLifecycle": [],
+      "conditionalRendering": [
+        {
+          "type": "LogicalExpression",
+          "condition": "onClose && null",
+          "location": 33,
+          "operator": "&&"
+        }
+      ],
+      "dynamicImports": [],
+      "contextUsage": [],
+      "methodChains": {
+        "PropTypes.oneOf": [
+          {
+            "chain": [
+              "PropTypes",
+              "oneOf"
+            ],
+            "location": 49,
+            "argumentCount": 1
+          }
+        ]
+      },
+      "asyncOperations": [],
+      "relativePath": "components/OrphanComponent.jsx"
+    },
+    "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/hooks/useApi.ts": {
+      "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/hooks/useApi.ts",
+      "name": "useApi",
+      "propsDeclared": [],
+      "propsUsedInBody": [],
+      "unusedProps": [],
+      "inDegree": 1,
+      "outDegree": 1,
+      "cyclomaticComplexity": 0,
+      "dependencies": [
+        "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/types/index.ts"
+      ],
+      "dependents": [
+        "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx"
+      ],
+      "functionCalls": {
+        "useApi": [],
+        "useApi_definition": {
+          "internalCalls": [
+            "useState",
+            "useCallback",
+            "setState",
+            "apiFunction",
+            "useEffect",
+            "execute"
+          ],
+          "referencedVariables": [
+            "Promise",
+            "ApiResponse",
+            "T",
+            "UseApiOptions",
+            "options",
+            "useState",
+            "ApiState",
+            "useCallback",
+            "setState",
+            "prev",
+            "apiFunction",
+            "response",
+            "onSuccess",
+            "errorMessage",
+            "onError",
+            "error",
+            "Error",
+            "useEffect",
+            "immediate",
+            "execute",
+            "state",
+            "reset"
+          ],
+          "parameters": [
+            "apiFunction",
+            "complex"
+          ]
+        },
+        "useState": [
+          {
+            "location": 32,
+            "context": "",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 102,
+            "context": "",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 169,
+            "context": "",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 262,
+            "context": "",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 282,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "useCallback": [
+          {
+            "location": 38,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 71,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 108,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 144,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 179,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 212,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 219,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 226,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 233,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 292,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 302,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          }
+        ],
+        "anonymous": [],
+        "anonymous_definition": {
+          "internalCalls": [
+            "setStoredValue",
+            "console.error"
+          ],
+          "referencedVariables": [
+            "window",
+            "key",
+            "setStoredValue",
+            "initialValue",
+            "console",
+            "error"
+          ],
+          "parameters": []
+        },
+        "setState": [
+          {
+            "location": 39,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 45,
+            "context": "",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 53,
+            "context": "",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 62,
+            "context": "",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 72,
+            "context": "",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 109,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 115,
+            "context": "",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 124,
+            "context": "",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 134,
+            "context": "",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 145,
+            "context": "",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 180,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 186,
+            "context": "",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 194,
+            "context": "",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 203,
+            "context": "",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 213,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 220,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 227,
+            "context": "",
+            "arguments": [
+              "function"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 234,
+            "context": "",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "apiFunction": [
+          {
+            "location": 42,
+            "context": "",
+            "arguments": [],
+            "argumentCount": 0
+          }
+        ],
+        "useEffect": [
+          {
+            "location": 79,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 241,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 264,
+            "context": "",
+            "arguments": [
+              "function",
+              "array"
+            ],
+            "argumentCount": 2
+          }
+        ],
+        "execute": [
+          {
+            "location": 81,
+            "context": "",
+            "arguments": [],
+            "argumentCount": 0
+          }
+        ],
+        "useAsyncOperation": [],
+        "useAsyncOperation_definition": {
+          "internalCalls": [
+            "useState",
+            "useCallback",
+            "setState",
+            "operation"
+          ],
+          "referencedVariables": [
+            "params",
+            "P",
+            "Promise",
+            "ApiResponse",
+            "T",
+            "UseApiOptions",
+            "options",
+            "useState",
+            "ApiState",
+            "useCallback",
+            "setState",
+            "prev",
+            "operation",
+            "response",
+            "onSuccess",
+            "errorMessage",
+            "onError",
+            "Error",
+            "error",
+            "state",
+            "execute",
+            "reset"
+          ],
+          "parameters": [
+            "operation",
+            "complex"
+          ]
+        },
+        "operation": [
+          {
+            "location": 112,
+            "context": "",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "useList": [],
+        "useList_definition": {
+          "internalCalls": [
+            "useState",
+            "useCallback",
+            "setState",
+            "fetchFunction",
+            "useEffect",
+            "fetch"
+          ],
+          "referencedVariables": [
+            "Promise",
+            "ApiResponse",
+            "T",
+            "UseApiOptions",
+            "options",
+            "useState",
+            "useCallback",
+            "setState",
+            "prev",
+            "fetchFunction",
+            "response",
+            "onSuccess",
+            "errorMessage",
+            "onError",
+            "error",
+            "Error",
+            "item",
+            "i",
+            "index",
+            "existingItem",
+            "useEffect",
+            "immediate",
+            "fetch",
+            "state",
+            "addItem",
+            "updateItem",
+            "removeItem",
+            "reset"
+          ],
+          "parameters": [
+            "fetchFunction",
+            "complex"
+          ]
+        },
+        "fetchFunction": [
+          {
+            "location": 183,
+            "context": "",
+            "arguments": [],
+            "argumentCount": 0
+          }
+        ],
+        "fetch": [
+          {
+            "location": 243,
+            "context": "",
+            "arguments": [],
+            "argumentCount": 0
+          }
+        ],
+        "useDebounce": [],
+        "useDebounce_definition": {
+          "internalCalls": [
+            "useState",
+            "useEffect",
+            "setTimeout",
+            "setDebouncedValue",
+            "clearTimeout"
+          ],
+          "referencedVariables": [
+            "T",
+            "useState",
+            "value",
+            "useEffect",
+            "setTimeout",
+            "setDebouncedValue",
+            "delay",
+            "clearTimeout",
+            "handler",
+            "debouncedValue"
+          ],
+          "parameters": [
+            "value",
+            "delay"
+          ]
+        },
+        "setTimeout": [
+          {
+            "location": 265,
+            "context": "",
+            "arguments": [
+              "function",
+              "variable"
+            ],
+            "argumentCount": 2
+          }
+        ],
+        "setDebouncedValue": [
+          {
+            "location": 266,
+            "context": "",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "clearTimeout": [
+          {
+            "location": 270,
+            "context": "",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "useLocalStorage": [],
+        "useLocalStorage_definition": {
+          "internalCalls": [
+            "useState",
+            "JSON.parse",
+            "console.error",
+            "useCallback",
+            "value",
+            "setStoredValue",
+            "JSON.stringify"
+          ],
+          "referencedVariables": [
+            "T",
+            "useState",
+            "window",
+            "key",
+            "item",
+            "JSON",
+            "initialValue",
+            "console",
+            "error",
+            "useCallback",
+            "val",
+            "value",
+            "Function",
+            "storedValue",
+            "setStoredValue",
+            "valueToStore",
+            "setValue",
+            "removeValue",
+            "const"
+          ],
+          "parameters": [
+            "key",
+            "initialValue"
+          ]
+        },
+        "JSON.parse": [
+          {
+            "location": 285,
+            "context": "JSON",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "console.error": [
+          {
+            "location": 287,
+            "context": "console",
+            "arguments": [
+              "unknown",
+              "variable"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 298,
+            "context": "console",
+            "arguments": [
+              "unknown",
+              "variable"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 307,
+            "context": "console",
+            "arguments": [
+              "unknown",
+              "variable"
+            ],
+            "argumentCount": 2
+          }
+        ],
+        "value": [
+          {
+            "location": 294,
+            "context": "",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "setStoredValue": [
+          {
+            "location": 295,
+            "context": "",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 305,
+            "context": "",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "JSON.stringify": [
+          {
+            "location": 296,
+            "context": "JSON",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          }
+        ]
+      },
+      "variableReferences": {
+        "response": [
+          {
+            "property": "success",
+            "location": 44,
+            "isComputed": false
+          },
+          {
+            "property": "data",
+            "location": 44,
+            "isComputed": false
+          },
+          {
+            "property": "data",
+            "location": 46,
+            "isComputed": false
+          },
+          {
+            "property": "data",
+            "location": 50,
+            "isComputed": false
+          },
+          {
+            "property": "error",
+            "location": 52,
+            "isComputed": false
+          },
+          {
+            "property": "success",
+            "location": 114,
+            "isComputed": false
+          },
+          {
+            "property": "data",
+            "location": 116,
+            "isComputed": false
+          },
+          {
+            "property": "data",
+            "location": 120,
+            "isComputed": false
+          },
+          {
+            "property": "data",
+            "location": 121,
+            "isComputed": false
+          },
+          {
+            "property": "error",
+            "location": 123,
+            "isComputed": false
+          },
+          {
+            "property": "success",
+            "location": 185,
+            "isComputed": false
+          },
+          {
+            "property": "data",
+            "location": 185,
+            "isComputed": false
+          },
+          {
+            "property": "data",
+            "location": 187,
+            "isComputed": false
+          },
+          {
+            "property": "data",
+            "location": 191,
+            "isComputed": false
+          },
+          {
+            "property": "error",
+            "location": 193,
+            "isComputed": false
+          }
+        ],
+        "error": [
+          {
+            "property": "message",
+            "location": 61,
+            "isComputed": false
+          },
+          {
+            "property": "message",
+            "location": 133,
+            "isComputed": false
+          },
+          {
+            "property": "message",
+            "location": 202,
+            "isComputed": false
+          }
+        ],
+        "prev": [
+          {
+            "property": "items",
+            "location": 215,
+            "isComputed": false
+          },
+          {
+            "property": "items",
+            "location": 222,
+            "isComputed": false
+          },
+          {
+            "property": "items",
+            "location": 229,
+            "isComputed": false
+          }
+        ],
+        "window": [
+          {
+            "property": "localStorage",
+            "location": 284,
+            "isComputed": false
+          },
+          {
+            "property": "localStorage",
+            "location": 296,
+            "isComputed": false
+          },
+          {
+            "property": "localStorage",
+            "location": 304,
+            "isComputed": false
+          }
+        ],
+        "JSON": [
+          {
+            "property": "parse",
+            "location": 285,
+            "isComputed": false
+          },
+          {
+            "property": "stringify",
+            "location": 296,
+            "isComputed": false
+          }
+        ],
+        "console": [
+          {
+            "property": "error",
+            "location": 287,
+            "isComputed": false
+          },
+          {
+            "property": "error",
+            "location": 298,
+            "isComputed": false
+          },
+          {
+            "property": "error",
+            "location": 307,
+            "isComputed": false
+          }
+        ]
+      },
+      "dataFlow": {
+        "execute": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback",
+            "operation",
+            "onSuccess",
+            "onError"
+          ],
+          "location": 108,
+          "isDeclaration": true
+        },
+        "response": {
+          "type": "unknown",
+          "dependencies": [],
+          "location": 183,
+          "isDeclaration": true
+        },
+        "errorMessage": {
+          "type": "unknown",
+          "dependencies": [],
+          "location": 202,
+          "isDeclaration": true
+        },
+        "reset": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback"
+          ],
+          "location": 233,
+          "isDeclaration": true
+        },
+        "fetch": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback",
+            "fetchFunction",
+            "onSuccess",
+            "onError"
+          ],
+          "location": 179,
+          "isDeclaration": true
+        },
+        "addItem": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback"
+          ],
+          "location": 212,
+          "isDeclaration": true
+        },
+        "updateItem": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback"
+          ],
+          "location": 219,
+          "isDeclaration": true
+        },
+        "removeItem": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback"
+          ],
+          "location": 226,
+          "isDeclaration": true
+        },
+        "handler": {
+          "type": "call-result",
+          "dependencies": [
+            "setTimeout",
+            "delay"
+          ],
+          "location": 265,
+          "isDeclaration": true
+        },
+        "item": {
+          "type": "call-result",
+          "dependencies": [
+            "key"
+          ],
+          "location": 284,
+          "isDeclaration": true
+        },
+        "setValue": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback",
+            "key",
+            "storedValue"
+          ],
+          "location": 292,
+          "isDeclaration": true
+        },
+        "valueToStore": {
+          "type": "unknown",
+          "dependencies": [],
+          "location": 294,
+          "isDeclaration": true
+        },
+        "removeValue": {
+          "type": "call-result",
+          "dependencies": [
+            "useCallback",
+            "key",
+            "initialValue"
+          ],
+          "location": 302,
+          "isDeclaration": true
+        }
+      },
+      "hookUsage": [
+        {
+          "name": "useState",
+          "location": 32,
+          "arguments": [
+            "object"
+          ],
+          "argumentCount": 1
+        },
+        {
+          "name": "useCallback",
+          "location": 38,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 71,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useEffect",
+          "location": 79,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useState",
+          "location": 102,
+          "arguments": [
+            "object"
+          ],
+          "argumentCount": 1
+        },
+        {
+          "name": "useCallback",
+          "location": 108,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 144,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useState",
+          "location": 169,
+          "arguments": [
+            "object"
+          ],
+          "argumentCount": 1
+        },
+        {
+          "name": "useCallback",
+          "location": 179,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 212,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 219,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 226,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 233,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useEffect",
+          "location": 241,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useState",
+          "location": 262,
+          "arguments": [
+            "variable"
+          ],
+          "argumentCount": 1
+        },
+        {
+          "name": "useEffect",
+          "location": 264,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useState",
+          "location": 282,
+          "arguments": [
+            "function"
+          ],
+          "argumentCount": 1
+        },
+        {
+          "name": "useCallback",
+          "location": 292,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        },
+        {
+          "name": "useCallback",
+          "location": 302,
+          "arguments": [
+            "function",
+            "array"
+          ],
+          "argumentCount": 2
+        }
+      ],
+      "eventHandlers": [],
+      "stateManagement": {
+        "useState_32": {
+          "type": "useState",
+          "location": 32,
+          "initialValue": "object"
+        },
+        "useState_102": {
+          "type": "useState",
+          "location": 102,
+          "initialValue": "object"
+        },
+        "useState_169": {
+          "type": "useState",
+          "location": 169,
+          "initialValue": "object"
+        },
+        "useState_262": {
+          "type": "useState",
+          "location": 262,
+          "initialValue": "variable"
+        },
+        "useState_282": {
+          "type": "useState",
+          "location": 282,
+          "initialValue": "function"
+        }
+      },
+      "componentLifecycle": [],
+      "conditionalRendering": [
+        {
+          "type": "LogicalExpression",
+          "condition": "response.success && response.data",
+          "location": 44,
+          "operator": "&&"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "response.error || null",
+          "location": 52,
+          "operator": "||"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "response.data || null",
+          "location": 116,
+          "operator": "||"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "response.error || null",
+          "location": 123,
+          "operator": "||"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "response.success && response.data",
+          "location": 185,
+          "operator": "&&"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "response.error || null",
+          "location": 193,
+          "operator": "||"
+        }
+      ],
+      "dynamicImports": [],
+      "contextUsage": [],
+      "methodChains": {
+        "prev.items.map": [
+          {
+            "chain": [
+              "prev",
+              "items",
+              "map"
+            ],
+            "location": 222,
+            "argumentCount": 1
+          }
+        ],
+        "prev.items.filter": [
+          {
+            "chain": [
+              "prev",
+              "items",
+              "filter"
+            ],
+            "location": 229,
+            "argumentCount": 1
+          }
+        ],
+        "window.localStorage.getItem": [
+          {
+            "chain": [
+              "window",
+              "localStorage",
+              "getItem"
+            ],
+            "location": 284,
+            "argumentCount": 1
+          }
+        ],
+        "JSON.parse": [
+          {
+            "chain": [
+              "JSON",
+              "parse"
+            ],
+            "location": 285,
+            "argumentCount": 1
+          }
+        ],
+        "console.error": [
+          {
+            "chain": [
+              "console",
+              "error"
+            ],
+            "location": 287,
+            "argumentCount": 2
+          },
+          {
+            "chain": [
+              "console",
+              "error"
+            ],
+            "location": 298,
+            "argumentCount": 2
+          },
+          {
+            "chain": [
+              "console",
+              "error"
+            ],
+            "location": 307,
+            "argumentCount": 2
+          }
+        ],
+        "window.localStorage.setItem": [
+          {
+            "chain": [
+              "window",
+              "localStorage",
+              "setItem"
+            ],
+            "location": 296,
+            "argumentCount": 2
+          }
+        ],
+        "JSON.stringify": [
+          {
+            "chain": [
+              "JSON",
+              "stringify"
+            ],
+            "location": 296,
+            "argumentCount": 1
+          }
+        ],
+        "window.localStorage.removeItem": [
+          {
+            "chain": [
+              "window",
+              "localStorage",
+              "removeItem"
+            ],
+            "location": 304,
+            "argumentCount": 1
+          }
+        ]
+      },
+      "asyncOperations": [
+        {
+          "type": "timer",
+          "method": "setTimeout",
+          "location": 265
+        }
+      ],
+      "relativePath": "hooks/useApi.ts"
+    },
+    "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/services/api.ts": {
+      "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/services/api.ts",
+      "name": "api",
+      "propsDeclared": [],
+      "propsUsedInBody": [],
+      "unusedProps": [],
+      "inDegree": 1,
+      "outDegree": 1,
+      "cyclomaticComplexity": 0,
+      "dependencies": [
+        "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/types/index.ts"
+      ],
+      "dependents": [
+        "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx"
+      ],
+      "functionCalls": {
+        "fetch": [
+          {
+            "location": 40,
+            "context": "",
+            "arguments": [
+              "variable",
+              "variable"
+            ],
+            "argumentCount": 2
+          }
+        ],
+        "response.json": [
+          {
+            "location": 46,
+            "context": "response",
+            "arguments": [],
+            "argumentCount": 0
+          }
+        ],
+        "console.error": [
+          {
+            "location": 49,
+            "context": "console",
+            "arguments": [
+              "unknown",
+              "variable"
+            ],
+            "argumentCount": 2
+          }
+        ],
+        "JSON.stringify": [
+          {
+            "location": 67,
+            "context": "JSON",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 77,
+            "context": "JSON",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "apiClient.get": [
+          {
+            "location": 100,
+            "context": "apiClient",
+            "arguments": [
+              "string"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 107,
+            "context": "apiClient",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 151,
+            "context": "apiClient",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 163,
+            "context": "apiClient",
+            "arguments": [
+              "string"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 170,
+            "context": "apiClient",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "apiClient.post": [
+          {
+            "location": 122,
+            "context": "apiClient",
+            "arguments": [
+              "string",
+              "variable"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 185,
+            "context": "apiClient",
+            "arguments": [
+              "string",
+              "variable"
+            ],
+            "argumentCount": 2
+          }
+        ],
+        "apiClient.put": [
+          {
+            "location": 133,
+            "context": "apiClient",
+            "arguments": [
+              "unknown",
+              "variable"
+            ],
+            "argumentCount": 2
+          },
+          {
+            "location": 201,
+            "context": "apiClient",
+            "arguments": [
+              "unknown",
+              "variable"
+            ],
+            "argumentCount": 2
+          }
+        ],
+        "apiClient.delete": [
+          {
+            "location": 144,
+            "context": "apiClient",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 212,
+            "context": "apiClient",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "emailRegex.test": [
+          {
+            "location": 220,
+            "context": "emailRegex",
+            "arguments": [
+              "variable"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "tasks.push": [
+          {
+            "location": 237,
+            "context": "tasks",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "Math.random": [
+          {
+            "location": 241,
+            "context": "Math",
+            "arguments": [],
+            "argumentCount": 0
+          },
+          {
+            "location": 242,
+            "context": "Math",
+            "arguments": [],
+            "argumentCount": 0
+          },
+          {
+            "location": 243,
+            "context": "Math",
+            "arguments": [],
+            "argumentCount": 0
+          },
+          {
+            "location": 244,
+            "context": "Math",
+            "arguments": [],
+            "argumentCount": 0
+          },
+          {
+            "location": 246,
+            "context": "Math",
+            "arguments": [],
+            "argumentCount": 0
+          },
+          {
+            "location": 246,
+            "context": "Math",
+            "arguments": [],
+            "argumentCount": 0
+          },
+          {
+            "location": 247,
+            "context": "Math",
+            "arguments": [],
+            "argumentCount": 0
+          },
+          {
+            "location": 268,
+            "context": "Math",
+            "arguments": [],
+            "argumentCount": 0
+          },
+          {
+            "location": 269,
+            "context": "Math",
+            "arguments": [],
+            "argumentCount": 0
+          },
+          {
+            "location": 270,
+            "context": "Math",
+            "arguments": [],
+            "argumentCount": 0
+          },
+          {
+            "location": 271,
+            "context": "Math",
+            "arguments": [],
+            "argumentCount": 0
+          },
+          {
+            "location": 271,
+            "context": "Math",
+            "arguments": [],
+            "argumentCount": 0
+          },
+          {
+            "location": 273,
+            "context": "Math",
+            "arguments": [],
+            "argumentCount": 0
+          },
+          {
+            "location": 275,
+            "context": "Math",
+            "arguments": [],
+            "argumentCount": 0
+          },
+          {
+            "location": 276,
+            "context": "Math",
+            "arguments": [],
+            "argumentCount": 0
+          }
+        ],
+        "Math.floor": [
+          {
+            "location": 242,
+            "context": "Math",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 246,
+            "context": "Math",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 247,
+            "context": "Math",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          },
+          {
+            "location": 268,
+            "context": "Math",
+            "arguments": [
+              "unknown"
+            ],
+            "argumentCount": 1
+          }
+        ],
+        "Date.now": [
+          {
+            "location": 243,
+            "context": "Date",
+            "arguments": [],
+            "argumentCount": 0
+          },
+          {
+            "location": 244,
+            "context": "Date",
+            "arguments": [],
+            "argumentCount": 0
+          },
+          {
+            "location": 270,
+            "context": "Date",
+            "arguments": [],
+            "argumentCount": 0
+          },
+          {
+            "location": 271,
+            "context": "Date",
+            "arguments": [],
+            "argumentCount": 0
+          }
+        ],
+        "tags.slice": [
+          {
+            "location": 247,
+            "context": "tags",
+            "arguments": [
+              "number",
+              "unknown"
+            ],
+            "argumentCount": 2
+          }
+        ],
+        "users.push": [
+          {
+            "location": 263,
+            "context": "users",
+            "arguments": [
+              "object"
+            ],
+            "argumentCount": 1
+          }
+        ]
+      },
+      "variableReferences": {
+        "process": [
+          {
+            "property": "env",
+            "location": 6,
+            "isComputed": false
+          }
+        ],
+        "options": [
+          {
+            "property": "headers",
+            "location": 35,
+            "isComputed": false
+          }
+        ],
+        "response": [
+          {
+            "property": "ok",
+            "location": 42,
+            "isComputed": false
+          },
+          {
+            "property": "status",
+            "location": 43,
+            "isComputed": false
+          },
+          {
+            "property": "json",
+            "location": 46,
+            "isComputed": false
+          }
+        ],
+        "console": [
+          {
+            "property": "error",
+            "location": 49,
+            "isComputed": false
+          }
+        ],
+        "JSON": [
+          {
+            "property": "stringify",
+            "location": 67,
+            "isComputed": false
+          },
+          {
+            "property": "stringify",
+            "location": 77,
+            "isComputed": false
+          }
+        ],
+        "apiClient": [
+          {
+            "property": "get",
+            "location": 100,
+            "isComputed": false
+          },
+          {
+            "property": "get",
+            "location": 107,
+            "isComputed": false
+          },
+          {
+            "property": "post",
+            "location": 122,
+            "isComputed": false
+          },
+          {
+            "property": "put",
+            "location": 133,
+            "isComputed": false
+          },
+          {
+            "property": "delete",
+            "location": 144,
+            "isComputed": false
+          },
+          {
+            "property": "get",
+            "location": 151,
+            "isComputed": false
+          },
+          {
+            "property": "get",
+            "location": 163,
+            "isComputed": false
+          },
+          {
+            "property": "get",
+            "location": 170,
+            "isComputed": false
+          },
+          {
+            "property": "post",
+            "location": 185,
+            "isComputed": false
+          },
+          {
+            "property": "put",
+            "location": 201,
+            "isComputed": false
+          },
+          {
+            "property": "delete",
+            "location": 212,
+            "isComputed": false
+          }
+        ],
+        "task": [
+          {
+            "property": "title",
+            "location": 115,
+            "isComputed": false
+          },
+          {
+            "property": "title",
+            "location": 115,
+            "isComputed": false
+          },
+          {
+            "property": "title",
+            "location": 118,
+            "isComputed": false
+          }
+        ],
+        "user": [
+          {
+            "property": "name",
+            "location": 178,
+            "isComputed": false
+          },
+          {
+            "property": "name",
+            "location": 178,
+            "isComputed": false
+          },
+          {
+            "property": "email",
+            "location": 181,
+            "isComputed": false
+          },
+          {
+            "property": "email",
+            "location": 181,
+            "isComputed": false
+          },
+          {
+            "property": "email",
+            "location": 197,
+            "isComputed": false
+          },
+          {
+            "property": "email",
+            "location": 197,
+            "isComputed": false
+          }
+        ],
+        "emailRegex": [
+          {
+            "property": "test",
+            "location": 220,
+            "isComputed": false
+          }
+        ],
+        "tasks": [
+          {
+            "property": "push",
+            "location": 237,
+            "isComputed": false
+          }
+        ],
+        "Math": [
+          {
+            "property": "random",
+            "location": 241,
+            "isComputed": false
+          },
+          {
+            "property": "floor",
+            "location": 242,
+            "isComputed": false
+          },
+          {
+            "property": "random",
+            "location": 242,
+            "isComputed": false
+          },
+          {
+            "property": "random",
+            "location": 243,
+            "isComputed": false
+          },
+          {
+            "property": "random",
+            "location": 244,
+            "isComputed": false
+          },
+          {
+            "property": "random",
+            "location": 246,
+            "isComputed": false
+          },
+          {
+            "property": "floor",
+            "location": 246,
+            "isComputed": false
+          },
+          {
+            "property": "random",
+            "location": 246,
+            "isComputed": false
+          },
+          {
+            "property": "floor",
+            "location": 247,
+            "isComputed": false
+          },
+          {
+            "property": "random",
+            "location": 247,
+            "isComputed": false
+          },
+          {
+            "property": "floor",
+            "location": 268,
+            "isComputed": false
+          },
+          {
+            "property": "random",
+            "location": 268,
+            "isComputed": false
+          },
+          {
+            "property": "random",
+            "location": 269,
+            "isComputed": false
+          },
+          {
+            "property": "random",
+            "location": 270,
+            "isComputed": false
+          },
+          {
+            "property": "random",
+            "location": 271,
+            "isComputed": false
+          },
+          {
+            "property": "random",
+            "location": 271,
+            "isComputed": false
+          },
+          {
+            "property": "random",
+            "location": 273,
+            "isComputed": false
+          },
+          {
+            "property": "random",
+            "location": 275,
+            "isComputed": false
+          },
+          {
+            "property": "random",
+            "location": 276,
+            "isComputed": false
+          }
+        ],
+        "priorities": [
+          {
+            "property": "computed",
+            "location": 242,
+            "isComputed": true
+          },
+          {
+            "property": "length",
+            "location": 242,
+            "isComputed": false
+          }
+        ],
+        "Date": [
+          {
+            "property": "now",
+            "location": 243,
+            "isComputed": false
+          },
+          {
+            "property": "now",
+            "location": 244,
+            "isComputed": false
+          },
+          {
+            "property": "now",
+            "location": 270,
+            "isComputed": false
+          },
+          {
+            "property": "now",
+            "location": 271,
+            "isComputed": false
+          }
+        ],
+        "tags": [
+          {
+            "property": "slice",
+            "location": 247,
+            "isComputed": false
+          }
+        ],
+        "users": [
+          {
+            "property": "push",
+            "location": 263,
+            "isComputed": false
+          }
+        ],
+        "names": [
+          {
+            "property": "computed",
+            "location": 265,
+            "isComputed": true
+          }
+        ],
+        "roles": [
+          {
+            "property": "computed",
+            "location": 268,
+            "isComputed": true
+          },
+          {
+            "property": "length",
+            "location": 268,
+            "isComputed": false
+          }
+        ]
+      },
+      "dataFlow": {
+        "API_BASE_URL": {
+          "type": "unknown",
+          "dependencies": [],
+          "location": 6,
+          "isDeclaration": true
+        },
+        "url": {
+          "type": "unknown",
+          "dependencies": [],
+          "location": 30,
+          "isDeclaration": true
+        },
+        "config": {
+          "type": "object",
+          "dependencies": [],
+          "location": 31,
+          "isDeclaration": true
+        },
+        "response": {
+          "type": "unknown",
+          "dependencies": [],
+          "location": 40,
+          "isDeclaration": true
+        },
+        "data": {
+          "type": "unknown",
+          "dependencies": [],
+          "location": 46,
+          "isDeclaration": true
+        },
+        "apiClient": {
+          "type": "unknown",
+          "dependencies": [],
+          "location": 90,
+          "isDeclaration": true
+        },
+        "taskService": {
+          "type": "object",
+          "dependencies": [],
+          "location": 95,
+          "isDeclaration": true
+        },
+        "userService": {
+          "type": "object",
+          "dependencies": [],
+          "location": 158,
+          "isDeclaration": true
+        },
+        "emailRegex": {
+          "type": "unknown",
+          "dependencies": [],
+          "location": 219,
+          "isDeclaration": true
+        },
+        "mockDataService": {
+          "type": "object",
+          "dependencies": [],
+          "location": 227,
+          "isDeclaration": true
+        },
+        "tasks": {
+          "type": "array",
+          "dependencies": [],
+          "location": 232,
+          "isDeclaration": true
+        },
+        "priorities": {
+          "type": "array",
+          "dependencies": [],
+          "location": 233,
+          "isDeclaration": true
+        },
+        "tags": {
+          "type": "array",
+          "dependencies": [],
+          "location": 234,
+          "isDeclaration": true
+        },
+        "i": {
+          "type": "number",
+          "dependencies": [],
+          "location": 262,
+          "isDeclaration": true
+        },
+        "users": {
+          "type": "array",
+          "dependencies": [],
+          "location": 258,
+          "isDeclaration": true
+        },
+        "roles": {
+          "type": "array",
+          "dependencies": [],
+          "location": 259,
+          "isDeclaration": true
+        },
+        "names": {
+          "type": "array",
+          "dependencies": [],
+          "location": 260,
+          "isDeclaration": true
+        }
+      },
+      "hookUsage": [],
+      "eventHandlers": [],
+      "stateManagement": {},
+      "componentLifecycle": [
+        {
+          "name": "constructor",
+          "location": 16,
+          "isAsync": false
+        }
+      ],
+      "conditionalRendering": [
+        {
+          "type": "LogicalExpression",
+          "condition": "null || null",
+          "location": 6,
+          "operator": "||"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "null || null === null",
+          "location": 115,
+          "operator": "||"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "null || null === null",
+          "location": 178,
+          "operator": "||"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "null || null",
+          "location": 181,
+          "operator": "||"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "user.email && null",
+          "location": 197,
+          "operator": "&&"
+        },
+        {
+          "type": "LogicalExpression",
+          "condition": "null || null",
+          "location": 265,
+          "operator": "||"
+        }
+      ],
+      "dynamicImports": [],
+      "contextUsage": [],
+      "methodChains": {
+        "response.json": [
+          {
+            "chain": [
+              "response",
+              "json"
+            ],
+            "location": 46,
+            "argumentCount": 0
+          }
+        ],
+        "console.error": [
+          {
+            "chain": [
+              "console",
+              "error"
+            ],
+            "location": 49,
+            "argumentCount": 2
+          }
+        ],
+        "JSON.stringify": [
+          {
+            "chain": [
+              "JSON",
+              "stringify"
+            ],
+            "location": 67,
+            "argumentCount": 1
+          },
+          {
+            "chain": [
+              "JSON",
+              "stringify"
+            ],
+            "location": 77,
+            "argumentCount": 1
+          }
+        ],
+        "apiClient.get": [
+          {
+            "chain": [
+              "apiClient",
+              "get"
+            ],
+            "location": 100,
+            "argumentCount": 1
+          },
+          {
+            "chain": [
+              "apiClient",
+              "get"
+            ],
+            "location": 107,
+            "argumentCount": 1
+          },
+          {
+            "chain": [
+              "apiClient",
+              "get"
+            ],
+            "location": 151,
+            "argumentCount": 1
+          },
+          {
+            "chain": [
+              "apiClient",
+              "get"
+            ],
+            "location": 163,
+            "argumentCount": 1
+          },
+          {
+            "chain": [
+              "apiClient",
+              "get"
+            ],
+            "location": 170,
+            "argumentCount": 1
+          }
+        ],
+        "task.title.trim": [
+          {
+            "chain": [
+              "task",
+              "title",
+              "trim"
+            ],
+            "location": 115,
+            "argumentCount": 0
+          }
+        ],
+        "apiClient.post": [
+          {
+            "chain": [
+              "apiClient",
+              "post"
+            ],
+            "location": 122,
+            "argumentCount": 2
+          },
+          {
+            "chain": [
+              "apiClient",
+              "post"
+            ],
+            "location": 185,
+            "argumentCount": 2
+          }
+        ],
+        "apiClient.put": [
+          {
+            "chain": [
+              "apiClient",
+              "put"
+            ],
+            "location": 133,
+            "argumentCount": 2
+          },
+          {
+            "chain": [
+              "apiClient",
+              "put"
+            ],
+            "location": 201,
+            "argumentCount": 2
+          }
+        ],
+        "apiClient.delete": [
+          {
+            "chain": [
+              "apiClient",
+              "delete"
+            ],
+            "location": 144,
+            "argumentCount": 1
+          },
+          {
+            "chain": [
+              "apiClient",
+              "delete"
+            ],
+            "location": 212,
+            "argumentCount": 1
+          }
+        ],
+        "user.name.trim": [
+          {
+            "chain": [
+              "user",
+              "name",
+              "trim"
+            ],
+            "location": 178,
+            "argumentCount": 0
+          }
+        ],
+        "emailRegex.test": [
+          {
+            "chain": [
+              "emailRegex",
+              "test"
+            ],
+            "location": 220,
+            "argumentCount": 1
+          }
+        ],
+        "tasks.push": [
+          {
+            "chain": [
+              "tasks",
+              "push"
+            ],
+            "location": 237,
+            "argumentCount": 1
+          }
+        ],
+        "Math.random": [
+          {
+            "chain": [
+              "Math",
+              "random"
+            ],
+            "location": 241,
+            "argumentCount": 0
+          },
+          {
+            "chain": [
+              "Math",
+              "random"
+            ],
+            "location": 242,
+            "argumentCount": 0
+          },
+          {
+            "chain": [
+              "Math",
+              "random"
+            ],
+            "location": 243,
+            "argumentCount": 0
+          },
+          {
+            "chain": [
+              "Math",
+              "random"
+            ],
+            "location": 244,
+            "argumentCount": 0
+          },
+          {
+            "chain": [
+              "Math",
+              "random"
+            ],
+            "location": 246,
+            "argumentCount": 0
+          },
+          {
+            "chain": [
+              "Math",
+              "random"
+            ],
+            "location": 246,
+            "argumentCount": 0
+          },
+          {
+            "chain": [
+              "Math",
+              "random"
+            ],
+            "location": 247,
+            "argumentCount": 0
+          },
+          {
+            "chain": [
+              "Math",
+              "random"
+            ],
+            "location": 268,
+            "argumentCount": 0
+          },
+          {
+            "chain": [
+              "Math",
+              "random"
+            ],
+            "location": 269,
+            "argumentCount": 0
+          },
+          {
+            "chain": [
+              "Math",
+              "random"
+            ],
+            "location": 270,
+            "argumentCount": 0
+          },
+          {
+            "chain": [
+              "Math",
+              "random"
+            ],
+            "location": 271,
+            "argumentCount": 0
+          },
+          {
+            "chain": [
+              "Math",
+              "random"
+            ],
+            "location": 271,
+            "argumentCount": 0
+          },
+          {
+            "chain": [
+              "Math",
+              "random"
+            ],
+            "location": 273,
+            "argumentCount": 0
+          },
+          {
+            "chain": [
+              "Math",
+              "random"
+            ],
+            "location": 275,
+            "argumentCount": 0
+          },
+          {
+            "chain": [
+              "Math",
+              "random"
+            ],
+            "location": 276,
+            "argumentCount": 0
+          }
+        ],
+        "Math.floor": [
+          {
+            "chain": [
+              "Math",
+              "floor"
+            ],
+            "location": 242,
+            "argumentCount": 1
+          },
+          {
+            "chain": [
+              "Math",
+              "floor"
+            ],
+            "location": 246,
+            "argumentCount": 1
+          },
+          {
+            "chain": [
+              "Math",
+              "floor"
+            ],
+            "location": 247,
+            "argumentCount": 1
+          },
+          {
+            "chain": [
+              "Math",
+              "floor"
+            ],
+            "location": 268,
+            "argumentCount": 1
+          }
+        ],
+        "Date.now": [
+          {
+            "chain": [
+              "Date",
+              "now"
+            ],
+            "location": 243,
+            "argumentCount": 0
+          },
+          {
+            "chain": [
+              "Date",
+              "now"
+            ],
+            "location": 244,
+            "argumentCount": 0
+          },
+          {
+            "chain": [
+              "Date",
+              "now"
+            ],
+            "location": 270,
+            "argumentCount": 0
+          },
+          {
+            "chain": [
+              "Date",
+              "now"
+            ],
+            "location": 271,
+            "argumentCount": 0
+          }
+        ],
+        "tags.slice": [
+          {
+            "chain": [
+              "tags",
+              "slice"
+            ],
+            "location": 247,
+            "argumentCount": 2
+          }
+        ],
+        "users.push": [
+          {
+            "chain": [
+              "users",
+              "push"
+            ],
+            "location": 263,
+            "argumentCount": 1
+          }
+        ]
+      },
+      "asyncOperations": [],
+      "relativePath": "services/api.ts"
+    },
+    "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.css": {
+      "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.css",
+      "name": "App",
+      "propsDeclared": [],
+      "propsUsedInBody": [],
+      "unusedProps": [],
+      "inDegree": 2,
+      "outDegree": 0,
+      "cyclomaticComplexity": 0,
+      "dependencies": [],
+      "dependents": [
+        "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.jsx",
+        "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx"
+      ],
+      "functionCalls": {},
+      "variableReferences": {},
+      "dataFlow": {},
+      "hookUsage": [],
+      "eventHandlers": [],
+      "stateManagement": {},
+      "componentLifecycle": [],
+      "conditionalRendering": [],
+      "dynamicImports": [],
+      "contextUsage": [],
+      "methodChains": {},
+      "asyncOperations": [],
+      "relativePath": "App.css"
+    },
+    "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/types/index.ts": {
+      "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/types/index.ts",
+      "name": "types",
+      "propsDeclared": [],
+      "propsUsedInBody": [],
+      "unusedProps": [],
+      "inDegree": 3,
+      "outDegree": 0,
+      "cyclomaticComplexity": 0,
+      "dependencies": [],
+      "dependents": [
+        "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx",
+        "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/hooks/useApi.ts",
+        "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/services/api.ts"
+      ],
+      "functionCalls": {},
+      "variableReferences": {},
+      "dataFlow": {},
+      "hookUsage": [],
+      "eventHandlers": [],
+      "stateManagement": {},
+      "componentLifecycle": [],
+      "conditionalRendering": [],
+      "dynamicImports": [],
+      "contextUsage": [],
+      "methodChains": {},
+      "asyncOperations": [],
+      "relativePath": "types/index.ts"
+    }
+  },
+  "edges": [
+    {
+      "source": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.jsx",
+      "target": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx",
+      "metadata": {
+        "importSpecifiers": [
+          {
+            "type": "default",
+            "local": "Button"
+          }
+        ],
+        "source": "./components/Button",
+        "usage": {
+          "count": 4,
+          "props": {}
+        }
+      }
+    },
+    {
+      "source": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.jsx",
+      "target": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Card.jsx",
+      "metadata": {
+        "importSpecifiers": [
+          {
+            "type": "default",
+            "local": "Card"
+          }
+        ],
+        "source": "./components/Card",
+        "usage": {
+          "count": 1,
+          "props": {}
+        }
+      }
+    },
+    {
+      "source": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.jsx",
+      "target": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.css",
+      "metadata": {
+        "importSpecifiers": [],
+        "source": "./App.css"
+      }
+    },
+    {
+      "source": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx",
+      "target": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/types/index.ts",
+      "metadata": {
+        "importSpecifiers": [
+          {
+            "type": "named",
+            "imported": "Task",
+            "local": "Task"
+          },
+          {
+            "type": "named",
+            "imported": "User",
+            "local": "User"
+          },
+          {
+            "type": "named",
+            "imported": "CreateTaskDto",
+            "local": "CreateTaskDto"
+          },
+          {
+            "type": "named",
+            "imported": "CreateUserDto",
+            "local": "CreateUserDto"
+          },
+          {
+            "type": "named",
+            "imported": "AppState",
+            "local": "AppState"
+          }
+        ],
+        "source": "./types",
+        "usage": null
+      }
+    },
+    {
+      "source": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx",
+      "target": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/services/api.ts",
+      "metadata": {
+        "importSpecifiers": [
+          {
+            "type": "named",
+            "imported": "taskService",
+            "local": "taskService"
+          },
+          {
+            "type": "named",
+            "imported": "userService",
+            "local": "userService"
+          }
+        ],
+        "source": "./services/api",
+        "usage": null
+      }
+    },
+    {
+      "source": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx",
+      "target": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/hooks/useApi.ts",
+      "metadata": {
+        "importSpecifiers": [
+          {
+            "type": "named",
+            "imported": "useApi",
+            "local": "useApi"
+          },
+          {
+            "type": "named",
+            "imported": "useAsyncOperation",
+            "local": "useAsyncOperation"
+          },
+          {
+            "type": "named",
+            "imported": "useList",
+            "local": "useList"
+          }
+        ],
+        "source": "./hooks/useApi",
+        "usage": null
+      }
+    },
+    {
+      "source": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx",
+      "target": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.css",
+      "metadata": {
+        "importSpecifiers": [],
+        "source": "./App.css",
+        "usage": null
+      }
+    },
+    {
+      "source": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Card.jsx",
+      "target": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx",
+      "metadata": {
+        "importSpecifiers": [
+          {
+            "type": "default",
+            "local": "Button"
+          }
+        ],
+        "source": "./Button",
+        "usage": {
+          "count": 1,
+          "props": {}
+        }
+      }
+    },
+    {
+      "source": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/hooks/useApi.ts",
+      "target": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/types/index.ts",
+      "metadata": {
+        "importSpecifiers": [
+          {
+            "type": "named",
+            "imported": "ApiResponse",
+            "local": "ApiResponse"
+          }
+        ],
+        "source": "../types",
+        "usage": null
+      }
+    },
+    {
+      "source": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/services/api.ts",
+      "target": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/types/index.ts",
+      "metadata": {
+        "importSpecifiers": [
+          {
+            "type": "named",
+            "imported": "Task",
+            "local": "Task"
+          },
+          {
+            "type": "named",
+            "imported": "CreateTaskDto",
+            "local": "CreateTaskDto"
+          },
+          {
+            "type": "named",
+            "imported": "UpdateTaskDto",
+            "local": "UpdateTaskDto"
+          },
+          {
+            "type": "named",
+            "imported": "User",
+            "local": "User"
+          },
+          {
+            "type": "named",
+            "imported": "CreateUserDto",
+            "local": "CreateUserDto"
+          },
+          {
+            "type": "named",
+            "imported": "UpdateUserDto",
+            "local": "UpdateUserDto"
+          },
+          {
+            "type": "named",
+            "imported": "ApiResponse",
+            "local": "ApiResponse"
+          },
+          {
+            "type": "named",
+            "imported": "PaginatedResponse",
+            "local": "PaginatedResponse"
+          }
+        ],
+        "source": "../types",
+        "usage": null
+      }
+    }
+  ],
+  "metadata": {
+    "nodeCount": 9,
+    "edgeCount": 10,
+    "density": 0.1388888888888889,
+    "degreeDistribution": {
+      "inDegree": {
+        "min": 0,
+        "max": 3,
+        "mean": 1.1111111111111112,
+        "median": 1,
+        "std": 0.9938079899999066
+      },
+      "outDegree": {
+        "min": 0,
+        "max": 4,
+        "mean": 1.1111111111111112,
+        "median": 1,
+        "std": 1.3698697784375502
+      },
+      "totalDegree": {
+        "min": 0,
+        "max": 4,
+        "mean": 2.2222222222222223,
+        "median": 2,
+        "std": 1.0304020550550783
+      }
+    },
+    "isolatedNodes": [
+      "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx"
+    ],
+    "leafNodes": [
+      "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx",
+      "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.css",
+      "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/types/index.ts"
+    ],
+    "rootNodes": [
+      "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.jsx",
+      "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx"
+    ],
+    "connectedComponents": 2,
+    "largestComponentSize": 8,
+    "generatedAt": "2025-10-15T06:02:09.602Z",
+    "projectPath": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src",
+    "framework": "react"
+  },
+  "analysis": {
+    "summary": {
+      "totalComponents": 9,
+      "totalDependencies": 10,
+      "orphanCount": 3,
+      "unusedPropsCount": 4,
+      "circularDependenciesCount": 0,
+      "deadCodeCount": 1,
+      "density": 0.1388888888888889
+    },
+    "orphanComponents": [
+      {
+        "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx",
+        "name": "App",
+        "outDegree": 4,
+        "reason": "entry_point"
+      },
+      {
+        "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.jsx",
+        "name": "App",
+        "outDegree": 3,
+        "reason": "entry_point"
+      },
+      {
+        "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx",
+        "name": "OrphanComponent",
+        "outDegree": 0,
+        "reason": "isolated"
+      }
+    ],
+    "unusedProps": [
+      {
+        "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx",
+        "name": "OrphanComponent",
+        "unusedProps": [
+          "unusedProp1",
+          "unusedProp2",
+          "unusedProp3"
+        ],
+        "totalProps": 6,
+        "usageRate": 50
+      },
+      {
+        "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx",
+        "name": "Button",
+        "unusedProps": [
+          "unusedProp"
+        ],
+        "totalProps": 7,
+        "usageRate": 85.71428571428571
+      }
+    ],
+    "circularDependencies": [],
+    "componentComplexity": [
+      {
+        "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx",
+        "name": "App",
+        "complexity": 8,
+        "inDegree": 0,
+        "outDegree": 4,
+        "propsCount": 0,
+        "category": "low"
+      },
+      {
+        "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx",
+        "name": "Button",
+        "complexity": 7.5,
+        "inDegree": 2,
+        "outDegree": 0,
+        "propsCount": 7,
+        "category": "low"
+      },
+      {
+        "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.jsx",
+        "name": "App",
+        "complexity": 6,
+        "inDegree": 0,
+        "outDegree": 3,
+        "propsCount": 0,
+        "category": "low"
+      },
+      {
+        "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Card.jsx",
+        "name": "Card",
+        "complexity": 6,
+        "inDegree": 1,
+        "outDegree": 1,
+        "propsCount": 5,
+        "category": "low"
+      },
+      {
+        "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx",
+        "name": "OrphanComponent",
+        "complexity": 6,
+        "inDegree": 0,
+        "outDegree": 0,
+        "propsCount": 6,
+        "category": "low"
+      },
+      {
+        "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/types/index.ts",
+        "name": "types",
+        "complexity": 4.5,
+        "inDegree": 3,
+        "outDegree": 0,
+        "propsCount": 0,
+        "category": "very_low"
+      },
+      {
+        "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/hooks/useApi.ts",
+        "name": "useApi",
+        "complexity": 3.5,
+        "inDegree": 1,
+        "outDegree": 1,
+        "propsCount": 0,
+        "category": "very_low"
+      },
+      {
+        "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/services/api.ts",
+        "name": "api",
+        "complexity": 3.5,
+        "inDegree": 1,
+        "outDegree": 1,
+        "propsCount": 0,
+        "category": "very_low"
+      },
+      {
+        "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.css",
+        "name": "App",
+        "complexity": 3,
+        "inDegree": 2,
+        "outDegree": 0,
+        "propsCount": 0,
+        "category": "very_low"
+      }
+    ],
+    "dependencyDepth": {
+      "averageDepth": 0.78,
+      "maxDepth": 2,
+      "deepestComponents": [
+        {
+          "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.jsx",
+          "name": "App",
+          "depth": 2,
+          "outDegree": 3
+        },
+        {
+          "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx",
+          "name": "App",
+          "depth": 2,
+          "outDegree": 4
+        }
+      ],
+      "depthDistribution": {
+        "0": 4,
+        "1": 3,
+        "2": 2
+      }
+    },
+    "hubComponents": [
+      {
+        "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx",
+        "name": "App",
+        "totalDegree": 4,
+        "inDegree": 0,
+        "outDegree": 4,
+        "centrality": 0.5,
+        "impact": 0
+      }
+    ],
+    "deadCode": [
+      {
+        "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx",
+        "name": "OrphanComponent",
+        "reason": "isolated_component",
+        "confidence": 0.9
+      }
+    ],
+    "couplingAnalysis": {
+      "metrics": {
+        "afferentCoupling": {},
+        "efferentCoupling": {},
+        "instability": {},
+        "abstractness": {}
+      },
+      "highCouplingComponents": [],
+      "averageCoupling": 2.2222222222222223,
+      "couplingDistribution": {
+        "low": 9,
+        "medium": 0,
+        "high": 0,
+        "very_high": 0
+      }
+    },
+    "recommendations": [
+      {
+        "type": "orphan_components",
+        "priority": "high",
+        "title": "移除孤立组件",
+        "description": "发现 1 个孤立组件，建议检查是否可以安全删除",
+        "components": [
+          {
+            "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx",
+            "name": "OrphanComponent",
+            "outDegree": 0,
+            "reason": "isolated"
+          }
+        ]
+      },
+      {
+        "type": "unused_props",
+        "priority": "medium",
+        "title": "清理未使用的Props",
+        "description": "发现 4 个未使用的Props，建议清理以简化组件接口",
+        "components": [
+          {
+            "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/OrphanComponent.jsx",
+            "name": "OrphanComponent",
+            "unusedProps": [
+              "unusedProp1",
+              "unusedProp2",
+              "unusedProp3"
+            ],
+            "totalProps": 6,
+            "usageRate": 50
+          },
+          {
+            "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/components/Button.jsx",
+            "name": "Button",
+            "unusedProps": [
+              "unusedProp"
+            ],
+            "totalProps": 7,
+            "usageRate": 85.71428571428571
+          }
+        ]
+      },
+      {
+        "type": "hub_components",
+        "priority": "medium",
+        "title": "关注枢纽组件",
+        "description": "发现 1 个枢纽组件，建议重点维护和测试",
+        "components": [
+          {
+            "id": "/Users/xiamuguizhi/Dependency-Analyzer/examples/react-demo/src/App.tsx",
+            "name": "App",
+            "totalDegree": 4,
+            "inDegree": 0,
+            "outDegree": 4,
+            "centrality": 0.5,
+            "impact": 0
+          }
+        ]
+      }
+    ]
+  }
+}

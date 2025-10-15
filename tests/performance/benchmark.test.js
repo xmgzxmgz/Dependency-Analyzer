@@ -31,9 +31,9 @@ describe("性能基准测试", () => {
 
     const components = [];
     // 准备 CommonJS 工具函数供 require 使用
-    await fs.ensureDir(path.join(testProjectDir, 'utils'));
+    await fs.ensureDir(path.join(testProjectDir, "utils"));
     await fs.writeFile(
-      path.join(testProjectDir, 'utils', 'commonjsUtil.js'),
+      path.join(testProjectDir, "utils", "commonjsUtil.js"),
       `module.exports = function util(x){ return x * 2; }\n`
     );
 
@@ -48,14 +48,16 @@ describe("性能基准测试", () => {
         dependencies.push(`Component${depIndex}`);
       }
 
-      const dynamicImportLine = i % 10 === 0 && i > 0
-        ? `const Lazy${i} = React.lazy(() => import('./Component${i - 1}'));\n`
-        : '';
-      const requireLine = i % 7 === 0
-        ? `const util = require('./utils/commonjsUtil');\n`
-        : '';
-      const lazyUsage = i % 10 === 0 && i > 0 ? `<Lazy${i} />` : '';
-      const utilUsage = i % 7 === 0 ? `{util(${i})}` : '';
+      const dynamicImportLine =
+        i % 10 === 0 && i > 0
+          ? `const Lazy${i} = React.lazy(() => import('./Component${
+              i - 1
+            }'));\n`
+          : "";
+      const requireLine =
+        i % 7 === 0 ? `const util = require('./utils/commonjsUtil');\n` : "";
+      const lazyUsage = i % 10 === 0 && i > 0 ? `<Lazy${i} />` : "";
+      const utilUsage = i % 7 === 0 ? `{util(${i})}` : "";
 
       const componentCode = `
 import React from 'react';

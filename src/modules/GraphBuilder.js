@@ -18,6 +18,21 @@ class ComponentNode {
     this.inDegree = 0; // 入度
     this.outDegree = 0; // 出度
     this.componentUsages = new Map(); // 组件使用情况
+    this.cyclomaticComplexity = 0; // 圈复杂度
+    
+    // 新增：增强的代码关联性数据
+    this.functionCalls = new Map(); // 函数调用关系
+    this.variableReferences = new Map(); // 变量引用关系
+    this.dataFlow = new Map(); // 数据流分析
+    this.hookUsage = new Set(); // Hook使用情况
+    this.eventHandlers = new Set(); // 事件处理器
+    this.stateManagement = new Map(); // 状态管理
+    this.componentLifecycle = new Set(); // 组件生命周期
+    this.conditionalRendering = []; // 条件渲染
+    this.dynamicImports = new Set(); // 动态导入
+    this.contextUsage = new Set(); // Context使用
+    this.methodChains = new Map(); // 方法链调用
+    this.asyncOperations = new Set(); // 异步操作
   }
 
   /**
@@ -66,9 +81,37 @@ class ComponentNode {
       unusedProps: this.getUnusedProps(),
       inDegree: this.inDegree,
       outDegree: this.outDegree,
+      cyclomaticComplexity: this.cyclomaticComplexity,
       dependencies: Array.from(this.dependencies.keys()),
-      dependents: Array.from(this.dependents)
+      dependents: Array.from(this.dependents),
+      
+      // 新增：增强的代码关联性数据
+      functionCalls: this.serializeMap(this.functionCalls),
+      variableReferences: this.serializeMap(this.variableReferences),
+      dataFlow: this.serializeMap(this.dataFlow),
+      hookUsage: Array.from(this.hookUsage),
+      eventHandlers: Array.from(this.eventHandlers),
+      stateManagement: this.serializeMap(this.stateManagement),
+      componentLifecycle: Array.from(this.componentLifecycle),
+      conditionalRendering: this.conditionalRendering,
+      dynamicImports: Array.from(this.dynamicImports),
+      contextUsage: Array.from(this.contextUsage),
+      methodChains: this.serializeMap(this.methodChains),
+      asyncOperations: Array.from(this.asyncOperations)
     };
+  }
+
+  /**
+   * 序列化Map对象为普通对象
+   * @param {Map} map - 要序列化的Map
+   * @returns {Object} 序列化后的对象
+   */
+  serializeMap(map) {
+    const obj = {};
+    for (const [key, value] of map) {
+      obj[key] = value;
+    }
+    return obj;
   }
 }
 
@@ -161,10 +204,50 @@ class GraphBuilder {
       node.propsUsedInBody = new Set(result.propsUsedInBody);
       // 标记是否使用了 ...rest 展开，供未使用props分析跳过处理
       node.usesRestSpread = !!result.usesRestSpread;
+      // 设置圈复杂度
+      node.cyclomaticComplexity = typeof result.cyclomaticComplexity === 'number' ? result.cyclomaticComplexity : 0;
       
       // 设置组件使用情况
       if (result.componentUsages) {
         node.componentUsages = new Map(result.componentUsages);
+      }
+
+      // 新增：设置增强的代码关联性数据
+      if (result.functionCalls) {
+        node.functionCalls = new Map(result.functionCalls);
+      }
+      if (result.variableReferences) {
+        node.variableReferences = new Map(result.variableReferences);
+      }
+      if (result.dataFlow) {
+        node.dataFlow = new Map(result.dataFlow);
+      }
+      if (result.hookUsage) {
+        node.hookUsage = new Set(result.hookUsage);
+      }
+      if (result.eventHandlers) {
+        node.eventHandlers = new Set(result.eventHandlers);
+      }
+      if (result.stateManagement) {
+        node.stateManagement = new Map(result.stateManagement);
+      }
+      if (result.componentLifecycle) {
+        node.componentLifecycle = new Set(result.componentLifecycle);
+      }
+      if (result.conditionalRendering) {
+        node.conditionalRendering = [...result.conditionalRendering];
+      }
+      if (result.dynamicImports) {
+        node.dynamicImports = new Set(result.dynamicImports);
+      }
+      if (result.contextUsage) {
+        node.contextUsage = new Set(result.contextUsage);
+      }
+      if (result.methodChains) {
+        node.methodChains = new Map(result.methodChains);
+      }
+      if (result.asyncOperations) {
+        node.asyncOperations = new Set(result.asyncOperations);
       }
 
       this.nodes.set(result.filePath, node);
@@ -225,6 +308,152 @@ class GraphBuilder {
     
     // 计算中心性指标
     this.calculateCentralityMetrics();
+    
+    // 新增：计算代码关联性指标
+    this.calculateCodeRelationshipMetrics();
+  }
+
+  /**
+   * 新增：计算代码关联性指标
+   */
+  calculateCodeRelationshipMetrics() {
+    for (const [nodeId, node] of this.nodes) {
+      // 计算函数调用复杂度
+      node.functionCallComplexity = this.calculateFunctionCallComplexity(node);
+      
+      // 计算数据流复杂度
+      node.dataFlowComplexity = this.calculateDataFlowComplexity(node);
+      
+      // 计算状态管理复杂度
+      node.stateComplexity = this.calculateStateComplexity(node);
+      
+      // 计算异步操作复杂度
+      node.asyncComplexity = this.calculateAsyncComplexity(node);
+      
+      // 计算整体关联性得分
+      node.relationshipScore = this.calculateRelationshipScore(node);
+    }
+  }
+
+  /**
+   * 新增：计算函数调用复杂度
+   * @param {ComponentNode} node - 组件节点
+   * @returns {number} 函数调用复杂度
+   */
+  calculateFunctionCallComplexity(node) {
+    let complexity = 0;
+    
+    // 基于函数调用数量和深度
+    for (const [functionName, calls] of node.functionCalls) {
+      if (Array.isArray(calls)) {
+        complexity += calls.length;
+        // 考虑参数复杂度
+        calls.forEach(call => {
+          complexity += (call.argumentCount || 0) * 0.1;
+        });
+      }
+    }
+    
+    // 基于方法链长度
+    for (const [chainName, chains] of node.methodChains) {
+      if (Array.isArray(chains)) {
+        chains.forEach(chain => {
+          complexity += (chain.chain?.length || 0) * 0.5;
+        });
+      }
+    }
+    
+    return Math.round(complexity * 100) / 100;
+  }
+
+  /**
+   * 新增：计算数据流复杂度
+   * @param {ComponentNode} node - 组件节点
+   * @returns {number} 数据流复杂度
+   */
+  calculateDataFlowComplexity(node) {
+    let complexity = 0;
+    
+    // 基于变量引用数量
+    for (const [varName, references] of node.variableReferences) {
+      if (Array.isArray(references)) {
+        complexity += references.length * 0.5;
+      }
+    }
+    
+    // 基于数据流依赖
+    for (const [varName, flow] of node.dataFlow) {
+      if (flow.dependencies && Array.isArray(flow.dependencies)) {
+        complexity += flow.dependencies.length * 0.3;
+      }
+    }
+    
+    // 基于条件渲染复杂度
+    complexity += node.conditionalRendering.length * 0.8;
+    
+    return Math.round(complexity * 100) / 100;
+  }
+
+  /**
+   * 新增：计算状态管理复杂度
+   * @param {ComponentNode} node - 组件节点
+   * @returns {number} 状态管理复杂度
+   */
+  calculateStateComplexity(node) {
+    let complexity = 0;
+    
+    // Hook使用复杂度
+    complexity += node.hookUsage.size * 1.0;
+    
+    // 状态管理复杂度
+    complexity += node.stateManagement.size * 1.5;
+    
+    // Context使用复杂度
+    complexity += node.contextUsage.size * 2.0;
+    
+    // 生命周期方法复杂度
+    complexity += node.componentLifecycle.size * 1.2;
+    
+    return Math.round(complexity * 100) / 100;
+  }
+
+  /**
+   * 新增：计算异步操作复杂度
+   * @param {ComponentNode} node - 组件节点
+   * @returns {number} 异步操作复杂度
+   */
+  calculateAsyncComplexity(node) {
+    let complexity = 0;
+    
+    // 异步操作数量
+    complexity += node.asyncOperations.size * 1.5;
+    
+    // 动态导入复杂度
+    complexity += node.dynamicImports.size * 2.0;
+    
+    return Math.round(complexity * 100) / 100;
+  }
+
+  /**
+   * 新增：计算整体关联性得分
+   * @param {ComponentNode} node - 组件节点
+   * @returns {number} 关联性得分
+   */
+  calculateRelationshipScore(node) {
+    const weights = {
+      functionCall: 0.25,
+      dataFlow: 0.25,
+      state: 0.3,
+      async: 0.2
+    };
+    
+    const score = 
+      (node.functionCallComplexity || 0) * weights.functionCall +
+      (node.dataFlowComplexity || 0) * weights.dataFlow +
+      (node.stateComplexity || 0) * weights.state +
+      (node.asyncComplexity || 0) * weights.async;
+    
+    return Math.round(score * 100) / 100;
   }
 
   /**
@@ -472,9 +701,24 @@ class GraphBuilder {
         inDegree: node.inDegree,
         outDegree: node.outDegree,
         totalDegree: node.inDegree + node.outDegree,
+        cyclomaticComplexity: node.cyclomaticComplexity,
         unusedProps: node.getUnusedProps(),
         propsDeclared: Array.from(node.propsDeclared),
-        propsUsedInBody: Array.from(node.propsUsedInBody)
+        propsUsedInBody: Array.from(node.propsUsedInBody),
+        
+        // 新增：代码关联性指标
+        functionCallComplexity: node.functionCallComplexity || 0,
+        dataFlowComplexity: node.dataFlowComplexity || 0,
+        stateComplexity: node.stateComplexity || 0,
+        asyncComplexity: node.asyncComplexity || 0,
+        relationshipScore: node.relationshipScore || 0,
+        
+        // 新增：详细的关联性数据
+        functionCallsCount: node.functionCalls.size,
+        hookUsageCount: node.hookUsage.size,
+        stateManagementCount: node.stateManagement.size,
+        asyncOperationsCount: node.asyncOperations.size,
+        conditionalRenderingCount: node.conditionalRendering.length
       });
     }
     

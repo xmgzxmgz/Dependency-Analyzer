@@ -5,6 +5,7 @@ const ASTAnalyzer = require("./modules/ASTAnalyzer");
 const GraphBuilder = require("./modules/GraphBuilder");
 const AnalysisEngine = require("./modules/AnalysisEngine");
 const VisualizationGenerator = require("./modules/VisualizationGenerator");
+const ConfigManager = require("./modules/ConfigManager");
 const chalk = require("chalk");
 const pLimit = require("p-limit");
 const oraPkg = require("ora");
@@ -34,6 +35,7 @@ class DependencyAnalyzer {
     this.graphBuilder = new GraphBuilder();
     this.analysisEngine = new AnalysisEngine();
     this.visualizationGenerator = null;
+    this.configManager = new ConfigManager();
   }
 
   /**
@@ -50,19 +52,35 @@ class DependencyAnalyzer {
       ? path.resolve(this.config.jsonPath)
       : null;
 
+    // 加载用户配置（支持自定义配置文件路径）
+    const loadedConfig = await this.configManager.loadConfig(
+      projectPath,
+      this.config.configPath || null
+    );
+
     // 规范化后的配置对象
     const normalizedConfig = {
       ...this.config,
       projectPath,
       outputPath,
       jsonPath,
+      // 合并 ConfigManager 中的配置（仅映射到现有字段）
+      excludePatterns:
+        this.config.excludePatterns && this.config.excludePatterns.length > 0
+          ? this.config.excludePatterns
+          : loadedConfig.exclude || [],
+      concurrency:
+        this.config.concurrency ||
+        this.configManager.get("analysis.maxConcurrency", undefined),
     };
 
     // 初始化依赖模块（使用规范化配置）
     if (!this.fileScanner) this.fileScanner = new FileScanner(normalizedConfig);
     if (!this.astAnalyzer) this.astAnalyzer = new ASTAnalyzer(normalizedConfig);
     if (!this.visualizationGenerator)
-      this.visualizationGenerator = new VisualizationGenerator(normalizedConfig);
+      this.visualizationGenerator = new VisualizationGenerator(
+        normalizedConfig
+      );
 
     // 1. 文件发现与过滤
     const files = await this.fileScanner.scanFiles();
@@ -90,7 +108,9 @@ class DependencyAnalyzer {
           }/${files.length})`;
           return result;
         } catch (error) {
-          spinner.warn(chalk.yellow(`解析文件失败: ${file} - ${error.message}`));
+          spinner.warn(
+            chalk.yellow(`解析文件失败: ${file} - ${error.message}`)
+          );
           console.warn(
             chalk.yellow(`\n⚠️  解析文件失败: ${file} - ${error.message}`)
           );
@@ -100,7 +120,9 @@ class DependencyAnalyzer {
     );
 
     const results = await Promise.all(analysisPromises);
-    spinner.succeed(chalk.gray(`成功解析 ${results.filter(Boolean).length} 个组件文件`));
+    spinner.succeed(
+      chalk.gray(`成功解析 ${results.filter(Boolean).length} 个组件文件`)
+    );
     const analysisResults = results.filter(Boolean);
 
     const duration = ((performance.now() - startTime) / 1000).toFixed(2);

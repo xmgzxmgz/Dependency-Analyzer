@@ -170,11 +170,11 @@ export { Util } from '../utils/Util.js';
     // TS 路径别名示例（@components/*）
     const tsconfig = {
       compilerOptions: {
-        baseUrl: '.',
+        baseUrl: ".",
         paths: {
-          '@components/*': ['components/*']
-        }
-      }
+          "@components/*": ["components/*"],
+        },
+      },
     };
     const aliasComp = `
 import React from 'react';
@@ -191,18 +191,36 @@ export default function AliasEntry(){
 `;
 
     // 写入扩展文件结构
-    await fs.writeFile(path.join(testProjectDir, 'LazyComp.jsx'), lazyComp);
-    await fs.writeFile(path.join(testProjectDir, 'DynamicLoader.jsx'), dynamicLoader);
-    await fs.ensureDir(path.join(testProjectDir, 'utils'));
-    await fs.writeFile(path.join(testProjectDir, 'utils', 'commonjsUtil.js'), commonjsUtil);
-    await fs.writeFile(path.join(testProjectDir, 'RequireUser.js'), requireUser);
-    await fs.writeFile(path.join(testProjectDir, 'utils', 'Util.js'), utilEsModule);
-    await fs.ensureDir(path.join(testProjectDir, 'reexports'));
-    await fs.writeFile(path.join(testProjectDir, 'reexports', 'index.js'), reexportIndex);
-    await fs.writeJson(path.join(testProjectDir, 'tsconfig.json'), tsconfig);
-    await fs.ensureDir(path.join(testProjectDir, 'components'));
-    await fs.writeFile(path.join(testProjectDir, 'components', 'AliasComp.tsx'), aliasComp);
-    await fs.writeFile(path.join(testProjectDir, 'AliasEntry.tsx'), aliasEntry);
+    await fs.writeFile(path.join(testProjectDir, "LazyComp.jsx"), lazyComp);
+    await fs.writeFile(
+      path.join(testProjectDir, "DynamicLoader.jsx"),
+      dynamicLoader
+    );
+    await fs.ensureDir(path.join(testProjectDir, "utils"));
+    await fs.writeFile(
+      path.join(testProjectDir, "utils", "commonjsUtil.js"),
+      commonjsUtil
+    );
+    await fs.writeFile(
+      path.join(testProjectDir, "RequireUser.js"),
+      requireUser
+    );
+    await fs.writeFile(
+      path.join(testProjectDir, "utils", "Util.js"),
+      utilEsModule
+    );
+    await fs.ensureDir(path.join(testProjectDir, "reexports"));
+    await fs.writeFile(
+      path.join(testProjectDir, "reexports", "index.js"),
+      reexportIndex
+    );
+    await fs.writeJson(path.join(testProjectDir, "tsconfig.json"), tsconfig);
+    await fs.ensureDir(path.join(testProjectDir, "components"));
+    await fs.writeFile(
+      path.join(testProjectDir, "components", "AliasComp.tsx"),
+      aliasComp
+    );
+    await fs.writeFile(path.join(testProjectDir, "AliasEntry.tsx"), aliasEntry);
 
     // 创建package.json
     const packageJson = {
@@ -210,7 +228,7 @@ export default function AliasEntry(){
       version: "1.0.0",
       dependencies: {
         react: "^18.0.0",
-        vue: "^3.4.0"
+        vue: "^3.4.0",
       },
     };
     await fs.writeJson(path.join(testProjectDir, "package.json"), packageJson);
@@ -328,7 +346,8 @@ export default function AliasEntry(){
       const edges = jsonData.edges || [];
       expect(
         edges.some(
-          (e) => typeof e.target === 'string' && e.target.endsWith('LazyComp.jsx')
+          (e) =>
+            typeof e.target === "string" && e.target.endsWith("LazyComp.jsx")
         )
       ).to.be.true;
     });
@@ -337,7 +356,7 @@ export default function AliasEntry(){
   describe("Vue项目分析", () => {
     it("应该成功分析Vue项目并生成报告", async () => {
       // 创建简单的 Vue 结构
-      const vueDir = path.join(testProjectDir, 'vue');
+      const vueDir = path.join(testProjectDir, "vue");
       await fs.ensureDir(vueDir);
       const appVue = `<template><div><Child /></div></template>
 <script setup>
@@ -346,10 +365,13 @@ import Child from './components/Child.vue';
       const childVue = `<template><span>Child</span></template>`;
       const orphanVue = `<template><div>Orphan Vue</div></template>`;
 
-      await fs.ensureDir(path.join(vueDir, 'components'));
-      await fs.writeFile(path.join(vueDir, 'App.vue'), appVue);
-      await fs.writeFile(path.join(vueDir, 'components', 'Child.vue'), childVue);
-      await fs.writeFile(path.join(vueDir, 'Orphan.vue'), orphanVue);
+      await fs.ensureDir(path.join(vueDir, "components"));
+      await fs.writeFile(path.join(vueDir, "App.vue"), appVue);
+      await fs.writeFile(
+        path.join(vueDir, "components", "Child.vue"),
+        childVue
+      );
+      await fs.writeFile(path.join(vueDir, "Orphan.vue"), orphanVue);
 
       const analyzer = new DependencyAnalyzer({
         projectPath: testProjectDir,

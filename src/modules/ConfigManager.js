@@ -20,24 +20,47 @@ class ConfigManager {
    * @param {string} projectPath - 项目根目录
    * @returns {Object} 合并后的配置对象
    */
-  async loadConfig(projectPath) {
+  async loadConfig(projectPath, customConfigPath = null) {
     const defaultConfig = this.getDefaultConfig();
     let userConfig = {};
 
-    // 尝试加载用户配置文件
-    for (const configPath of this.configPaths) {
-      const fullPath = path.join(projectPath, configPath);
-      if (await fs.pathExists(fullPath)) {
+    // 如果指定了自定义配置路径，优先加载该路径
+    if (customConfigPath) {
+      const resolvedCustom = path.isAbsolute(customConfigPath)
+        ? customConfigPath
+        : path.join(projectPath, customConfigPath);
+      if (await fs.pathExists(resolvedCustom)) {
         try {
-          if (configPath.endsWith(".json")) {
-            userConfig = await fs.readJson(fullPath);
+          if (resolvedCustom.endsWith(".json")) {
+            userConfig = await fs.readJson(resolvedCustom);
           } else {
-            delete require.cache[require.resolve(fullPath)];
-            userConfig = require(fullPath);
+            delete require.cache[require.resolve(resolvedCustom)];
+            userConfig = require(resolvedCustom);
           }
-          break;
         } catch (error) {
-          console.warn(`配置文件加载失败: ${configPath}`, error.message);
+          console.warn(`自定义配置文件加载失败: ${resolvedCustom}`, error.message);
+        }
+      } else {
+        console.warn(`指定的配置文件不存在: ${resolvedCustom}`);
+      }
+    }
+
+    // 若未通过自定义路径加载成功，尝试加载默认配置文件
+    if (!userConfig || Object.keys(userConfig).length === 0) {
+      for (const configPath of this.configPaths) {
+        const fullPath = path.join(projectPath, configPath);
+        if (await fs.pathExists(fullPath)) {
+          try {
+            if (configPath.endsWith(".json")) {
+              userConfig = await fs.readJson(fullPath);
+            } else {
+              delete require.cache[require.resolve(fullPath)];
+              userConfig = require(fullPath);
+            }
+            break;
+          } catch (error) {
+            console.warn(`配置文件加载失败: ${configPath}`, error.message);
+          }
         }
       }
     }
