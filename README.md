@@ -1,338 +1,251 @@
 # 前端组件库依赖关系可视化与冗余代码分析工具
 
-一个强大的命令行工具，用于分析前端组件库（React、Vue）的依赖关系，生成可视化图表，并识别冗余代码。
+一个用于分析前端组件库（React、Vue）的依赖关系、生成可视化图表并识别冗余代码的完整解决方案，涵盖命令行工具、可编程接口与可选的 Web 服务。
 
-## ✨ 特性
+## ✨ 项目介绍
 
-- 🔍 **智能代码分析**: 基于AST的静态代码分析，支持JavaScript、TypeScript、JSX、Vue SFC
-- 📊 **可视化图表**: 生成交互式D3.js力导向图，直观展示组件依赖关系
-- 🎯 **冗余代码检测**: 识别孤岛组件、未使用的Props、循环依赖等问题
-- 🚀 **多框架支持**: 支持React和Vue项目
-- 📈 **详细报告**: 提供HTML可视化报告和JSON数据导出
-- ⚡ **高性能**: 异步处理，支持大型项目
+- 核心功能与价值定位
+  - 基于 AST 的静态分析，构建组件级依赖图谱，识别架构问题与冗余代码，产出可视化报告与结构化数据，助力重构与性能优化。
+  - 适配 React/Vue 项目，支持大型代码库的高并发解析与渐进式反馈。
+- 适用用户与场景
+  - 前端架构师：评估依赖健康度、定位循环依赖与枢纽组件。
+  - 团队工程师：在迭代中持续审视孤立组件、未使用的 Props。
+  - 技术负责人：在评审/重构阶段用报告辅助决策。
+- 技术栈与主要依赖
+  - 运行环境：Node.js ≥ 16
+  - 解析分析：`@babel/parser`、`@babel/traverse`、`@babel/types`、`@vue/compiler-sfc`
+  - CLI 与工具：`commander`、`glob`、`fs-extra`、`ora`、`p-limit`
+  - 可视化报告：D3.js（浏览器端）
+  - Web API（可选）：`express`、`cors`
 
-## 🛠️ 安装
+## 🛠️ 使用指南
+
+### 安装与配置
 
 ```bash
-# 全局安装
+# 全局安装（推荐）
 npm install -g frontend-dependency-analyzer
 
-# 或者本地安装
-npm install frontend-dependency-analyzer
+# 或在项目中本地安装
+npm install frontend-dependency-analyzer --save-dev
+
+# 初始化配置文件（可选）
+dep-analyzer init . --format json   # 生成 .dep-analyzer.json
+dep-analyzer init . --format js     # 生成 dep-analyzer.config.js
 ```
 
-## 🚀 快速开始
+建议将输出目录置于 `.gitignore`，避免报告产物入库。
 
-### 基本用法
+### 命令行使用
 
 ```bash
-# 分析React项目
-frontend-dep-analyzer analyze ./src --framework react
+# 基本分析（React）
+dep-analyzer analyze ./src -f react -o ./reports/dep-graph.html -j ./reports/graph-data.json
 
-# 分析Vue项目
-frontend-dep-analyzer analyze ./src --framework vue
+# 基本分析（Vue）
+dep-analyzer analyze ./src -f vue -o ./reports/dep-graph.html -j ./reports/graph-data.json
+
+# 排除多类文件（可重复传入模式）
+dep-analyzer analyze ./src -f react --exclude "**/*.test.*" "**/__mocks__/**"
 ```
 
-### 完整命令示例
-
-```bash
-frontend-dep-analyzer analyze ./src \
-  --framework react \
-  --output ./reports/dependency-graph.html \
-  --json ./reports/graph-data.json \
-  --exclude "**/*.test.*" "**/stories/**"
-```
-
-## 📋 命令行选项
-
-### 主命令
-
-```bash
-frontend-dep-analyzer analyze <directory>
-```
-
-### 选项
+选项说明：
 
 | 选项 | 简写 | 描述 | 默认值 |
 |------|------|------|--------|
-| `--framework <type>` | `-f` | 项目框架类型 (react/vue) | **必需** |
-| `--output <path>` | `-o` | HTML报告输出路径 | `./dep-graph.html` |
-| `--json <path>` | `-j` | JSON数据输出路径 | 无 |
-| `--exclude <patterns>` | | 排除文件模式 (可重复) | 见默认排除列表 |
-| `--help` | `-h` | 显示帮助信息 | |
-| `--version` | `-v` | 显示版本号 | |
+| `--framework <type>` | `-f` | 项目框架类型（`react`/`vue`） | 必填 |
+| `--output <path>` | `-o` | HTML 报告输出路径 | `./dep-graph.html` |
+| `--json <path>` | `-j` | JSON 数据输出路径 | 不生成 |
+| `--exclude <patterns...>` |  | 排除文件/目录的 glob 模式 | 见默认排除 |
+| `--config <path>` | `-c` | 指定配置文件（`.json`/`.js`） | 自动发现 |
+| `--help` | `-h` | 显示帮助信息 |  |
+| `--version` | `-v` | 显示版本号 |  |
 
-### 默认排除模式
+默认排除模式（可在配置文件 `exclude` 覆盖）：
 
 - `**/node_modules/**`
-- `**/dist/**`
-- `**/build/**`
-- `**/*.test.*`
-- `**/*.spec.*`
-- `**/__tests__/**`
-- `**/__mocks__/**`
+- `**/*.test.*`、`**/*.spec.*`
+- `**/dist/**`、`**/build/**`
 
-## 📊 分析报告
+### 可编程 API（Node.js）
 
-### HTML可视化报告
+```js
+// 在 Node.js 中以库方式使用
+const DependencyAnalyzer = require('frontend-dependency-analyzer');
 
-生成的HTML报告包含：
+async function run() {
+  const analyzer = new DependencyAnalyzer({
+    projectPath: './src',
+    framework: 'react',
+    outputPath: './reports/dep-graph.html',
+    jsonPath: './reports/graph-data.json',
+    excludePatterns: ['**/*.test.*', '**/__mocks__/**']
+  });
 
-1. **交互式依赖图**: D3.js力导向图，支持缩放、拖拽、点击查看详情
-2. **统计概览**: 组件总数、依赖关系、问题统计等
-3. **优化建议**: 基于分析结果的具体优化建议
-4. **控制面板**: 调整图表显示参数
+  const summary = await analyzer.analyze();
+  console.log('分析概览:', summary);
+}
 
-### JSON数据报告
+run().catch(console.error);
+```
 
-包含完整的图谱数据和分析结果，便于进一步处理：
+### Web API（可选服务）
+
+启动服务：
+
+```bash
+node web/server.js   # 默认监听 http://localhost:3000
+```
+
+主要接口：
+
+- `POST /api/analyze`
+  - 请求体：
+    ```json
+    {
+      "projectPath": "examples/react-demo/src",
+      "config": {
+        "framework": "react",
+        "outputPath": "test-output/dependency-graph.html",
+        "jsonPath": "test-output/graph-data.json",
+        "excludePatterns": ["**/*.test.*"]
+      }
+    }
+    ```
+  - 响应示例：
+    ```json
+    {
+      "success": true,
+      "result": {
+        "totalComponents": 42,
+        "totalDependencies": 128,
+        "orphanComponents": 3,
+        "unusedProps": 7,
+        "reportPath": "test-output/dependency-graph.html",
+        "jsonPath": "test-output/graph-data.json"
+      }
+    }
+    ```
+- `GET /api/projects` 获取内置示例项目列表
+- `POST /api/init` 生成默认配置文件（`json`/`js`）
+- `GET /api/reports` 列出已生成的报告
+- `DELETE /api/reports/:id` 删除指定报告
+- `GET /api/system` 获取运行环境信息
+- `GET /api/health` 健康检查
+
+### 报告格式
+
+- HTML 可视化报告：交互式 D3 力导图、统计面板、优化建议、显示控制面板。
+- JSON 数据：`nodes`、`edges`、`metadata`、`analysis`，便于二次处理与集成。
 
 ```json
 {
-  "graph": {
-    "nodes": {...},
-    "edges": [...],
-    "metadata": {...}
-  },
-  "analysis": {
-    "summary": {...},
-    "orphanComponents": [...],
-    "unusedProps": [...],
-    "circularDependencies": [...],
-    "recommendations": [...]
-  },
-  "metadata": {
-    "generatedAt": "2024-01-01T00:00:00.000Z",
-    "projectPath": "/path/to/project",
-    "framework": "react"
-  }
+  "nodes": {"/abs/path/ComponentA.tsx": {"inDegree": 2, "outDegree": 1}},
+  "edges": [{"source": "A", "target": "B"}],
+  "metadata": {"generatedAt": "2025-01-01T00:00:00.000Z", "framework": "react"},
+  "analysis": {"summary": {"totalComponents": 42}}
 }
 ```
 
-## 🔍 分析功能
+## 🔍 分析能力
 
-### 1. 依赖关系分析
+### 依赖关系分析
+- 导入/导出与 JSX 组件引用关系
+- 依赖深度与广度、图密度、枢纽节点识别
 
-- 组件间的导入/导出关系
-- 组件使用关系（JSX中的组件引用）
-- 依赖深度和广度分析
+### 冗余检测
+- 孤岛组件（入度 0）与潜在死代码
+- 未使用的 Props 与接口冗余
+- 循环依赖定位与修复建议
 
-### 2. 冗余代码检测
-
-#### 孤岛组件
-- 入度为0的组件（未被其他组件使用）
-- 可能的死代码
-
-#### 未使用Props
-- 组件声明但未实际使用的Props
-- 接口冗余分析
-
-#### 循环依赖
-- 检测组件间的循环引用
-- 潜在的架构问题
-
-### 3. 复杂度分析
-
-- 组件复杂度评分
-- 依赖密度计算
-- 枢纽组件识别
+### 复杂度画像
+- 圈复杂度、连接度、关联性与多维复杂度评分
 
 ## 🏗️ 项目结构
 
 ```
 frontend-dependency-analyzer/
-├── bin/
-│   └── cli.js                 # CLI入口
-├── src/
-│   ├── index.js              # 主分析器
-│   ├── modules/
-│   │   ├── FileScanner.js    # 文件扫描器
-│   │   ├── ASTAnalyzer.js    # AST分析器
-│   │   ├── GraphBuilder.js   # 图谱构建器
-│   │   ├── AnalysisEngine.js # 分析引擎
-│   │   └── VisualizationGenerator.js # 可视化生成器
-│   └── utils/
-│       └── index.js          # 工具函数
-├── package.json
-└── README.md
+├── bin/cli.js                  # CLI 入口
+├── src/index.js                # 主分析器（可编程 API）
+├── src/modules/                # 文件扫描/AST/图构建/分析/报告
+├── web/server.js               # 可选 Web 服务与 REST API
+├── examples/                   # 示例项目与报告
+├── tests/                      # 单元/集成/E2E 测试
+└── package.json
 ```
 
-## 🔧 开发
-
-### 本地开发
+## 🔧 开发与测试
 
 ```bash
-# 克隆项目
+# 克隆并安装
 git clone <repository-url>
 cd frontend-dependency-analyzer
-
-# 安装依赖
 npm install
 
-# 链接到全局
+# 本地链接 CLI
 npm link
 
-# 测试
-frontend-dep-analyzer analyze ./test-project --framework react
-```
-
-### 运行测试
-
-```bash
+# 运行单测/覆盖率/代码质量
 npm test
+npm run test:coverage
+npm run lint
 ```
 
-### 构建
+## 🐛 常见问题与故障排除
 
+### 解析错误（Unexpected token）
+- 请确认语法配置与 Babel/TypeScript 设置一致；第三方宏/实验语法需要对应插件。
+
+### 内存不足（JavaScript heap out of memory）
 ```bash
-npm run build
+node --max-old-space-size=4096 $(which dep-analyzer) analyze ./src -f react
 ```
 
-## 📝 使用示例
+### 路径/导入解析失败
+- 统一相对路径与别名设置；必要时在 `exclude` 中剔除生成产物。
 
-### React项目分析
 
-```bash
-# 基本分析
-frontend-dep-analyzer analyze ./src --framework react
 
-# 生成详细报告
-frontend-dep-analyzer analyze ./src \
-  --framework react \
-  --output ./reports/react-deps.html \
-  --json ./reports/react-data.json
+## 🗺️ 未来规划
 
-# 排除测试文件
-frontend-dep-analyzer analyze ./src \
-  --framework react \
-  --exclude "**/*.test.*" "**/*.stories.*"
-```
+### 短期路线（1–3 个月）
+- 自动框架检测与更智能的入口发现
+- 报告模板多主题与导出（PNG/PDF）
+- CLI 性能优化与缓存命中率提升
+- 更丰富的分析维度（状态/异步/数据流）
 
-### Vue项目分析
+### 中长期路线（3–12 个月）
+- 插件化架构，支持自定义规则与语言扩展
+- Angular/Svelte 等框架支持
+- IDE 集成与交互式热分析
+- 团队协作与趋势看板（历史对比）
 
-```bash
-# 分析Vue项目
-frontend-dep-analyzer analyze ./src --framework vue
+欢迎通过 Issue 参与路线讨论与投票优先级。
 
-# 包含TypeScript支持
-frontend-dep-analyzer analyze ./src \
-  --framework vue \
-  --output ./vue-analysis.html
-```
+## 🤝 社区参与与贡献指南
 
-## 🎯 最佳实践
-
-### 1. 定期分析
-
-建议在CI/CD流程中集成依赖分析：
-
-```yaml
-# .github/workflows/dependency-analysis.yml
-name: Dependency Analysis
-on: [push, pull_request]
-
-jobs:
-  analyze:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-      - run: npm install -g frontend-dependency-analyzer
-      - run: frontend-dep-analyzer analyze ./src --framework react --json ./analysis.json
-      - uses: actions/upload-artifact@v2
-        with:
-          name: dependency-analysis
-          path: analysis.json
-```
-
-### 2. 优化建议
-
-根据分析结果进行优化：
-
-- **清理孤岛组件**: 删除未使用的组件
-- **简化Props接口**: 移除未使用的Props
-- **解决循环依赖**: 重构组件架构
-- **拆分复杂组件**: 降低组件复杂度
-
-### 3. 监控指标
-
-关注以下关键指标：
-
-- 组件总数变化趋势
-- 依赖密度
-- 孤岛组件比例
-- 平均组件复杂度
-
-## 🐛 故障排除
-
-### 常见问题
-
-#### 1. 解析错误
-
-```
-Error: Unexpected token
-```
-
-**解决方案**: 确保项目使用标准的JavaScript/TypeScript语法，检查Babel配置。
-
-#### 2. 内存不足
-
-```
-JavaScript heap out of memory
-```
-
-**解决方案**: 
-```bash
-# 增加Node.js内存限制
-node --max-old-space-size=4096 $(which frontend-dep-analyzer) analyze ./src --framework react
-```
-
-#### 3. 文件未找到
-
-```
-Error: Cannot resolve import
-```
-
-**解决方案**: 检查导入路径是否正确，确保相对路径解析正确。
-
-### 调试模式
-
-```bash
-# 启用详细日志
-DEBUG=frontend-dep-analyzer:* frontend-dep-analyzer analyze ./src --framework react
-```
-
-## 🤝 贡献
-
-欢迎贡献代码！请遵循以下步骤：
-
-1. Fork项目
-2. 创建特性分支 (`git checkout -b feature/amazing-feature`)
-3. 提交更改 (`git commit -m 'Add amazing feature'`)
-4. 推送到分支 (`git push origin feature/amazing-feature`)
-5. 创建Pull Request
+- 代码风格：遵循 `eslint` 规则；保持函数/模块职责单一。
+- 测试要求：新增功能需附带单元/集成测试，覆盖核心路径。
+- 提交规范：清晰的 Commit 信息与 PR 描述，附可复现实例。
+- 安全与隐私：严禁提交任何密钥或敏感配置。
 
 ## 📄 许可证
 
-MIT License - 详见 [LICENSE](LICENSE) 文件
+本项目采用 MIT 许可证。可自由使用、修改与分发，但需保留版权声明与许可条款。
 
-## 🙏 致谢
+## 📞 联系方式与支持
 
-- [Babel](https://babeljs.io/) - JavaScript编译器
-- [D3.js](https://d3js.org/) - 数据可视化库
-- [Commander.js](https://github.com/tj/commander.js/) - 命令行界面
-- [Vue Compiler](https://github.com/vuejs/core/tree/main/packages/compiler-sfc) - Vue单文件组件编译器
+- 问题反馈：在本仓库的 Issues 提交问题/建议
+- 邮件支持：maintainers@example.com（请附问题复现步骤）
+- 安全反馈：security@example.com（仅处理安全相关）
 
-## 📞 支持
+## 🔗 相关资源与参考
 
-如有问题或建议，请：
-
-- 创建 [Issue](https://github.com/your-repo/issues)
-- 发送邮件至 support@example.com
-- 查看 [文档](https://docs.example.com)
+- Babel（解析器）：https://babeljs.io/
+- D3.js（可视化）：https://d3js.org/
+- Commander.js（CLI）：https://github.com/tj/commander.js/
+- Vue SFC 编译器：https://github.com/vuejs/core/tree/main/packages/compiler-sfc
 
 ---
 
-**让代码分析变得简单高效！** 🚀
+让依赖分析与架构优化变得简单高效 🚀
