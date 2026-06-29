@@ -1,2 +1,21 @@
-.history
-node_modules
+# OS
+.DS_Store
+
+# Dependencies
+node_modules/
+
+# Testing
+coverage/
+test-output/
+
+# Build artifacts
+*.tgz
+
+# Env
+.env
+
+# Web build
+web/dist/
+
+# IDE
+.history/
