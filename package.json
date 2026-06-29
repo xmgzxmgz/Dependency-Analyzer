@@ -1,7 +1,7 @@
 {
-  "name": "frontend-dependency-analyzer",
+  "name": "@xmgz/dependency-analyzer",
   "version": "1.0.0",
-  "description": "前端组件库依赖关系可视化与冗余代码分析工具",
+  "description": "Project dependency analysis tool",
   "main": "src/index.js",
   "bin": {
     "dep-analyzer": "./bin/cli.js"
@@ -24,6 +24,8 @@
     "dependency",
     "analysis",
     "visualization",
+    "npm",
+    "security",
     "frontend",
     "react",
     "vue",
@@ -31,6 +33,16 @@
   ],
   "author": "xmgz",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xmgzxmgz/Dependency-Analyzer.git"
+  },
+  "files": [
+    "src/",
+    "bin/",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
     "@babel/parser": "^7.23.0",
     "@babel/traverse": "^7.23.0",
