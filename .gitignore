@@ -1,5 +1,6 @@
 # OS
 .DS_Store
+Thumbs.db
 
 # Dependencies
 node_modules/
@@ -7,15 +8,32 @@ node_modules/
 # Testing
 coverage/
 test-output/
+tests/fixtures/
 
 # Build artifacts
 *.tgz
+dist/
 
 # Env
 .env
+.env.local
+.env.*.local
 
 # Web build
 web/dist/
 
 # IDE
+.idea/
+.vscode/
 .history/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Cache
+.dep-analyzer-cache/
+.dep-analyzer-cache.json
+.test-cache/

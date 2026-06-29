@@ -287,10 +287,11 @@ class PerformanceMonitor {
    */
   generatePerformanceRecommendations() {
     const recommendations = [];
-    const report = this.getPerformanceReport();
 
-    // 内存使用建议
-    if (report.memory.delta.heapUsed > 100 * 1024 * 1024) {
+    // 内存使用建议（直接读取 metrics 避免递归调用 getPerformanceReport）
+    const currentMemory = this.getMemoryUsage();
+    const heapDelta = currentMemory.process.heapUsed - this.initialMemory.heapUsed;
+    if (heapDelta > 100 * 1024 * 1024) {
       // 100MB
       recommendations.push({
         type: "memory",
@@ -300,7 +301,13 @@ class PerformanceMonitor {
     }
 
     // 文件处理效率建议
-    if (report.files.averageTime > 1000) {
+    const fileMetrics = this.metrics.get("file.processing") || [];
+    const avgTime =
+      fileMetrics.length > 0
+        ? fileMetrics.reduce((sum, m) => sum + m.value.duration, 0) /
+          fileMetrics.length
+        : 0;
+    if (avgTime > 1000) {
       // 1秒
       recommendations.push({
         type: "performance",
@@ -310,9 +317,16 @@ class PerformanceMonitor {
     }
 
     // 阶段耗时建议
-    const slowPhases = Object.entries(report.phases)
-      .filter(([_, duration]) => duration > 10000) // 10秒
-      .map(([phase, _]) => phase);
+    const slowPhases = [];
+    for (const [name, metrics] of this.metrics) {
+      if (name.startsWith("timer.")) {
+        const phaseName = name.replace("timer.", "");
+        const duration = metrics[metrics.length - 1]?.value?.duration || 0;
+        if (duration > 10000) {
+          slowPhases.push(phaseName);
+        }
+      }
+    }
 
     if (slowPhases.length > 0) {
       recommendations.push({

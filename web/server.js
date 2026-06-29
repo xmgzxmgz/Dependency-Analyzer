@@ -12,9 +12,25 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+/**
+ * 验证路径是否在允许的目录范围内（防止路径遍历攻击）
+ * @param {string} targetPath - 要验证的路径
+ * @param {string} allowedRoot - 允许的根目录
+ * @returns {string|null} 规范化后的安全路径，若不合法则返回 null
+ */
+function safePath(targetPath, allowedRoot) {
+  if (!targetPath || typeof targetPath !== "string") return null;
+  const resolved = path.resolve(allowedRoot, targetPath);
+  const normalizedRoot = path.resolve(allowedRoot) + path.sep;
+  if (!resolved.startsWith(normalizedRoot) && resolved !== path.resolve(allowedRoot)) {
+    return null;
+  }
+  return resolved;
+}
+
 // 中间件配置
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "1mb" }));
 
 // 优先提供构建后的前端（web/dist），否则回退到开发版（web/）
 const distDir = path.join(__dirname, "dist");
@@ -87,6 +103,19 @@ app.post("/api/analyze", async (req, res) => {
       return res.status(400).json({ error: "项目路径不能为空" });
     }
 
+    // 路径遍历防护：解析并验证路径在允许范围内
+    const projectRoot = path.join(__dirname, "..");
+    let effectivePath = path.isAbsolute(projectPath)
+      ? projectPath
+      : path.join(projectRoot, projectPath);
+    effectivePath = path.resolve(effectivePath);
+
+    // 禁止访问项目根目录之外的路径
+    const normalizedRoot = path.resolve(projectRoot) + path.sep;
+    if (!effectivePath.startsWith(normalizedRoot) && effectivePath !== path.resolve(projectRoot)) {
+      return res.status(403).json({ error: "不允许访问项目目录之外的路径" });
+    }
+
     // 框架处理：不支持 angular，auto 则检测
     let framework = config && config.framework ? config.framework : "auto";
     if (framework === "angular") {
@@ -124,9 +153,7 @@ app.post("/api/analyze", async (req, res) => {
     };
 
     // 规范化输入路径：支持传入文件路径，自动取其父目录
-    let effectivePath = path.isAbsolute(projectPath)
-      ? projectPath
-      : path.join(__dirname, "..", projectPath);
+    // effectivePath 已在上面的路径遍历验证中计算并校验
     try {
       const st = await fs.stat(effectivePath);
       if (st && !st.isDirectory()) {
@@ -284,12 +311,22 @@ app.post("/api/init", async (req, res) => {
     const { format, projectPath } = req.body || {};
     const fmt = format === "js" ? "js" : "json";
 
-    // 目标目录：优先使用前端提供的项目路径
-    const targetDir = projectPath
-      ? path.isAbsolute(projectPath)
+    // 目标目录：优先使用前端提供的项目路径，带路径遍历防护
+    const projectRoot = path.join(__dirname, "..");
+    let targetDir;
+    if (projectPath) {
+      const candidate = path.isAbsolute(projectPath)
         ? projectPath
-        : path.join(__dirname, "..", projectPath)
-      : path.join(__dirname, "..");
+        : path.join(projectRoot, projectPath);
+      const resolved = path.resolve(candidate);
+      const normalizedRoot = path.resolve(projectRoot) + path.sep;
+      if (!resolved.startsWith(normalizedRoot) && resolved !== path.resolve(projectRoot)) {
+        return res.status(403).json({ success: false, error: "不允许访问项目目录之外的路径" });
+      }
+      targetDir = resolved;
+    } else {
+      targetDir = projectRoot;
+    }
 
     // 生成默认配置内容
     const defaultConfig = {

@@ -1,5 +1,9 @@
 # 前端组件库依赖关系可视化与冗余代码分析工具
 
+[![CI/CD Pipeline](https://github.com/xmgzxmgz/Dependency-Analyzer/actions/workflows/ci.yml/badge.svg)](https://github.com/xmgzxmgz/Dependency-Analyzer/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen.svg)](https://nodejs.org/)
+
 一个用于分析前端组件库（React、Vue）的依赖关系、生成可视化图表并识别冗余代码的完整解决方案，涵盖命令行工具、可编程接口与可选的 Web 服务。
 
 ## ✨ 项目介绍
@@ -178,8 +182,8 @@ frontend-dependency-analyzer/
 
 ```bash
 # 克隆并安装
-git clone <repository-url>
-cd frontend-dependency-analyzer
+git clone https://github.com/xmgzxmgz/Dependency-Analyzer.git
+cd Dependency-Analyzer
 npm install
 
 # 本地链接 CLI
@@ -235,9 +239,8 @@ node --max-old-space-size=4096 $(which dep-analyzer) analyze ./src -f react
 
 ## 📞 联系方式与支持
 
-- 问题反馈：在本仓库的 Issues 提交问题/建议
-- 邮件支持：maintainers@example.com（请附问题复现步骤）
-- 安全反馈：security@example.com（仅处理安全相关）
+- 问题反馈：在本仓库的 [Issues](https://github.com/xmgzxmgz/Dependency-Analyzer/issues) 提交问题/建议
+- 安全反馈：请通过 [Issues](https://github.com/xmgzxmgz/Dependency-Analyzer/issues) 私密报告安全相关问题
 
 ## 🔗 相关资源与参考
 
