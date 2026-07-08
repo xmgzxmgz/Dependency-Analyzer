@@ -334,13 +334,18 @@ export default function AliasEntry(){
 
       // 节点应包含动态加载组件与别名组件
       const nodeKeys = Object.keys(jsonData.nodes || {});
-      expect(nodeKeys.some((k) => k.endsWith('LazyComp.jsx'))).to.be.true;
-      expect(nodeKeys.some((k) => k.endsWith('components/AliasComp.tsx'))).to.be
+      const normalize = (p) => p.replace(/\\/g, '/');
+      expect(nodeKeys.some((k) => normalize(k).endsWith('LazyComp.jsx'))).to.be
         .true;
-      expect(nodeKeys.some((k) => k.endsWith('utils/commonjsUtil.js'))).to.be
-        .true;
+      expect(
+        nodeKeys.some((k) => normalize(k).endsWith('components/AliasComp.tsx'))
+      ).to.be.true;
+      expect(
+        nodeKeys.some((k) => normalize(k).endsWith('utils/commonjsUtil.js'))
+      ).to.be.true;
       // re-export 来源文件也应参与图谱
-      expect(nodeKeys.some((k) => k.endsWith('reexports/index.js'))).to.be.true;
+      expect(nodeKeys.some((k) => normalize(k).endsWith('reexports/index.js')))
+        .to.be.true;
 
       // 边应包含到 LazyComp 的依赖（动态导入）
       const edges = jsonData.edges || [];
