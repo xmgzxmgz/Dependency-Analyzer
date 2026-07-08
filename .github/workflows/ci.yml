@@ -1,5 +1,9 @@
 name: CI/CD Pipeline
 
+permissions:
+  contents: read
+  security-events: write
+
 on:
   push:
     branches: [main, develop]
@@ -195,6 +199,9 @@ jobs:
     needs: [build, e2e, performance]
     if: github.ref == 'refs/heads/main'
     environment: production
+    permissions:
+      contents: write
+      security-events: write
     steps:
       - uses: actions/checkout@v4
 
