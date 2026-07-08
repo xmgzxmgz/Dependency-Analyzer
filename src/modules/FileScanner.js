@@ -20,10 +20,10 @@ class FileScanner {
     this.excludePatterns = config.excludePatterns || [];
     this.tsConfig = this.loadTSConfig();
     this.aliasResolver = this.buildAliasResolver();
-    
+
     // 根据框架定义文件扩展名
     this.fileExtensions = this.getFileExtensions();
-    
+
     // 默认排除模式
     this.defaultExcludes = [
       '**/node_modules/**',
@@ -43,12 +43,12 @@ class FileScanner {
    */
   getFileExtensions() {
     switch (this.framework) {
-      case 'react':
-        return ['.js', '.jsx', '.ts', '.tsx'];
-      case 'vue':
-        return ['.vue', '.js', '.ts'];
-      default:
-        throw new Error(`不支持的框架: ${this.framework}`);
+    case 'react':
+      return ['.js', '.jsx', '.ts', '.tsx'];
+    case 'vue':
+      return ['.vue', '.js', '.ts'];
+    default:
+      throw new Error(`不支持的框架: ${this.framework}`);
     }
   }
 
@@ -59,9 +59,9 @@ class FileScanner {
   async scanFiles() {
     const patterns = this.buildGlobPatterns();
     const excludePatterns = [...this.defaultExcludes, ...this.excludePatterns];
-    
+
     const files = [];
-    
+
     for (const pattern of patterns) {
       const matchedFiles = await glob(pattern, {
         cwd: this.projectPath,
@@ -69,14 +69,14 @@ class FileScanner {
         ignore: excludePatterns,
         nodir: true
       });
-      
+
       files.push(...matchedFiles);
     }
-    
+
     // 去重并排序
     const uniqueFiles = [...new Set(files)];
     uniqueFiles.sort();
-    
+
     // 过滤掉不存在的文件
     const existingFiles = [];
     for (const file of uniqueFiles) {
@@ -84,7 +84,7 @@ class FileScanner {
         existingFiles.push(file);
       }
     }
-    
+
     return existingFiles;
   }
 
@@ -94,11 +94,11 @@ class FileScanner {
    */
   buildGlobPatterns() {
     const patterns = [];
-    
+
     for (const ext of this.fileExtensions) {
       patterns.push(`**/*${ext}`);
     }
-    
+
     return patterns;
   }
 
@@ -139,23 +139,23 @@ class FileScanner {
     if (!importPath.startsWith('.') && !importPath.startsWith('/')) {
       return null;
     }
-    
+
     const currentDir = path.dirname(currentFile);
     let resolvedPath = path.resolve(currentDir, importPath);
-    
+
     // 尝试添加文件扩展名
     const withExt = this.tryResolveWithExtensions(resolvedPath);
     if (withExt) return withExt;
-    
+
     // 尝试index文件
     const asIndex = this.tryResolveIndexFile(resolvedPath);
     if (asIndex) return asIndex;
-    
+
     // 如果已经有扩展名，直接检查
     if (path.extname(resolvedPath) && fs.existsSync(resolvedPath)) {
       return resolvedPath;
     }
-    
+
     return null;
   }
 

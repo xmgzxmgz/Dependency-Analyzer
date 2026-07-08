@@ -1,16 +1,16 @@
-const os = require("os");
-const path = require("path");
-const FileScanner = require("./modules/FileScanner");
-const ASTAnalyzer = require("./modules/ASTAnalyzer");
-const GraphBuilder = require("./modules/GraphBuilder");
-const AnalysisEngine = require("./modules/AnalysisEngine");
-const VisualizationGenerator = require("./modules/VisualizationGenerator");
-const ConfigManager = require("./modules/ConfigManager");
-const chalk = require("chalk");
-const pLimit = require("p-limit");
-const oraPkg = require("ora");
+const os = require('os');
+const path = require('path');
+const FileScanner = require('./modules/FileScanner');
+const ASTAnalyzer = require('./modules/ASTAnalyzer');
+const GraphBuilder = require('./modules/GraphBuilder');
+const AnalysisEngine = require('./modules/AnalysisEngine');
+const VisualizationGenerator = require('./modules/VisualizationGenerator');
+const ConfigManager = require('./modules/ConfigManager');
+const chalk = require('chalk');
+const pLimit = require('p-limit');
+const oraPkg = require('ora');
 const ora = oraPkg && oraPkg.default ? oraPkg.default : oraPkg;
-const { performance } = require("perf_hooks");
+const { performance } = require('perf_hooks');
 
 /**
  * 依赖关系分析器主类
@@ -43,7 +43,7 @@ class DependencyAnalyzer {
    * @returns {Object} 分析结果统计
    */
   async analyze() {
-    console.log(chalk.blue("📁 扫描项目文件..."));
+    console.log(chalk.blue('📁 扫描项目文件...'));
 
     // 路径归一化，防止路径遍历等安全问题
     const projectPath = path.resolve(this.config.projectPath);
@@ -71,7 +71,7 @@ class DependencyAnalyzer {
           : loadedConfig.exclude || [],
       concurrency:
         this.config.concurrency ||
-        this.configManager.get("analysis.maxConcurrency", undefined),
+        this.configManager.get('analysis.maxConcurrency', undefined)
     };
 
     // 初始化依赖模块（使用规范化配置）
@@ -87,7 +87,7 @@ class DependencyAnalyzer {
     console.log(chalk.gray(`发现 ${files.length} 个源文件`));
 
     // 2. AST解析与信息提取
-    console.log(chalk.blue("🔍 解析源代码..."));
+    console.log(chalk.blue('🔍 解析源代码...'));
     const startTime = performance.now();
     let processedCount = 0;
     const concurrency = normalizedConfig.concurrency || os.cpus().length;
@@ -95,7 +95,7 @@ class DependencyAnalyzer {
     const spinner = ora(`解析源代码 (0/${files.length})`).start();
 
     const analysisPromises = files.map((file) =>
-      limit(async () => {
+      limit(async() => {
         try {
           const result = await this.astAnalyzer.analyzeFile(file);
           processedCount++;
@@ -126,19 +126,19 @@ class DependencyAnalyzer {
     const analysisResults = results.filter(Boolean);
 
     const duration = ((performance.now() - startTime) / 1000).toFixed(2);
-    process.stdout.write("\n"); // 换行
+    process.stdout.write('\n'); // 换行
     console.log(chalk.gray(`成功解析 ${analysisResults.length} 个组件文件`));
 
     // 3. 构建依赖图谱
-    console.log(chalk.blue("🕸️  构建依赖图谱..."));
+    console.log(chalk.blue('🕸️  构建依赖图谱...'));
     const dependencyGraph = this.graphBuilder.buildGraph(analysisResults);
 
     // 4. 执行分析算法
-    console.log(chalk.blue("🔬 执行依赖分析..."));
+    console.log(chalk.blue('🔬 执行依赖分析...'));
     const analysisReport = this.analysisEngine.analyze(dependencyGraph);
 
     // 5. 生成可视化报告
-    console.log(chalk.blue("📊 生成可视化报告..."));
+    console.log(chalk.blue('📊 生成可视化报告...'));
     await this.visualizationGenerator.generateReport(
       dependencyGraph,
       analysisReport
@@ -152,7 +152,7 @@ class DependencyAnalyzer {
       unusedProps: analysisReport.unusedProps.reduce(
         (total, component) => total + component.unusedProps.length,
         0
-      ),
+      )
     };
   }
 }

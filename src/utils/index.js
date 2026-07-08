@@ -48,12 +48,12 @@ class Utils {
    */
   static isSupportedFile(filePath, framework) {
     const ext = path.extname(filePath).toLowerCase();
-    
+
     const supportedExtensions = {
       react: ['.js', '.jsx', '.ts', '.tsx'],
       vue: ['.vue', '.js', '.ts']
     };
-    
+
     return supportedExtensions[framework]?.includes(ext) || false;
   }
 
@@ -69,18 +69,18 @@ class Utils {
     if (!importPath.startsWith('.')) {
       return null;
     }
-    
+
     const currentDir = path.dirname(currentFile);
     let resolvedPath = path.resolve(currentDir, importPath);
-    
+
     // 尝试添加常见扩展名
     const extensions = ['.js', '.jsx', '.ts', '.tsx', '.vue'];
-    
+
     // 如果路径已经有扩展名，直接检查
     if (path.extname(resolvedPath)) {
       return fs.existsSync(resolvedPath) ? resolvedPath : null;
     }
-    
+
     // 尝试添加扩展名
     for (const ext of extensions) {
       const pathWithExt = resolvedPath + ext;
@@ -88,7 +88,7 @@ class Utils {
         return pathWithExt;
       }
     }
-    
+
     // 尝试index文件
     for (const ext of extensions) {
       const indexPath = path.join(resolvedPath, 'index' + ext);
@@ -96,7 +96,7 @@ class Utils {
         return indexPath;
       }
     }
-    
+
     return null;
   }
 
@@ -107,12 +107,12 @@ class Utils {
    */
   static extractComponentName(filePath) {
     const basename = path.basename(filePath, path.extname(filePath));
-    
+
     // 如果是index文件，使用父目录名
     if (basename.toLowerCase() === 'index') {
       return path.basename(path.dirname(filePath));
     }
-    
+
     return basename;
   }
 
@@ -133,9 +133,9 @@ class Utils {
    */
   static deepMerge(target, source) {
     const result = { ...target };
-    
+
     for (const key in source) {
-      if (source.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
         if (typeof source[key] === 'object' && source[key] !== null && !Array.isArray(source[key])) {
           result[key] = this.deepMerge(result[key] || {}, source[key]);
         } else {
@@ -143,7 +143,7 @@ class Utils {
         }
       }
     }
-    
+
     return result;
   }
 
@@ -154,11 +154,11 @@ class Utils {
    */
   static formatFileSize(bytes) {
     if (bytes === 0) return '0 B';
-    
+
     const k = 1024;
     const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    
+
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 
@@ -169,26 +169,26 @@ class Utils {
    */
   static calculateComplexityScore(componentInfo) {
     let score = 0;
-    
+
     // 基于依赖数量
     const dependencyCount = Object.keys(componentInfo.dependencies || {}).length;
     score += Math.min(dependencyCount * 5, 30);
-    
+
     // 基于Props数量
     const propsCount = (componentInfo.propsDeclared || []).length;
     score += Math.min(propsCount * 3, 20);
-    
+
     // 基于未使用Props比例
-    const unusedPropsRatio = componentInfo.getUnusedProps ? 
+    const unusedPropsRatio = componentInfo.getUnusedProps ?
       componentInfo.getUnusedProps().length / Math.max(propsCount, 1) : 0;
     score += unusedPropsRatio * 25;
-    
+
     // 基于文件大小（如果有）
     if (componentInfo.fileSize) {
       const sizeScore = Math.min(componentInfo.fileSize / 1000, 25);
       score += sizeScore;
     }
-    
+
     return Math.min(Math.round(score), 100);
   }
 
@@ -200,30 +200,30 @@ class Utils {
   static validateConfig(config) {
     const errors = [];
     const warnings = [];
-    
+
     // 必需字段验证
     if (!config.projectPath) {
       errors.push('项目路径不能为空');
     }
-    
+
     if (!config.framework || !['react', 'vue'].includes(config.framework)) {
       errors.push('框架类型必须是 react 或 vue');
     }
-    
+
     if (!config.outputPath) {
       errors.push('输出路径不能为空');
     }
-    
+
     // 路径验证
     if (config.outputPath && !path.isAbsolute(config.outputPath)) {
       warnings.push('建议使用绝对路径作为输出路径');
     }
-    
+
     // 排除模式验证
     if (config.excludePatterns && !Array.isArray(config.excludePatterns)) {
       errors.push('排除模式必须是数组');
     }
-    
+
     return {
       isValid: errors.length === 0,
       errors,
@@ -254,7 +254,7 @@ class Utils {
       enableCache: true,
       verbose: false
     };
-    
+
     return this.deepMerge(defaultConfig, overrides);
   }
 
@@ -267,22 +267,22 @@ class Utils {
   static async measurePerformance(operation, fn) {
     const startTime = process.hrtime.bigint();
     const startMemory = process.memoryUsage();
-    
+
     try {
       const result = await fn();
       const endTime = process.hrtime.bigint();
       const endMemory = process.memoryUsage();
-      
+
       const duration = Number(endTime - startTime) / 1000000; // 转换为毫秒
       const memoryDelta = endMemory.heapUsed - startMemory.heapUsed;
-      
+
       console.log(`[性能] ${operation}: ${duration.toFixed(2)}ms, 内存变化: ${this.formatFileSize(memoryDelta)}`);
-      
+
       return result;
     } catch (error) {
       const endTime = process.hrtime.bigint();
       const duration = Number(endTime - startTime) / 1000000;
-      
+
       console.error(`[性能] ${operation} 失败: ${duration.toFixed(2)}ms`);
       throw error;
     }
@@ -296,24 +296,24 @@ class Utils {
    */
   static createProgressBar(total, label = '处理中') {
     let current = 0;
-    
+
     return {
       update(increment = 1) {
         current += increment;
         const percentage = Math.round((current / total) * 100);
         const filled = Math.round(percentage / 2);
         const empty = 50 - filled;
-        
+
         const bar = '█'.repeat(filled) + '░'.repeat(empty);
         const info = `${label}: [${bar}] ${percentage}% (${current}/${total})`;
-        
+
         process.stdout.write(`\r${info}`);
-        
+
         if (current >= total) {
           process.stdout.write('\n');
         }
       },
-      
+
       finish() {
         current = total;
         this.update(0);
