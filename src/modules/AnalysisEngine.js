@@ -38,7 +38,7 @@ class AnalysisEngine {
         ),
         circularDependenciesCount: circularDependencies.length,
         deadCodeCount: deadCode.length,
-        density: metadata.density,
+        density: metadata.density
       },
       orphanComponents,
       unusedProps,
@@ -54,8 +54,8 @@ class AnalysisEngine {
         circularDependencies,
         hubComponents,
         deadCode,
-        couplingAnalysis,
-      }),
+        couplingAnalysis
+      })
     };
 
     this.analysisResults = report;
@@ -135,7 +135,7 @@ class AnalysisEngine {
           id: nodeId,
           name: node.name,
           outDegree: node.outDegree,
-          reason: node.outDegree === 0 ? "isolated" : "entry_point",
+          reason: node.outDegree === 0 ? 'isolated' : 'entry_point'
         });
       }
     }
@@ -166,7 +166,7 @@ class AnalysisEngine {
           unusedProps,
           totalProps: node.propsDeclared.size,
           usageRate:
-            (node.propsUsedInBody.size / node.propsDeclared.size) * 100,
+            (node.propsUsedInBody.size / node.propsDeclared.size) * 100
         });
       }
     }
@@ -197,7 +197,7 @@ class AnalysisEngine {
         cycles.push({
           cycle,
           length: cycle.length - 1,
-          severity: this.calculateCycleSeverity(cycle, nodes),
+          severity: this.calculateCycleSeverity(cycle, nodes)
         });
         return;
       }
@@ -267,13 +267,13 @@ class AnalysisEngine {
     for (const cycle of cycles) {
       // 标准化循环表示（从最小元素开始）
       const normalized = this.normalizeCycle(cycle.cycle);
-      const key = normalized.join("->");
+      const key = normalized.join('->');
 
       if (!seen.has(key)) {
         seen.add(key);
         unique.push({
           ...cycle,
-          cycle: normalized,
+          cycle: normalized
         });
       }
     }
@@ -301,7 +301,7 @@ class AnalysisEngine {
     const normalized = [
       ...cycle.slice(minIndex, cycle.length - 1),
       ...cycle.slice(0, minIndex),
-      cycle[minIndex], // 闭合循环
+      cycle[minIndex] // 闭合循环
     ];
 
     return normalized;
@@ -325,7 +325,7 @@ class AnalysisEngine {
         inDegree: node.inDegree,
         outDegree: node.outDegree,
         propsCount: node.propsDeclared.size,
-        category: this.categorizeComplexity(complexity),
+        category: this.categorizeComplexity(complexity)
       });
     }
 
@@ -361,11 +361,11 @@ class AnalysisEngine {
    * @returns {string} 复杂度等级
    */
   categorizeComplexity(complexity) {
-    if (complexity >= 20) return "very_high";
-    if (complexity >= 15) return "high";
-    if (complexity >= 10) return "medium";
-    if (complexity >= 5) return "low";
-    return "very_low";
+    if (complexity >= 20) return 'very_high';
+    if (complexity >= 15) return 'high';
+    if (complexity >= 10) return 'medium';
+    if (complexity >= 5) return 'low';
+    return 'very_low';
   }
 
   /**
@@ -399,7 +399,7 @@ class AnalysisEngine {
           id: nodeId,
           name: node.name,
           depth,
-          outDegree: node.outDegree,
+          outDegree: node.outDegree
         });
       }
     }
@@ -408,7 +408,7 @@ class AnalysisEngine {
       averageDepth: Math.round(avgDepth * 100) / 100,
       maxDepth,
       deepestComponents: deepestComponents.sort((a, b) => b.depth - a.depth),
-      depthDistribution: this.calculateDepthDistribution(maxDepths),
+      depthDistribution: this.calculateDepthDistribution(maxDepths)
     };
   }
 
@@ -491,7 +491,7 @@ class AnalysisEngine {
           inDegree: node.inDegree,
           outDegree: node.outDegree,
           centrality: node.degreeCentrality || 0,
-          impact: this.calculateHubImpact(node, nodes),
+          impact: this.calculateHubImpact(node, nodes)
         });
       }
     }
@@ -548,8 +548,8 @@ class AnalysisEngine {
         deadCode.push({
           id: nodeId,
           name: node.name,
-          reason: "isolated_component",
-          confidence: 0.9,
+          reason: 'isolated_component',
+          confidence: 0.9
         });
       }
       // 入度为0但有出度的可能是入口点，需要进一步分析
@@ -561,9 +561,9 @@ class AnalysisEngine {
           deadCode.push({
             id: nodeId,
             name: node.name,
-            reason: "unused_entry_point",
+            reason: 'unused_entry_point',
             confidence: 0.6,
-            outDegree: node.outDegree,
+            outDegree: node.outDegree
           });
         }
       }
@@ -584,7 +584,7 @@ class AnalysisEngine {
       /app/i,
       /main/i,
       /index/i,
-      /layout/i,
+      /layout/i
     ];
 
     return entryPointPatterns.some((pattern) => pattern.test(node.name));
@@ -601,7 +601,7 @@ class AnalysisEngine {
       afferentCoupling: new Map(), // 传入耦合
       efferentCoupling: new Map(), // 传出耦合
       instability: new Map(), // 不稳定性
-      abstractness: new Map(), // 抽象性
+      abstractness: new Map() // 抽象性
     };
 
     // 计算耦合度指标
@@ -630,7 +630,7 @@ class AnalysisEngine {
           efferentCoupling: node.outDegree,
           totalCoupling,
           instability,
-          category: this.categorizeCoupling(totalCoupling),
+          category: this.categorizeCoupling(totalCoupling)
         });
       }
     }
@@ -641,7 +641,7 @@ class AnalysisEngine {
         (a, b) => b.totalCoupling - a.totalCoupling
       ),
       averageCoupling: this.calculateAverageCoupling(nodes),
-      couplingDistribution: this.calculateCouplingDistribution(nodes),
+      couplingDistribution: this.calculateCouplingDistribution(nodes)
     };
   }
 
@@ -651,10 +651,10 @@ class AnalysisEngine {
    * @returns {string} 耦合度等级
    */
   categorizeCoupling(coupling) {
-    if (coupling >= 15) return "very_high";
-    if (coupling >= 10) return "high";
-    if (coupling >= 5) return "medium";
-    return "low";
+    if (coupling >= 15) return 'very_high';
+    if (coupling >= 10) return 'high';
+    if (coupling >= 5) return 'medium';
+    return 'low';
   }
 
   /**
@@ -700,17 +700,17 @@ class AnalysisEngine {
     // 孤岛组件建议
     if (analysisData.orphanComponents.length > 0) {
       const isolatedCount = analysisData.orphanComponents.filter(
-        (c) => c.reason === "isolated"
+        (c) => c.reason === 'isolated'
       ).length;
       if (isolatedCount > 0) {
         recommendations.push({
-          type: "orphan_components",
-          priority: "high",
-          title: "移除孤立组件",
+          type: 'orphan_components',
+          priority: 'high',
+          title: '移除孤立组件',
           description: `发现 ${isolatedCount} 个孤立组件，建议检查是否可以安全删除`,
           components: analysisData.orphanComponents
-            .filter((c) => c.reason === "isolated")
-            .slice(0, 5),
+            .filter((c) => c.reason === 'isolated')
+            .slice(0, 5)
         });
       }
     }
@@ -722,22 +722,22 @@ class AnalysisEngine {
         0
       );
       recommendations.push({
-        type: "unused_props",
-        priority: "medium",
-        title: "清理未使用的Props",
+        type: 'unused_props',
+        priority: 'medium',
+        title: '清理未使用的Props',
         description: `发现 ${totalUnusedProps} 个未使用的Props，建议清理以简化组件接口`,
-        components: analysisData.unusedProps.slice(0, 5),
+        components: analysisData.unusedProps.slice(0, 5)
       });
     }
 
     // 循环依赖建议
     if (analysisData.circularDependencies.length > 0) {
       recommendations.push({
-        type: "circular_dependencies",
-        priority: "critical",
-        title: "解决循环依赖",
+        type: 'circular_dependencies',
+        priority: 'critical',
+        title: '解决循环依赖',
         description: `发现 ${analysisData.circularDependencies.length} 个循环依赖，需要重构以避免潜在问题`,
-        cycles: analysisData.circularDependencies.slice(0, 3),
+        cycles: analysisData.circularDependencies.slice(0, 3)
       });
     }
 
@@ -745,18 +745,18 @@ class AnalysisEngine {
     if (analysisData.couplingAnalysis.highCouplingComponents.length > 0) {
       const veryHighCouplingCount =
         analysisData.couplingAnalysis.highCouplingComponents.filter(
-          (c) => c.category === "very_high"
+          (c) => c.category === 'very_high'
         ).length;
 
       if (veryHighCouplingCount > 0) {
         recommendations.push({
-          type: "high_coupling",
-          priority: "high",
-          title: "降低组件耦合度",
+          type: 'high_coupling',
+          priority: 'high',
+          title: '降低组件耦合度',
           description: `发现 ${veryHighCouplingCount} 个高耦合组件，建议拆分或重构`,
           components: analysisData.couplingAnalysis.highCouplingComponents
-            .filter((c) => c.category === "very_high")
-            .slice(0, 5),
+            .filter((c) => c.category === 'very_high')
+            .slice(0, 5)
         });
       }
     }
@@ -764,11 +764,11 @@ class AnalysisEngine {
     // 枢纽组件建议
     if (analysisData.hubComponents.length > 0) {
       recommendations.push({
-        type: "hub_components",
-        priority: "medium",
-        title: "关注枢纽组件",
+        type: 'hub_components',
+        priority: 'medium',
+        title: '关注枢纽组件',
         description: `发现 ${analysisData.hubComponents.length} 个枢纽组件，建议重点维护和测试`,
-        components: analysisData.hubComponents.slice(0, 3),
+        components: analysisData.hubComponents.slice(0, 3)
       });
     }
 

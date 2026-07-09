@@ -1,10 +1,10 @@
-const fs = require("fs-extra");
-const path = require("path");
-const parser = require("@babel/parser");
-const traverse = require("@babel/traverse").default;
-const t = require("@babel/types");
-const { parse: parseVue } = require("@vue/compiler-sfc");
-const FileScanner = require("./FileScanner");
+const fs = require('fs-extra');
+const path = require('path');
+const parser = require('@babel/parser');
+const traverse = require('@babel/traverse').default;
+const t = require('@babel/types');
+const { parse: parseVue } = require('@vue/compiler-sfc');
+const FileScanner = require('./FileScanner');
 
 /**
  * AST分析器
@@ -21,23 +21,23 @@ class ASTAnalyzer {
 
     // Babel解析器配置
     this.babelOptions = {
-      sourceType: "module",
+      sourceType: 'module',
       allowImportExportEverywhere: true,
       allowReturnOutsideFunction: true,
       plugins: [
-        "jsx",
-        "typescript",
-        "decorators-legacy",
-        "classProperties",
-        "objectRestSpread",
-        "asyncGenerators",
-        "functionBind",
-        "exportDefaultFrom",
-        "exportNamespaceFrom",
-        "dynamicImport",
-        "nullishCoalescingOperator",
-        "optionalChaining",
-      ],
+        'jsx',
+        'typescript',
+        'decorators-legacy',
+        'classProperties',
+        'objectRestSpread',
+        'asyncGenerators',
+        'functionBind',
+        'exportDefaultFrom',
+        'exportNamespaceFrom',
+        'dynamicImport',
+        'nullishCoalescingOperator',
+        'optionalChaining'
+      ]
     };
   }
 
@@ -50,7 +50,7 @@ class ASTAnalyzer {
     const ext = path.extname(filePath);
 
     try {
-      if (ext === ".vue") {
+      if (ext === '.vue') {
         return await this.analyzeVueFile(filePath);
       } else {
         return await this.analyzeJSFile(filePath);
@@ -66,7 +66,7 @@ class ASTAnalyzer {
    * @returns {Object|null} 分析结果
    */
   async analyzeVueFile(filePath) {
-    const content = await fs.readFile(filePath, "utf-8");
+    const content = await fs.readFile(filePath, 'utf-8');
     const { descriptor } = parseVue(content, { filename: filePath });
 
     const result = {
@@ -76,13 +76,13 @@ class ASTAnalyzer {
       exports: [],
       propsDeclared: new Set(),
       propsUsedInBody: new Set(),
-      isComponent: true,
+      isComponent: true
     };
 
     // 分析script部分
     if (descriptor.script || descriptor.scriptSetup) {
       const scriptContent =
-        descriptor.script?.content || descriptor.scriptSetup?.content || "";
+        descriptor.script?.content || descriptor.scriptSetup?.content || '';
       const scriptResult = await this.analyzeScriptContent(
         scriptContent,
         filePath
@@ -116,7 +116,7 @@ class ASTAnalyzer {
    * @returns {Object|null} 分析结果
    */
   async analyzeJSFile(filePath) {
-    const content = await fs.readFile(filePath, "utf-8");
+    const content = await fs.readFile(filePath, 'utf-8');
     return await this.analyzeScriptContent(content, filePath);
   }
 
@@ -160,7 +160,7 @@ class ASTAnalyzer {
       dynamicImports: new Set(), // 动态导入
       contextUsage: new Set(), // Context 使用
       methodChains: new Map(), // 方法链调用
-      asyncOperations: new Set(), // 异步操作
+      asyncOperations: new Set() // 异步操作
     };
 
     // 遍历AST
@@ -192,15 +192,15 @@ class ASTAnalyzer {
             result.dependencies.set(resolvedPath, {
               source: src,
               resolvedPath,
-              specifiers: ["*"],
-              type: "reexport",
+              specifiers: ['*'],
+              type: 'reexport'
             });
             // 记录通配符重导出到 exports
             result.exports.push({
-              type: "named",
-              name: "*",
+              type: 'named',
+              name: '*',
               reexport: true,
-              from: src,
+              from: src
             });
           }
         }
@@ -278,7 +278,7 @@ class ASTAnalyzer {
       // 新增：处理动态导入
       Import: (path) => {
         this.analyzeDynamicImports(path, result);
-      },
+      }
     });
 
     // 如果没有导出任何组件，返回null
@@ -306,15 +306,15 @@ class ASTAnalyzer {
       const specifiers = path.node.specifiers
         .map((spec) => {
           if (t.isImportDefaultSpecifier(spec)) {
-            return { type: "default", local: spec.local.name };
+            return { type: 'default', local: spec.local.name };
           } else if (t.isImportSpecifier(spec)) {
             return {
-              type: "named",
+              type: 'named',
               imported: spec.imported.name,
-              local: spec.local.name,
+              local: spec.local.name
             };
           } else if (t.isImportNamespaceSpecifier(spec)) {
-            return { type: "namespace", local: spec.local.name };
+            return { type: 'namespace', local: spec.local.name };
           }
           return null;
         })
@@ -323,7 +323,7 @@ class ASTAnalyzer {
       result.dependencies.set(resolvedPath, {
         source,
         resolvedPath,
-        specifiers,
+        specifiers
       });
     }
   }
@@ -336,8 +336,8 @@ class ASTAnalyzer {
   handleExportDeclaration(path, result) {
     if (t.isExportDefaultDeclaration(path.node)) {
       result.exports.push({
-        type: "default",
-        name: this.extractExportName(path.node.declaration),
+        type: 'default',
+        name: this.extractExportName(path.node.declaration)
       });
       result.isComponent = this.isComponentDeclaration(path.node.declaration);
     } else if (t.isExportNamedDeclaration(path.node)) {
@@ -345,8 +345,8 @@ class ASTAnalyzer {
         const name = this.extractExportName(path.node.declaration);
         if (name) {
           result.exports.push({
-            type: "named",
-            name,
+            type: 'named',
+            name
           });
           result.isComponent = this.isComponentDeclaration(
             path.node.declaration
@@ -365,7 +365,7 @@ class ASTAnalyzer {
           result.dependencies.set(resolvedPath, {
             source: src,
             resolvedPath,
-            specifiers: [],
+            specifiers: []
           });
           // 将重导出视为导出的一部分，以便该文件参与图谱
           const exportedNames = (path.node.specifiers || [])
@@ -376,19 +376,19 @@ class ASTAnalyzer {
           if (exportedNames.length > 0) {
             exportedNames.forEach((name) => {
               result.exports.push({
-                type: "named",
+                type: 'named',
                 name,
                 reexport: true,
-                from: src,
+                from: src
               });
             });
           } else {
             // 无显式名称时，记录通配符
             result.exports.push({
-              type: "named",
-              name: "*",
+              type: 'named',
+              name: '*',
               reexport: true,
-              from: src,
+              from: src
             });
           }
         }
@@ -420,7 +420,7 @@ class ASTAnalyzer {
 
           const usage = result.componentUsages.get(depPath) || {
             count: 0,
-            props: new Set(),
+            props: new Set()
           };
           usage.count++;
 
@@ -459,7 +459,7 @@ class ASTAnalyzer {
           result.cyclomaticComplexity || 0,
           computed || 0
         );
-      } catch (_) {}
+      } catch (_) { /* complexity computation is best-effort */ }
     }
   }
 
@@ -484,7 +484,7 @@ class ASTAnalyzer {
           result.cyclomaticComplexity || 0,
           computed || 0
         );
-      } catch (_) {}
+      } catch (_) { /* complexity computation is best-effort */ }
     }
   }
 
@@ -502,7 +502,7 @@ class ASTAnalyzer {
         const renderMethod = path.node.body?.body?.find(
           (member) =>
             t.isClassMethod(member) &&
-            t.isIdentifier(member.key, { name: "render" })
+            t.isIdentifier(member.key, { name: 'render' })
         );
         const bodyNode = renderMethod?.body || null;
         const computed = this.computeCyclomaticComplexity(
@@ -512,7 +512,7 @@ class ASTAnalyzer {
           result.cyclomaticComplexity || 0,
           computed || 0
         );
-      } catch (_) {}
+      } catch (_) { /* complexity computation is best-effort */ }
     }
   }
 
@@ -526,7 +526,7 @@ class ASTAnalyzer {
 
     // 检查 props.xxx 模式
     if (
-      t.isIdentifier(node.object, { name: "props" }) &&
+      t.isIdentifier(node.object, { name: 'props' }) &&
       t.isIdentifier(node.property)
     ) {
       result.propsUsedInBody.add(node.property.name);
@@ -543,7 +543,7 @@ class ASTAnalyzer {
     const parent = path.parent;
     if (
       t.isVariableDeclarator(parent) &&
-      t.isIdentifier(parent.init, { name: "props" })
+      t.isIdentifier(parent.init, { name: 'props' })
     ) {
       path.node.properties.forEach((prop) => {
         if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
@@ -564,7 +564,7 @@ class ASTAnalyzer {
     if (
       t.isObjectPattern(parent) &&
       t.isVariableDeclarator(parent.parent) &&
-      t.isIdentifier(parent.parent.init, { name: "props" })
+      t.isIdentifier(parent.parent.init, { name: 'props' })
     ) {
       result.usesRestSpread = true;
     }
@@ -610,7 +610,7 @@ class ASTAnalyzer {
    */
   extractComponentName(filePath) {
     const basename = path.basename(filePath, path.extname(filePath));
-    return basename === "index"
+    return basename === 'index'
       ? path.basename(path.dirname(filePath))
       : basename;
   }
@@ -631,14 +631,14 @@ class ASTAnalyzer {
             source: src,
             resolvedPath: resolved,
             specifiers: [],
-            dynamic: true,
+            dynamic: true
           });
         }
       }
     }
     // require('...')
     if (
-      t.isIdentifier(callee, { name: "require" }) &&
+      t.isIdentifier(callee, { name: 'require' }) &&
       path.node.arguments?.length >= 1
     ) {
       const arg = path.node.arguments[0];
@@ -650,7 +650,7 @@ class ASTAnalyzer {
             source: src,
             resolvedPath: resolved,
             specifiers: [],
-            require: true,
+            require: true
           });
         }
       }
@@ -739,13 +739,13 @@ class ASTAnalyzer {
   isClassComponent(node) {
     // 检查是否继承自React.Component或Component
     if (node.superClass) {
-      if (t.isIdentifier(node.superClass, { name: "Component" })) {
+      if (t.isIdentifier(node.superClass, { name: 'Component' })) {
         return true;
       }
       if (
         t.isMemberExpression(node.superClass) &&
-        t.isIdentifier(node.superClass.object, { name: "React" }) &&
-        t.isIdentifier(node.superClass.property, { name: "Component" })
+        t.isIdentifier(node.superClass.object, { name: 'React' }) &&
+        t.isIdentifier(node.superClass.property, { name: 'Component' })
       ) {
         return true;
       }
@@ -809,11 +809,11 @@ class ASTAnalyzer {
           else if (t.isConditionalExpression(n)) complexity += 1;
           else if (
             t.isLogicalExpression(n) &&
-            (n.operator === "&&" || n.operator === "||")
+            (n.operator === '&&' || n.operator === '||')
           )
             complexity += 1;
           else if (t.isCatchClause(n)) complexity += 1;
-        },
+        }
       });
     } catch (e) {
       // 兜底，确保不抛错
@@ -847,8 +847,8 @@ class ASTAnalyzer {
 
         // 遍历函数体，标记被实际引用的解构标识符为已使用
         // 仅遍历函数体，避免将形参本身计为使用
-        const bodyPath = path.get("body");
-        if (bodyPath && typeof bodyPath.traverse === "function") {
+        const bodyPath = path.get('body');
+        if (bodyPath && typeof bodyPath.traverse === 'function') {
           const used = new Set();
           bodyPath.traverse({
             Identifier(p) {
@@ -856,7 +856,7 @@ class ASTAnalyzer {
               if (declared.has(name)) {
                 used.add(name);
               }
-            },
+            }
           });
           for (const name of used) {
             result.propsUsedInBody.add(name);
@@ -879,7 +879,7 @@ class ASTAnalyzer {
     const propTypesProperty = path.node.body.body.find(
       (member) =>
         t.isClassProperty(member) &&
-        t.isIdentifier(member.key, { name: "propTypes" }) &&
+        t.isIdentifier(member.key, { name: 'propTypes' }) &&
         member.static
     );
 
@@ -915,11 +915,11 @@ class ASTAnalyzer {
       // 获取调用位置信息
       const location = path.node.loc?.start.line || 0;
       const args = path.node.arguments.map(arg => this.getExpressionType(arg));
-      
+
       if (!result.functionCalls.has(callName)) {
         result.functionCalls.set(callName, []);
       }
-      
+
       result.functionCalls.get(callName).push({
         location,
         context,
@@ -961,7 +961,7 @@ class ASTAnalyzer {
     if (!result.functionCalls.has(functionName)) {
       result.functionCalls.set(functionName, []);
     }
-    
+
     result.functionCalls.set(functionName + '_definition', {
       internalCalls: Array.from(calls),
       referencedVariables: Array.from(variables),
@@ -980,12 +980,12 @@ class ASTAnalyzer {
    */
   analyzeHookUsage(path, result) {
     const callee = path.node.callee;
-    
+
     if (t.isIdentifier(callee) && callee.name.startsWith('use')) {
       const hookName = callee.name;
       const location = path.node.loc?.start.line || 0;
       const args = path.node.arguments.map(arg => this.getExpressionType(arg));
-      
+
       result.hookUsage.add({
         name: hookName,
         location,
@@ -1030,16 +1030,16 @@ class ASTAnalyzer {
    */
   analyzeVariableReferences(path, result) {
     const node = path.node;
-    
+
     if (t.isMemberExpression(node) && t.isIdentifier(node.object)) {
       const objectName = node.object.name;
       const propertyName = t.isIdentifier(node.property) ? node.property.name : 'computed';
       const location = node.loc?.start.line || 0;
-      
+
       if (!result.variableReferences.has(objectName)) {
         result.variableReferences.set(objectName, []);
       }
-      
+
       result.variableReferences.get(objectName).push({
         property: propertyName,
         location,
@@ -1055,12 +1055,12 @@ class ASTAnalyzer {
    */
   analyzeDataFlow(path, result) {
     const node = path.node;
-    
+
     if (t.isVariableDeclarator(node) && t.isIdentifier(node.id)) {
       const varName = node.id.name;
       const initType = this.getExpressionType(node.init);
       const location = node.loc?.start.line || 0;
-      
+
       result.dataFlow.set(varName, {
         type: initType,
         dependencies: this.extractDependencies(node.init),
@@ -1071,7 +1071,7 @@ class ASTAnalyzer {
       const varName = node.left.name;
       const valueType = this.getExpressionType(node.right);
       const location = node.loc?.start.line || 0;
-      
+
       result.dataFlow.set(varName + '_reassign_' + location, {
         variable: varName,
         type: valueType,
@@ -1090,7 +1090,7 @@ class ASTAnalyzer {
   analyzeStateManagement(path, result) {
     const callee = path.node.callee;
     const location = path.node.loc?.start.line || 0;
-    
+
     // React state management
     if (t.isIdentifier(callee)) {
       if (callee.name === 'useState') {
@@ -1116,12 +1116,12 @@ class ASTAnalyzer {
         result.stateManagement.set('useContext_' + location, stateInfo);
       }
     }
-    
+
     // Redux/Zustand patterns
     if (t.isMemberExpression(callee)) {
       const objectName = callee.object.name;
       const methodName = callee.property.name;
-      
+
       if (objectName === 'dispatch' || methodName === 'dispatch') {
         const stateInfo = {
           type: 'redux-dispatch',
@@ -1141,7 +1141,7 @@ class ASTAnalyzer {
   analyzeContextUsage(path, result) {
     const callee = path.node.callee;
     const location = path.node.loc?.start.line || 0;
-    
+
     if (t.isIdentifier(callee) && callee.name === 'useContext') {
       const arg = path.node.arguments[0];
       if (t.isIdentifier(arg)) {
@@ -1152,9 +1152,9 @@ class ASTAnalyzer {
         });
       }
     }
-    
-    if (t.isMemberExpression(callee) && 
-        t.isIdentifier(callee.property) && 
+
+    if (t.isMemberExpression(callee) &&
+        t.isIdentifier(callee.property) &&
         callee.property.name === 'createContext') {
       result.contextUsage.add({
         type: 'createContext',
@@ -1171,7 +1171,7 @@ class ASTAnalyzer {
   analyzeConditionalRendering(path, result) {
     const node = path.node;
     const location = node.loc?.start.line || 0;
-    
+
     if (t.isConditionalExpression(node) || t.isLogicalExpression(node)) {
       const condition = this.extractConditionInfo(node);
       if (condition) {
@@ -1193,14 +1193,14 @@ class ASTAnalyzer {
   analyzeEventHandlers(path, result) {
     const attributes = path.node.attributes || [];
     const location = path.node.loc?.start.line || 0;
-    
+
     attributes.forEach(attr => {
       if (t.isJSXAttribute(attr) && t.isJSXIdentifier(attr.name)) {
         const attrName = attr.name.name;
         if (attrName.startsWith('on') && attrName.length > 2) {
           const eventType = attrName.slice(2).toLowerCase();
           const handlerType = this.getExpressionType(attr.value?.expression);
-          
+
           result.eventHandlers.add({
             eventType,
             handlerType,
@@ -1219,17 +1219,17 @@ class ASTAnalyzer {
    */
   analyzeMethodChains(path, result) {
     const callee = path.node.callee;
-    
+
     if (t.isMemberExpression(callee)) {
       const chain = this.extractMethodChain(callee);
       if (chain.length > 1) {
         const location = path.node.loc?.start.line || 0;
         const chainKey = chain.join('.');
-        
+
         if (!result.methodChains.has(chainKey)) {
           result.methodChains.set(chainKey, []);
         }
-        
+
         result.methodChains.get(chainKey).push({
           chain,
           location,
@@ -1247,7 +1247,7 @@ class ASTAnalyzer {
   analyzeAsyncOperations(path, result) {
     const callee = path.node.callee;
     const location = path.node.loc?.start.line || 0;
-    
+
     // Promise相关
     if (t.isMemberExpression(callee) && t.isIdentifier(callee.property)) {
       const methodName = callee.property.name;
@@ -1259,7 +1259,7 @@ class ASTAnalyzer {
         });
       }
     }
-    
+
     // async/await 在函数声明中处理
     if (t.isIdentifier(callee)) {
       // setTimeout, setInterval等
@@ -1318,9 +1318,9 @@ class ASTAnalyzer {
    */
   extractDependencies(node) {
     const dependencies = [];
-    
+
     if (!node) return dependencies;
-    
+
     if (t.isIdentifier(node)) {
       dependencies.push(node.name);
     } else if (t.isMemberExpression(node)) {
@@ -1348,7 +1348,7 @@ class ASTAnalyzer {
         }
       });
     }
-    
+
     return dependencies;
   }
 
@@ -1384,18 +1384,18 @@ class ASTAnalyzer {
   extractMethodChain(node) {
     const chain = [];
     let current = node;
-    
+
     while (t.isMemberExpression(current)) {
       if (t.isIdentifier(current.property)) {
         chain.unshift(current.property.name);
       }
       current = current.object;
     }
-    
+
     if (t.isIdentifier(current)) {
       chain.unshift(current.name);
     }
-    
+
     return chain;
   }
 
@@ -1406,8 +1406,8 @@ class ASTAnalyzer {
    */
   extractActionType(node) {
     if (t.isObjectExpression(node)) {
-      const typeProp = node.properties.find(prop => 
-        t.isObjectProperty(prop) && 
+      const typeProp = node.properties.find(prop =>
+        t.isObjectProperty(prop) &&
         t.isIdentifier(prop.key, { name: 'type' })
       );
       if (typeProp && t.isStringLiteral(typeProp.value)) {

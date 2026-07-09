@@ -24,7 +24,7 @@ class VisualizationGenerator {
     await this.generateHTMLReport(dependencyGraph, analysisReport);
 
     // 始终生成JSON文件：优先使用配置的 jsonPath，否则与 HTML 同名 .json
-    const defaultJsonPath = this.config.outputPath.replace(/\.html?$/i, ".json");
+    const defaultJsonPath = this.config.outputPath.replace(/\.html?$/i, '.json');
     const targetJsonPath = this.config.jsonPath || defaultJsonPath;
     await this.generateJSONReport(dependencyGraph, analysisReport, targetJsonPath);
   }
@@ -35,12 +35,12 @@ class VisualizationGenerator {
    * @param {Object} analysisReport - 分析报告
    */
   async generateHTMLReport(dependencyGraph, analysisReport) {
-    const d3Data = dependencyGraph.nodes.size > 0 ? 
-      this.convertToD3Format(dependencyGraph) : 
+    const d3Data = dependencyGraph.nodes.size > 0 ?
+      this.convertToD3Format(dependencyGraph) :
       { nodes: [], links: [] };
-    
+
     const htmlContent = this.generateHTMLTemplate(d3Data, analysisReport);
-    
+
     await fs.writeFile(this.config.outputPath, htmlContent, 'utf-8');
   }
 
@@ -59,9 +59,9 @@ class VisualizationGenerator {
         ...graphJson.metadata,
         generatedAt: new Date().toISOString(),
         projectPath: this.config.projectPath,
-        framework: this.config.framework,
+        framework: this.config.framework
       },
-      analysis: analysisReport,
+      analysis: analysisReport
     };
 
     await fs.writeFile(outputJsonPath, JSON.stringify(jsonData, null, 2), 'utf-8');
@@ -75,7 +75,7 @@ class VisualizationGenerator {
   convertToD3Format(dependencyGraph) {
     const nodes = [];
     const links = [];
-    
+
     // 转换节点
     for (const [nodeId, node] of dependencyGraph.nodes) {
       nodes.push({
@@ -92,7 +92,7 @@ class VisualizationGenerator {
         relativePath: path.relative(this.config.projectPath, nodeId)
       });
     }
-    
+
     // 转换边
     for (const edge of dependencyGraph.edges) {
       links.push({
@@ -101,7 +101,7 @@ class VisualizationGenerator {
         value: edge.metadata.usage ? edge.metadata.usage.count : 1
       });
     }
-    
+
     return { nodes, links };
   }
 
@@ -118,9 +118,9 @@ class VisualizationGenerator {
         relativePath: path.relative(this.config.projectPath, nodeId)
       };
     }
-    
+
     const edges = dependencyGraph.edges.map(edge => edge.toJSON());
-    
+
     return {
       nodes,
       edges,
@@ -347,7 +347,7 @@ class VisualizationGenerator {
     if (!recommendations || recommendations.length === 0) {
       return '<p class="no-recommendations">🎉 暂无优化建议，代码结构良好！</p>';
     }
-    
+
     return recommendations.slice(0, 5).map(rec => {
       const priorityClass = {
         critical: 'priority-critical',
@@ -355,7 +355,7 @@ class VisualizationGenerator {
         medium: 'priority-medium',
         low: 'priority-low'
       }[rec.priority] || 'priority-low';
-      
+
       return `
         <div class="recommendation ${priorityClass}">
           <div class="rec-title">${rec.title}</div>
@@ -373,7 +373,7 @@ class VisualizationGenerator {
    */
   calculateAverageComplexity(nodes, field) {
     if (!nodes || nodes.length === 0) return '0.00';
-    
+
     const sum = nodes.reduce((acc, node) => acc + (node[field] || 0), 0);
     const average = sum / nodes.length;
     return average.toFixed(2);
@@ -398,7 +398,7 @@ class VisualizationGenerator {
    */
   countHighComplexityNodes(nodes) {
     if (!nodes || nodes.length === 0) return 0;
-    
+
     return nodes.filter(node => (node.relationshipScore || 0) >= 8).length;
   }
 

@@ -19,7 +19,7 @@ class ComponentNode {
     this.outDegree = 0; // 出度
     this.componentUsages = new Map(); // 组件使用情况
     this.cyclomaticComplexity = 0; // 圈复杂度
-    
+
     // 新增：增强的代码关联性数据
     this.functionCalls = new Map(); // 函数调用关系
     this.variableReferences = new Map(); // 变量引用关系
@@ -84,7 +84,7 @@ class ComponentNode {
       cyclomaticComplexity: this.cyclomaticComplexity,
       dependencies: Array.from(this.dependencies.keys()),
       dependents: Array.from(this.dependents),
-      
+
       // 新增：增强的代码关联性数据
       functionCalls: this.serializeMap(this.functionCalls),
       variableReferences: this.serializeMap(this.variableReferences),
@@ -198,7 +198,7 @@ class GraphBuilder {
       }
 
       const node = new ComponentNode(result.filePath, result.componentName);
-      
+
       // 设置Props信息
       node.propsDeclared = new Set(result.propsDeclared);
       node.propsUsedInBody = new Set(result.propsUsedInBody);
@@ -206,7 +206,7 @@ class GraphBuilder {
       node.usesRestSpread = !!result.usesRestSpread;
       // 设置圈复杂度
       node.cyclomaticComplexity = typeof result.cyclomaticComplexity === 'number' ? result.cyclomaticComplexity : 0;
-      
+
       // 设置组件使用情况
       if (result.componentUsages) {
         node.componentUsages = new Map(result.componentUsages);
@@ -280,7 +280,7 @@ class GraphBuilder {
           targetNode.usesRestSpread = false;
           this.nodes.set(targetPath, targetNode);
         }
-        
+
         if (targetNode) {
           // 创建边
           const edge = new DependencyEdge(result.filePath, targetPath, {
@@ -288,9 +288,9 @@ class GraphBuilder {
             source: dependency.source,
             usage: result.componentUsages ? result.componentUsages.get(targetPath) : null
           });
-          
+
           this.edges.push(edge);
-          
+
           // 更新节点的依赖关系
           sourceNode.addDependency(targetPath, dependency);
           targetNode.addDependent(result.filePath);
@@ -305,10 +305,10 @@ class GraphBuilder {
   calculateGraphMetrics() {
     // 计算连通分量
     this.calculateConnectedComponents();
-    
+
     // 计算中心性指标
     this.calculateCentralityMetrics();
-    
+
     // 新增：计算代码关联性指标
     this.calculateCodeRelationshipMetrics();
   }
@@ -320,16 +320,16 @@ class GraphBuilder {
     for (const [nodeId, node] of this.nodes) {
       // 计算函数调用复杂度
       node.functionCallComplexity = this.calculateFunctionCallComplexity(node);
-      
+
       // 计算数据流复杂度
       node.dataFlowComplexity = this.calculateDataFlowComplexity(node);
-      
+
       // 计算状态管理复杂度
       node.stateComplexity = this.calculateStateComplexity(node);
-      
+
       // 计算异步操作复杂度
       node.asyncComplexity = this.calculateAsyncComplexity(node);
-      
+
       // 计算整体关联性得分
       node.relationshipScore = this.calculateRelationshipScore(node);
     }
@@ -342,7 +342,7 @@ class GraphBuilder {
    */
   calculateFunctionCallComplexity(node) {
     let complexity = 0;
-    
+
     // 基于函数调用数量和深度
     for (const [functionName, calls] of node.functionCalls) {
       if (Array.isArray(calls)) {
@@ -353,7 +353,7 @@ class GraphBuilder {
         });
       }
     }
-    
+
     // 基于方法链长度
     for (const [chainName, chains] of node.methodChains) {
       if (Array.isArray(chains)) {
@@ -362,7 +362,7 @@ class GraphBuilder {
         });
       }
     }
-    
+
     return Math.round(complexity * 100) / 100;
   }
 
@@ -373,24 +373,24 @@ class GraphBuilder {
    */
   calculateDataFlowComplexity(node) {
     let complexity = 0;
-    
+
     // 基于变量引用数量
     for (const [varName, references] of node.variableReferences) {
       if (Array.isArray(references)) {
         complexity += references.length * 0.5;
       }
     }
-    
+
     // 基于数据流依赖
     for (const [varName, flow] of node.dataFlow) {
       if (flow.dependencies && Array.isArray(flow.dependencies)) {
         complexity += flow.dependencies.length * 0.3;
       }
     }
-    
+
     // 基于条件渲染复杂度
     complexity += node.conditionalRendering.length * 0.8;
-    
+
     return Math.round(complexity * 100) / 100;
   }
 
@@ -401,19 +401,19 @@ class GraphBuilder {
    */
   calculateStateComplexity(node) {
     let complexity = 0;
-    
+
     // Hook使用复杂度
     complexity += node.hookUsage.size * 1.0;
-    
+
     // 状态管理复杂度
     complexity += node.stateManagement.size * 1.5;
-    
+
     // Context使用复杂度
     complexity += node.contextUsage.size * 2.0;
-    
+
     // 生命周期方法复杂度
     complexity += node.componentLifecycle.size * 1.2;
-    
+
     return Math.round(complexity * 100) / 100;
   }
 
@@ -424,13 +424,13 @@ class GraphBuilder {
    */
   calculateAsyncComplexity(node) {
     let complexity = 0;
-    
+
     // 异步操作数量
     complexity += node.asyncOperations.size * 1.5;
-    
+
     // 动态导入复杂度
     complexity += node.dynamicImports.size * 2.0;
-    
+
     return Math.round(complexity * 100) / 100;
   }
 
@@ -446,13 +446,13 @@ class GraphBuilder {
       state: 0.3,
       async: 0.2
     };
-    
-    const score = 
+
+    const score =
       (node.functionCallComplexity || 0) * weights.functionCall +
       (node.dataFlowComplexity || 0) * weights.dataFlow +
       (node.stateComplexity || 0) * weights.state +
       (node.asyncComplexity || 0) * weights.async;
-    
+
     return Math.round(score * 100) / 100;
   }
 
@@ -462,7 +462,7 @@ class GraphBuilder {
   calculateConnectedComponents() {
     const visited = new Set();
     const components = [];
-    
+
     for (const [nodeId] of this.nodes) {
       if (!visited.has(nodeId)) {
         const component = [];
@@ -470,7 +470,7 @@ class GraphBuilder {
         components.push(component);
       }
     }
-    
+
     // 为每个节点添加连通分量信息
     components.forEach((component, index) => {
       component.forEach(nodeId => {
@@ -481,7 +481,7 @@ class GraphBuilder {
         }
       });
     });
-    
+
     this.connectedComponents = components;
   }
 
@@ -494,17 +494,17 @@ class GraphBuilder {
   dfsComponent(nodeId, visited, component) {
     visited.add(nodeId);
     component.push(nodeId);
-    
+
     const node = this.nodes.get(nodeId);
     if (!node) return;
-    
+
     // 访问所有相邻节点（无向图）
     for (const dependencyId of node.dependencies.keys()) {
       if (!visited.has(dependencyId)) {
         this.dfsComponent(dependencyId, visited, component);
       }
     }
-    
+
     for (const dependentId of node.dependents) {
       if (!visited.has(dependentId)) {
         this.dfsComponent(dependentId, visited, component);
@@ -517,14 +517,14 @@ class GraphBuilder {
    */
   calculateCentralityMetrics() {
     const nodeCount = this.nodes.size;
-    
+
     for (const [nodeId, node] of this.nodes) {
       // 度中心性
       node.degreeCentrality = (node.inDegree + node.outDegree) / (nodeCount - 1);
-      
+
       // 入度中心性
       node.inDegreeCentrality = node.inDegree / (nodeCount - 1);
-      
+
       // 出度中心性
       node.outDegreeCentrality = node.outDegree / (nodeCount - 1);
     }
@@ -537,14 +537,14 @@ class GraphBuilder {
   getGraphMetadata() {
     const nodeCount = this.nodes.size;
     const edgeCount = this.edges.length;
-    
+
     // 计算密度
     const maxPossibleEdges = nodeCount * (nodeCount - 1);
     const density = maxPossibleEdges > 0 ? edgeCount / maxPossibleEdges : 0;
-    
+
     // 计算度分布
     const degreeDistribution = this.calculateDegreeDistribution();
-    
+
     // 查找孤立节点
     const isolatedNodes = [];
     for (const [nodeId, node] of this.nodes) {
@@ -552,7 +552,7 @@ class GraphBuilder {
         isolatedNodes.push(nodeId);
       }
     }
-    
+
     // 查找叶子节点（只有入度没有出度）
     const leafNodes = [];
     for (const [nodeId, node] of this.nodes) {
@@ -560,7 +560,7 @@ class GraphBuilder {
         leafNodes.push(nodeId);
       }
     }
-    
+
     // 查找根节点（只有出度没有入度）
     const rootNodes = [];
     for (const [nodeId, node] of this.nodes) {
@@ -568,7 +568,7 @@ class GraphBuilder {
         rootNodes.push(nodeId);
       }
     }
-    
+
     return {
       nodeCount,
       edgeCount,
@@ -578,7 +578,7 @@ class GraphBuilder {
       leafNodes,
       rootNodes,
       connectedComponents: this.connectedComponents ? this.connectedComponents.length : 0,
-      largestComponentSize: this.connectedComponents ? 
+      largestComponentSize: this.connectedComponents ?
         Math.max(...this.connectedComponents.map(c => c.length)) : 0
     };
   }
@@ -591,13 +591,13 @@ class GraphBuilder {
     const inDegrees = [];
     const outDegrees = [];
     const totalDegrees = [];
-    
+
     for (const [, node] of this.nodes) {
       inDegrees.push(node.inDegree);
       outDegrees.push(node.outDegree);
       totalDegrees.push(node.inDegree + node.outDegree);
     }
-    
+
     return {
       inDegree: this.calculateStatistics(inDegrees),
       outDegree: this.calculateStatistics(outDegrees),
@@ -614,19 +614,19 @@ class GraphBuilder {
     if (values.length === 0) {
       return { min: 0, max: 0, mean: 0, median: 0, std: 0 };
     }
-    
+
     const sorted = [...values].sort((a, b) => a - b);
     const min = sorted[0];
     const max = sorted[sorted.length - 1];
     const mean = values.reduce((sum, val) => sum + val, 0) / values.length;
-    
+
     const median = sorted.length % 2 === 0 ?
       (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2 :
       sorted[Math.floor(sorted.length / 2)];
-    
+
     const variance = values.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / values.length;
     const std = Math.sqrt(variance);
-    
+
     return { min, max, mean, median, std };
   }
 
@@ -640,33 +640,33 @@ class GraphBuilder {
     if (!this.nodes.has(sourceId) || !this.nodes.has(targetId)) {
       return null;
     }
-    
+
     if (sourceId === targetId) {
       return [sourceId];
     }
-    
+
     const queue = [sourceId];
     const visited = new Set([sourceId]);
     const parent = new Map();
-    
+
     while (queue.length > 0) {
       const currentId = queue.shift();
       const currentNode = this.nodes.get(currentId);
-      
+
       if (!currentNode) continue;
-      
+
       // 检查所有邻居（依赖和被依赖）
       const neighbors = [
         ...currentNode.dependencies.keys(),
         ...currentNode.dependents
       ];
-      
+
       for (const neighborId of neighbors) {
         if (!visited.has(neighborId)) {
           visited.add(neighborId);
           parent.set(neighborId, currentId);
           queue.push(neighborId);
-          
+
           if (neighborId === targetId) {
             // 重构路径
             const path = [];
@@ -680,7 +680,7 @@ class GraphBuilder {
         }
       }
     }
-    
+
     return null; // 没有找到路径
   }
 
@@ -691,7 +691,7 @@ class GraphBuilder {
   toD3Format() {
     const nodes = [];
     const links = [];
-    
+
     // 转换节点
     for (const [nodeId, node] of this.nodes) {
       nodes.push({
@@ -705,14 +705,14 @@ class GraphBuilder {
         unusedProps: node.getUnusedProps(),
         propsDeclared: Array.from(node.propsDeclared),
         propsUsedInBody: Array.from(node.propsUsedInBody),
-        
+
         // 新增：代码关联性指标
         functionCallComplexity: node.functionCallComplexity || 0,
         dataFlowComplexity: node.dataFlowComplexity || 0,
         stateComplexity: node.stateComplexity || 0,
         asyncComplexity: node.asyncComplexity || 0,
         relationshipScore: node.relationshipScore || 0,
-        
+
         // 新增：详细的关联性数据
         functionCallsCount: node.functionCalls.size,
         hookUsageCount: node.hookUsage.size,
@@ -721,7 +721,7 @@ class GraphBuilder {
         conditionalRenderingCount: node.conditionalRendering.length
       });
     }
-    
+
     // 转换边
     for (const edge of this.edges) {
       links.push({
@@ -730,7 +730,7 @@ class GraphBuilder {
         value: edge.metadata.usage ? edge.metadata.usage.count : 1
       });
     }
-    
+
     return { nodes, links };
   }
 
@@ -743,9 +743,9 @@ class GraphBuilder {
     for (const [nodeId, node] of this.nodes) {
       nodes[nodeId] = node.toJSON();
     }
-    
+
     const edges = this.edges.map(edge => edge.toJSON());
-    
+
     return {
       nodes,
       edges,

@@ -1,5 +1,5 @@
-const os = require("os");
-const process = require("process");
+const os = require('os');
+const process = require('process');
 
 /**
  * 性能监控器
@@ -22,7 +22,7 @@ class PerformanceMonitor {
   startTimer(label) {
     this.timers.set(label, {
       start: process.hrtime.bigint(),
-      startTime: Date.now(),
+      startTime: Date.now()
     });
 
     if (this.logger) {
@@ -48,7 +48,7 @@ class PerformanceMonitor {
       label,
       duration,
       startTime: timer.startTime,
-      endTime: Date.now(),
+      endTime: Date.now()
     };
 
     this.timers.delete(label);
@@ -72,7 +72,7 @@ class PerformanceMonitor {
       name,
       value,
       timestamp: Date.now(),
-      metadata,
+      metadata
     };
 
     if (!this.metrics.has(name)) {
@@ -91,7 +91,7 @@ class PerformanceMonitor {
     const systemMemory = {
       total: os.totalmem(),
       free: os.freemem(),
-      used: os.totalmem() - os.freemem(),
+      used: os.totalmem() - os.freemem()
     };
 
     return {
@@ -100,13 +100,13 @@ class PerformanceMonitor {
         heapTotal: usage.heapTotal,
         heapUsed: usage.heapUsed,
         external: usage.external,
-        arrayBuffers: usage.arrayBuffers,
+        arrayBuffers: usage.arrayBuffers
       },
       system: systemMemory,
       percentage: {
         rss: (usage.rss / systemMemory.total) * 100,
-        heap: (usage.heapUsed / usage.heapTotal) * 100,
-      },
+        heap: (usage.heapUsed / usage.heapTotal) * 100
+      }
     };
   }
 
@@ -120,14 +120,14 @@ class PerformanceMonitor {
 
     return {
       count: cpus.length,
-      model: cpus[0]?.model || "Unknown",
+      model: cpus[0]?.model || 'Unknown',
       speed: cpus[0]?.speed || 0,
       process: {
         user: usage.user,
         system: usage.system,
-        total: usage.user + usage.system,
+        total: usage.user + usage.system
       },
-      loadAverage: os.loadavg(),
+      loadAverage: os.loadavg()
     };
   }
 
@@ -136,7 +136,7 @@ class PerformanceMonitor {
    * @param {number} interval - 监控间隔（毫秒）
    */
   startSystemMonitoring(interval = 5000) {
-    if (this.intervals.has("system")) {
+    if (this.intervals.has('system')) {
       return; // 已经在监控
     }
 
@@ -144,32 +144,32 @@ class PerformanceMonitor {
       const memory = this.getMemoryUsage();
       const cpu = this.getCPUUsage();
 
-      this.recordMetric("system.memory", memory);
-      this.recordMetric("system.cpu", cpu);
+      this.recordMetric('system.memory', memory);
+      this.recordMetric('system.cpu', cpu);
 
       // 检查内存泄漏
       if (memory.process.heapUsed > this.initialMemory.heapUsed * 2) {
         if (this.logger) {
-          this.logger.warn("检测到可能的内存泄漏", {
+          this.logger.warn('检测到可能的内存泄漏', {
             current: memory.process.heapUsed,
             initial: this.initialMemory.heapUsed,
-            ratio: memory.process.heapUsed / this.initialMemory.heapUsed,
+            ratio: memory.process.heapUsed / this.initialMemory.heapUsed
           });
         }
       }
     }, interval);
 
-    this.intervals.set("system", intervalId);
+    this.intervals.set('system', intervalId);
   }
 
   /**
    * 停止系统监控
    */
   stopSystemMonitoring() {
-    const intervalId = this.intervals.get("system");
+    const intervalId = this.intervals.get('system');
     if (intervalId) {
       clearInterval(intervalId);
-      this.intervals.delete("system");
+      this.intervals.delete('system');
     }
   }
 
@@ -180,11 +180,11 @@ class PerformanceMonitor {
    * @param {number} duration - 处理时间
    */
   recordFileProcessing(filePath, size, duration) {
-    this.recordMetric("file.processing", {
+    this.recordMetric('file.processing', {
       filePath,
       size,
       duration,
-      throughput: size / duration, // 字节/毫秒
+      throughput: size / duration // 字节/毫秒
     });
   }
 
@@ -209,15 +209,15 @@ class PerformanceMonitor {
     // 计算各阶段耗时
     const phaseTimings = {};
     for (const [name, metrics] of this.metrics) {
-      if (name.startsWith("timer.")) {
-        const phaseName = name.replace("timer.", "");
+      if (name.startsWith('timer.')) {
+        const phaseName = name.replace('timer.', '');
         phaseTimings[phaseName] =
           metrics[metrics.length - 1]?.value?.duration || 0;
       }
     }
 
     // 计算文件处理统计
-    const fileMetrics = this.metrics.get("file.processing") || [];
+    const fileMetrics = this.metrics.get('file.processing') || [];
     const fileStats = {
       totalFiles: fileMetrics.length,
       totalSize: fileMetrics.reduce((sum, m) => sum + m.value.size, 0),
@@ -231,21 +231,21 @@ class PerformanceMonitor {
         fileMetrics.length > 0
           ? fileMetrics.reduce((sum, m) => sum + m.value.duration, 0) /
             fileMetrics.length
-          : 0,
+          : 0
     };
 
     // 内存使用变化
     const memoryDelta = {
       rss: currentMemory.process.rss - this.initialMemory.rss,
       heapUsed: currentMemory.process.heapUsed - this.initialMemory.heapUsed,
-      heapTotal: currentMemory.process.heapTotal - this.initialMemory.heapTotal,
+      heapTotal: currentMemory.process.heapTotal - this.initialMemory.heapTotal
     };
 
     return {
       summary: {
         totalDuration,
         startTime: this.startTime,
-        endTime: Date.now(),
+        endTime: Date.now()
       },
       phases: phaseTimings,
       files: fileStats,
@@ -253,10 +253,10 @@ class PerformanceMonitor {
         initial: this.initialMemory,
         current: currentMemory.process,
         delta: memoryDelta,
-        peak: this.getPeakMemoryUsage(),
+        peak: this.getPeakMemoryUsage()
       },
       cpu: currentCPU,
-      recommendations: this.generatePerformanceRecommendations(),
+      recommendations: this.generatePerformanceRecommendations()
     };
   }
 
@@ -265,7 +265,7 @@ class PerformanceMonitor {
    * @returns {Object} 峰值内存信息
    */
   getPeakMemoryUsage() {
-    const memoryMetrics = this.metrics.get("system.memory") || [];
+    const memoryMetrics = this.metrics.get('system.memory') || [];
 
     if (memoryMetrics.length === 0) {
       return this.getMemoryUsage().process;
@@ -276,7 +276,7 @@ class PerformanceMonitor {
       return {
         rss: Math.max(peak.rss || 0, memory.rss),
         heapUsed: Math.max(peak.heapUsed || 0, memory.heapUsed),
-        heapTotal: Math.max(peak.heapTotal || 0, memory.heapTotal),
+        heapTotal: Math.max(peak.heapTotal || 0, memory.heapTotal)
       };
     }, {});
   }
@@ -294,14 +294,14 @@ class PerformanceMonitor {
     if (heapDelta > 100 * 1024 * 1024) {
       // 100MB
       recommendations.push({
-        type: "memory",
-        level: "warning",
-        message: "内存使用量较高，建议启用缓存或减少并发处理数量",
+        type: 'memory',
+        level: 'warning',
+        message: '内存使用量较高，建议启用缓存或减少并发处理数量'
       });
     }
 
     // 文件处理效率建议
-    const fileMetrics = this.metrics.get("file.processing") || [];
+    const fileMetrics = this.metrics.get('file.processing') || [];
     const avgTime =
       fileMetrics.length > 0
         ? fileMetrics.reduce((sum, m) => sum + m.value.duration, 0) /
@@ -310,17 +310,17 @@ class PerformanceMonitor {
     if (avgTime > 1000) {
       // 1秒
       recommendations.push({
-        type: "performance",
-        level: "info",
-        message: "文件处理速度较慢，建议检查文件大小或启用并行处理",
+        type: 'performance',
+        level: 'info',
+        message: '文件处理速度较慢，建议检查文件大小或启用并行处理'
       });
     }
 
     // 阶段耗时建议
     const slowPhases = [];
     for (const [name, metrics] of this.metrics) {
-      if (name.startsWith("timer.")) {
-        const phaseName = name.replace("timer.", "");
+      if (name.startsWith('timer.')) {
+        const phaseName = name.replace('timer.', '');
         const duration = metrics[metrics.length - 1]?.value?.duration || 0;
         if (duration > 10000) {
           slowPhases.push(phaseName);
@@ -330,11 +330,11 @@ class PerformanceMonitor {
 
     if (slowPhases.length > 0) {
       recommendations.push({
-        type: "performance",
-        level: "info",
+        type: 'performance',
+        level: 'info',
         message: `以下阶段耗时较长: ${slowPhases.join(
-          ", "
-        )}，建议优化算法或启用缓存`,
+          ', '
+        )}，建议优化算法或启用缓存`
       });
     }
 
@@ -360,18 +360,18 @@ class PerformanceMonitor {
    * @param {string} format - 导出格式 (json|csv)
    * @returns {string} 导出的数据
    */
-  exportMetrics(format = "json") {
+  exportMetrics(format = 'json') {
     const data = {};
 
     for (const [name, metrics] of this.metrics) {
       data[name] = metrics;
     }
 
-    if (format === "json") {
+    if (format === 'json') {
       return JSON.stringify(data, null, 2);
-    } else if (format === "csv") {
+    } else if (format === 'csv') {
       // 简单的CSV导出
-      let csv = "metric,timestamp,value\n";
+      let csv = 'metric,timestamp,value\n';
       for (const [name, metrics] of this.metrics) {
         for (const metric of metrics) {
           csv += `${name},${metric.timestamp},${JSON.stringify(

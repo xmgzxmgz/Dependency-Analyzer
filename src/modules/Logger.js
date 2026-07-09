@@ -1,6 +1,6 @@
-const fs = require("fs-extra");
-const path = require("path");
-const chalk = require("chalk");
+const fs = require('fs-extra');
+const path = require('path');
+const chalk = require('chalk');
 
 /**
  * 日志记录器
@@ -9,13 +9,13 @@ const chalk = require("chalk");
 class Logger {
   constructor(config = {}) {
     this.config = {
-      level: config.level || "info",
+      level: config.level || 'info',
       file: config.file || null,
       maxSize: config.maxSize || 10 * 1024 * 1024, // 10MB
       maxFiles: config.maxFiles || 5,
       timestamp: config.timestamp !== false,
       colors: config.colors !== false,
-      ...config,
+      ...config
     };
 
     this.levels = {
@@ -23,7 +23,7 @@ class Logger {
       warn: 1,
       info: 2,
       debug: 3,
-      trace: 4,
+      trace: 4
     };
 
     this.colors = {
@@ -31,7 +31,7 @@ class Logger {
       warn: chalk.yellow,
       info: chalk.blue,
       debug: chalk.gray,
-      trace: chalk.dim,
+      trace: chalk.dim
     };
 
     this.currentLogFile = null;
@@ -107,7 +107,7 @@ class Logger {
    * @returns {string} 格式化后的消息
    */
   formatMessage(level, message, meta = {}) {
-    let formatted = "";
+    let formatted = '';
 
     if (this.config.timestamp) {
       const timestamp = new Date().toISOString();
@@ -149,7 +149,7 @@ class Logger {
     // 文件输出
     if (this.currentLogFile) {
       await this.rotateLogIfNeeded();
-      await fs.appendFile(this.currentLogFile, formatted + "\n");
+      await fs.appendFile(this.currentLogFile, formatted + '\n');
     }
   }
 
@@ -159,7 +159,7 @@ class Logger {
    * @param {Object} meta - 元数据
    */
   async error(message, meta = {}) {
-    await this.log("error", message, meta);
+    await this.log('error', message, meta);
   }
 
   /**
@@ -168,7 +168,7 @@ class Logger {
    * @param {Object} meta - 元数据
    */
   async warn(message, meta = {}) {
-    await this.log("warn", message, meta);
+    await this.log('warn', message, meta);
   }
 
   /**
@@ -177,7 +177,7 @@ class Logger {
    * @param {Object} meta - 元数据
    */
   async info(message, meta = {}) {
-    await this.log("info", message, meta);
+    await this.log('info', message, meta);
   }
 
   /**
@@ -186,7 +186,7 @@ class Logger {
    * @param {Object} meta - 元数据
    */
   async debug(message, meta = {}) {
-    await this.log("debug", message, meta);
+    await this.log('debug', message, meta);
   }
 
   /**
@@ -195,7 +195,7 @@ class Logger {
    * @param {Object} meta - 元数据
    */
   async trace(message, meta = {}) {
-    await this.log("trace", message, meta);
+    await this.log('trace', message, meta);
   }
 
   /**
@@ -222,7 +222,7 @@ class Logger {
   child(options = {}) {
     return new Logger({
       ...this.config,
-      ...options,
+      ...options
     });
   }
 }

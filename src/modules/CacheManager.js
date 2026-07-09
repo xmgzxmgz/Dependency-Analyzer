@@ -1,6 +1,6 @@
-const fs = require("fs-extra");
-const path = require("path");
-const crypto = require("crypto");
+const fs = require('fs-extra');
+const path = require('path');
+const crypto = require('crypto');
 
 /**
  * 缓存管理器
@@ -11,9 +11,9 @@ class CacheManager {
     this.config = {
       enabled: config.enabled !== false,
       ttl: config.ttl || 3600000, // 默认1小时
-      directory: config.directory || ".dep-analyzer-cache",
+      directory: config.directory || '.dep-analyzer-cache',
       maxMemoryItems: config.maxMemoryItems || 1000,
-      projectPath: config.projectPath || null,
+      projectPath: config.projectPath || null
     };
 
     this.memoryCache = new Map();
@@ -44,7 +44,7 @@ class CacheManager {
    */
   generateCacheKey(key, params = {}) {
     const data = JSON.stringify({ key, params });
-    return crypto.createHash("md5").update(data).digest("hex");
+    return crypto.createHash('md5').update(data).digest('hex');
   }
 
   /**
@@ -62,7 +62,7 @@ class CacheManager {
 
     this.memoryCache.set(key, {
       value,
-      timestamp: Date.now(),
+      timestamp: Date.now()
     });
   }
 
@@ -102,7 +102,7 @@ class CacheManager {
       value,
       timestamp: Date.now(),
       filePath: filePath || null,
-      mtime: filePath ? fs.statSync(filePath).mtime.getTime() : null,
+      mtime: filePath ? fs.statSync(filePath).mtime.getTime() : null
     };
 
     const cacheFile = path.join(this.cacheDir, `${key}.json`);
@@ -226,7 +226,7 @@ class CacheManager {
     const files = await fs.readdir(this.cacheDir);
 
     for (const file of files) {
-      if (!file.endsWith(".json")) continue;
+      if (!file.endsWith('.json')) continue;
 
       const filePath = path.join(this.cacheDir, file);
       try {
@@ -250,7 +250,7 @@ class CacheManager {
 
     if (this.cacheDir && (await fs.pathExists(this.cacheDir))) {
       const files = await fs.readdir(this.cacheDir);
-      fileItems = files.filter((f) => f.endsWith(".json")).length;
+      fileItems = files.filter((f) => f.endsWith('.json')).length;
     }
 
     const memorySize = JSON.stringify([...this.memoryCache.entries()]).length;
@@ -264,10 +264,10 @@ class CacheManager {
       hitRate:
         this.stats.hits + this.stats.misses > 0
           ? (
-              (this.stats.hits / (this.stats.hits + this.stats.misses)) *
+            (this.stats.hits / (this.stats.hits + this.stats.misses)) *
               100
-            ).toFixed(2) + "%"
-          : "0%",
+          ).toFixed(2) + '%'
+          : '0%'
     };
   }
 }
