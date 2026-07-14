@@ -5,7 +5,11 @@ const path = require('path');
 const DependencyAnalyzer = require('../../src/index');
 const PerformanceMonitor = require('../../src/modules/PerformanceMonitor');
 
-describe('性能基准测试', () => {
+// 性能测试在 CI 上跳过——CI 跑者负载波动导致计时断言必然不稳定
+const isCI = process.env.CI || process.env.GITHUB_ACTIONS;
+const skipInCI = isCI ? describe.skip : describe;
+
+skipInCI('性能基准测试', () => {
   let testProjectDir;
   let outputDir;
   let performanceMonitor;
