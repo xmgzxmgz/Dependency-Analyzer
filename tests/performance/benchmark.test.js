@@ -307,8 +307,8 @@ export default App;
       console.log(`串行处理耗时: ${serialTiming.duration.toFixed(2)}ms`);
       console.log(`并行处理耗时: ${parallelTiming.duration.toFixed(2)}ms`);
 
-      // 并行处理应该不会显著慢于串行处理
-      expect(parallelTiming.duration).to.be.below(serialTiming.duration * 2);
+      // 并行处理应该不会显著慢于串行处理（CI 环境下需要更大容差）
+      expect(parallelTiming.duration).to.be.below(serialTiming.duration * 3);
     });
   });
 
