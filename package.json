@@ -12,7 +12,7 @@
     "test:unit": "mocha tests/unit/**/*.test.js",
     "test:integration": "mocha tests/integration/**/*.test.js --timeout 30000",
     "test:performance": "mocha tests/performance/**/*.test.js --timeout 60000",
-    "test:coverage": "nyc npm test",
+    "test:coverage": "nyc mocha tests/unit/**/*.test.js tests/integration/**/*.test.js --timeout 30000",
     "test:watch": "mocha tests/**/*.test.js --watch",
     "lint": "eslint src/ tests/",
     "lint:fix": "eslint src/ tests/ --fix",

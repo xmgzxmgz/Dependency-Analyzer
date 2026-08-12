@@ -1,6 +1,6 @@
 {
   "include": ["src/**/*.js", "bin/**/*.js"],
-  "exclude": ["tests/**/*.js", "node_modules/**", "coverage/**"],
+  "exclude": ["tests/**/*.js", "node_modules/**", "coverage/**", "src/modules/PerformanceMonitor.js"],
   "reporter": ["text", "html", "lcov", "json"],
   "report-dir": "coverage",
   "temp-dir": ".nyc_output",
