@@ -1,0 +1,160 @@
+
+
+  AnalysisEngine 单元测试
+    构造函数
+      ✔ 应该正确初始化分析结果
+      ✔ 应该创建新实例
+    findOrphanComponents 方法
+      ✔ 应该找到孤立组件
+    findUnusedProps 方法
+      ✔ 应该找到未使用的属性
+    findCircularDependencies 方法
+      ✔ 应该检测循环依赖
+    analyze 方法
+      ✔ 应该生成完整的分析报告
+    错误处理
+      ✔ 应该处理无效的依赖图谱
+      ✔ 应该处理缺少节点的依赖图谱
+
+  CacheManager
+    构造函数
+      ✔ 应该创建CacheManager实例
+      ✔ 应该支持禁用缓存
+    generateCacheKey
+      ✔ 应该生成一致的缓存键
+      ✔ 不同输入应该生成不同的键
+    内存缓存
+      ✔ 应该存储和获取数据
+      ✔ 应该处理不存在的键
+      ✔ 应该处理过期数据 (1111ms)
+      ✔ 应该限制内存缓存大小
+    文件缓存
+      ✔ 应该存储和获取数据
+      ✔ 应该处理不存在的文件
+      ✔ 应该处理过期文件 (1106ms)
+      ✔ 应该验证文件修改时间
+    统一缓存接口
+      ✔ 应该优先使用内存缓存
+      ✔ 应该回退到文件缓存
+      ✔ 应该同时存储到内存和文件
+    缓存管理
+      ✔ 应该删除缓存 (313ms)
+      ✔ 应该清空所有缓存 (360ms)
+      ✔ 应该清理过期缓存 (1398ms)
+    统计信息
+      ✔ 应该返回缓存统计
+    禁用缓存
+      ✔ 禁用时应该跳过所有操作
+
+  ConfigManager
+    构造函数
+      ✔ 应该创建ConfigManager实例
+    getDefaultConfig
+      ✔ 应该返回默认配置
+    loadEnvConfig
+      ✔ 应该从环境变量加载配置
+    loadConfig
+      ✔ 应该加载JSON配置文件
+      ✔ 应该加载JS配置文件
+      ✔ 应该处理不存在的配置文件
+配置文件加载失败: .dep-analyzer.json C:\Users\82109\WorkBuddy\2026-08-12-17-18-10\da-fix\tests\fixtures\config-test\.dep-analyzer.json: Expected property name or '}' in JSON at position 2 (line 1 column 3)
+      ✔ 应该处理损坏的配置文件
+    validateConfig
+      ✔ 应该验证有效配置
+      ✔ 应该拒绝缺少必需字段的配置
+      ✔ 应该验证数值范围
+      ✔ 应该验证缓存TTL
+    get/set
+      ✔ 应该获取配置值
+      ✔ 应该设置配置值
+      ✔ 应该处理嵌套路径
+    配置优先级
+      ✔ 环境变量应该覆盖文件配置
+
+  Logger 单元测试
+    构造函数
+      ✔ 应该使用默认配置
+      ✔ 应该使用自定义配置
+      ✔ 应该初始化日志级别
+    日志级别
+      ✔ 应该根据配置级别过滤日志
+      ✔ 应该支持所有日志级别
+    控制台输出
+      ✔ 应该输出到控制台
+      ✔ 应该支持禁用颜色输出
+    文件输出
+      ✔ 应该写入日志到文件
+      ✔ 应该支持禁用文件输出
+      ✔ 应该处理文件写入错误
+    日志轮转
+      ✔ 应该在文件大小超限时进行轮转
+      ✔ 应该删除超出数量限制的旧文件
+      ✔ 应该处理轮转过程中的错误
+    日志格式化
+      ✔ 应该包含时间戳
+      ✔ 应该支持禁用时间戳
+      ✔ 应该支持元数据
+    性能监控
+      ✔ 应该支持性能计时
+      ✔ 应该记录性能结果
+    子日志器
+      ✔ 应该创建子日志器
+      ✔ 子日志器应该继承父级配置
+    错误处理
+      ✔ 应该优雅地处理格式化错误
+      ✔ 应该处理文件系统错误
+
+  完整分析流程集成测试
+    React项目分析
+📁 扫描项目文件...
+发现 15 个源文件
+🔍 解析源代码...
+- 解析源代码 (0/15)
+已处理 1/15 个文件已处理 2/15 个文件已处理 3/15 个文件已处理 4/15 个文件已处理 5/15 个文件已处理 6/15 个文件已处理 7/15 个文件已处理 8/15 个文件已处理 9/15 个文件已处理 10/15 个文件已处理 11/15 个文件已处理 12/15 个文件已处理 13/15 个文件已处理 14/15 个文件已处理 15/15 个文件✔ 成功解析 14 个组件文件
+
+成功解析 14 个组件文件
+🕸️  构建依赖图谱...
+🔬 执行依赖分析...
+📊 生成可视化报告...
+      ✔ 应该成功分析React项目 (159ms)
+      1) "after each" hook for "应该成功分析React项目"
+
+
+  66 passing (26s)
+  1 failing
+
+  1) 完整分析流程集成测试
+       "after each" hook for "应该成功分析React项目":
+     Error: [safe-delete] 操作失败: ERROR C:\Users\82109\WorkBuddy\2026-08-12-17-18-10\da-fix\tests\fixtures\test-project: Error during a `trash` operation: Unknown { description: "Some operations were aborted" }
+      at trashViaBinary (C:\Users\82109\AppData\Local\Programs\WorkBuddy\resources\app.asar.unpacked\cli\vendor\shim\genie-safe-delete.cjs:270:15)
+      at trashItem (C:\Users\82109\AppData\Local\Programs\WorkBuddy\resources\app.asar.unpacked\cli\vendor\shim\genie-safe-delete.cjs:283:9)
+      at tryTrash (C:\Users\82109\AppData\Local\Programs\WorkBuddy\resources\app.asar.unpacked\cli\vendor\shim\genie-safe-delete.cjs:547:5)
+      at tryRm (C:\Users\82109\AppData\Local\Programs\WorkBuddy\resources\app.asar.unpacked\cli\vendor\shim\genie-safe-delete.cjs:722:5)
+      at Object.wrappedRm [as rm] (C:\Users\82109\AppData\Local\Programs\WorkBuddy\resources\app.asar.unpacked\cli\vendor\shim\genie-safe-delete.cjs:750:13)
+      at Object.remove (node_modules\fs-extra\lib\remove\index.js:7:6)
+      at C:\Users\82109\WorkBuddy\2026-08-12-17-18-10\da-fix\node_modules\universalify\index.js:9:12
+      at new Promise (<anonymous>)
+      at Object.remove (node_modules\universalify\index.js:7:14)
+      at Context.<anonymous> (tests\integration\full-analysis.test.js:23:14)
+      at process.processImmediate (node:internal/timers:484:21)
+
+
+
+ERROR: Coverage for branches (60.49%) does not meet global threshold (65%)
+ERROR: Coverage for statements (78.66%) does not meet global threshold (80%)
+----------------------------|---------|----------|---------|---------|------------------------------
+File                        | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s            
+----------------------------|---------|----------|---------|---------|------------------------------
+All files                   |   78.66 |    60.49 |   82.08 |   80.27 |                              
+ src                        |   95.45 |    66.66 |     100 |   95.31 |                              
+  index.js                  |   95.45 |    66.66 |     100 |   95.31 | 111-117                      
+ src/modules                |   77.85 |    60.34 |    81.7 |   79.54 |                              
+  ASTAnalyzer.js            |   61.88 |    49.69 |    68.6 |    63.3 | ...-1347,1361-1376,1408-1419 
+  AnalysisEngine.js         |    88.8 |    76.56 |   86.66 |   91.53 | ...5,296,410,626,641,747-758 
+  CacheManager.js           |   88.04 |    81.15 |   81.25 |   91.76 | 145,199-204,239              
+  ConfigManager.js          |   86.15 |    80.48 |     100 |   85.93 | 29-44                        
+  FileScanner.js            |   80.43 |     55.1 |   76.92 |   80.89 | ...1-121,151-159,184,239-252 
+  GraphBuilder.js           |   82.87 |    56.15 |   89.18 |   83.66 | 193,197,264,615,640-749      
+  Logger.js                 |   98.33 |    90.24 |     100 |     100 | 58,109,132,222               
+  VisualizationGenerator.js |   90.19 |       75 |     100 |   97.72 | 348                          
+----------------------------|---------|----------|---------|---------|------------------------------

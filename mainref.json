@@ -1,0 +1,10 @@
+{
+  "ref": "refs/heads/main",
+  "node_id": "REF_kwDOPwoMBq9yZWZzL2hlYWRzL21haW4",
+  "url": "https://api.github.com/repos/xmgzxmgz/Dependency-Analyzer/git/refs/heads/main",
+  "object": {
+    "sha": "62605130b80d2410b81e12f749dc309599f674b9",
+    "type": "commit",
+    "url": "https://api.github.com/repos/xmgzxmgz/Dependency-Analyzer/git/commits/62605130b80d2410b81e12f749dc309599f674b9"
+  }
+}
