@@ -44,15 +44,15 @@
     "LICENSE"
   ],
   "dependencies": {
-    "@babel/parser": "^7.23.0",
-    "@babel/traverse": "^7.23.0",
+    "@babel/parser": "^7.29.8",
+    "@babel/traverse": "^7.29.8",
     "@babel/types": "^7.23.0",
-    "@vue/compiler-sfc": "^3.3.0",
+    "@vue/compiler-sfc": "^3.5.41",
     "chalk": "^4.1.2",
     "commander": "^11.1.0",
     "cors": "^2.8.6",
     "express": "^5.1.0",
-    "fs-extra": "^11.1.0",
+    "fs-extra": "^11.4.0",
     "glob": "^10.3.0",
     "ora": "^7.0.1",
     "p-limit": "^3.1.0"
@@ -61,7 +61,7 @@
     "@types/node": "^20.5.0",
     "chai": "^4.3.7",
     "eslint": "^8.0.0",
-    "mocha": "^11.7.6",
+    "mocha": "^11.8.0",
     "mock-fs": "^5.2.0",
     "nodemon": "^3.0.1",
     "nyc": "^18.0.0",
